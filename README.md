@@ -8,7 +8,7 @@ In practice, this will provide a declarative approach to interact with native UI
 
 ## Example
 
-![Demo](https://raw.githubusercontent.com/MMarco94/kotlin-compose-gtk-adw/main/screenshots/demo.mp4)
+![Demo](https://raw.githubusercontent.com/MMarco94/kotlin-compose-gtk-adw/main/screenshots/demo.gif)
 
 
 ```kotlin
