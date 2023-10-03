@@ -1,12 +1,8 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
     kotlin("jvm")
     id("org.jetbrains.compose")
+    `maven-publish`
 }
-
-group = "com.example"
-version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -47,4 +43,16 @@ tasks.withType<JavaCompile>().all {
         "--enable-native-access=ALL-UNNAMED",
         "-Djava.library.path=/usr/lib64:/lib64:/lib:/usr/lib:/lib/x86_64-linux-gnu"
     )
+}
+
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = "io.github.mmarco94"
+            artifactId = "compose-gtk"
+            version = "0.1-SNAPSHOT"
+            from(components["java"])
+        }
+    }
 }
