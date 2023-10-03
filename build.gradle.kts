@@ -9,26 +9,17 @@ repositories {
     maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     google()
 }
+
 kotlin {
     jvmToolchain(20)
 }
 
 dependencies {
-    implementation(compose.runtime)
-    implementation("io.github.jwharm.javagi:gtk:0.7.2")
-    implementation("io.github.jwharm.javagi:adw:0.7.2")
+    api(compose.runtime)
+    api("io.github.jwharm.javagi:gtk:0.7.2")
+    api("io.github.jwharm.javagi:adw:0.7.2")
 }
 
-compose.desktop {
-    application {
-        mainClass = "MainKt"
-
-        nativeDistributions {
-            packageName = "gtk4-demo"
-            packageVersion = "1.0.0"
-        }
-    }
-}
 tasks.withType<JavaExec>().all {
     this.jvmArgs = listOf(
         "--enable-preview",
@@ -45,14 +36,13 @@ tasks.withType<JavaCompile>().all {
     )
 }
 
-
 publishing {
     publications {
         create<MavenPublication>("maven") {
             groupId = "io.github.mmarco94"
-            artifactId = "compose-gtk"
-            version = "0.1-SNAPSHOT"
-            from(components["java"])
+            artifactId = "compose-4-gtk-adw"
+            version = "0.1"
+            from(components["kotlin"])
         }
     }
 }
