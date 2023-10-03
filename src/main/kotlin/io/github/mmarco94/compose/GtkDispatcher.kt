@@ -1,3 +1,5 @@
+package io.github.mmarco94.compose
+
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Runnable
 import org.gnome.glib.GLib

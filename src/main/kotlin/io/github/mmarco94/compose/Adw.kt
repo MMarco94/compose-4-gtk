@@ -1,3 +1,5 @@
+package io.github.mmarco94.compose
+
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.Snapshot
 import kotlinx.coroutines.*

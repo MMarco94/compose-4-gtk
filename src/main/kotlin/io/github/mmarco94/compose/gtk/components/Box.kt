@@ -1,9 +1,10 @@
-package components
+package io.github.mmarco94.compose.gtk.components
 
-import GtkApplier
-import GtkComposeNode
+import io.github.mmarco94.compose.GtkApplier
+import io.github.mmarco94.compose.GtkComposeNode
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
+import io.github.mmarco94.compose.Modifier
 import org.gnome.gobject.GObject
 import org.gnome.gtk.Box
 import org.gnome.gtk.Orientation
@@ -12,7 +13,6 @@ import org.gnome.gtk.Widget
 private class GtkBoxComposeNode(gObject: Box) : GtkComposeNode<Box>(gObject) {
     private val children = mutableListOf<Widget>()
     override fun add(index: Int, child: GObject) {
-        println("Adding child at $index")
         child as Widget
         when (index) {
             children.size -> gObject.append(child)
@@ -23,7 +23,6 @@ private class GtkBoxComposeNode(gObject: Box) : GtkComposeNode<Box>(gObject) {
     }
 
     override fun remove(index: Int) {
-        println("Removing child at $index")
         gObject.remove(children.removeAt(index))
     }
 
@@ -34,8 +33,25 @@ private class GtkBoxComposeNode(gObject: Box) : GtkComposeNode<Box>(gObject) {
 }
 
 @Composable
+fun VerticalBox(
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit,
+) {
+    Box(modifier, Orientation.VERTICAL, content)
+}
+
+@Composable
+fun HorizontalBox(
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit,
+) {
+    Box(modifier, Orientation.HORIZONTAL, content)
+}
+
+@Composable
 fun Box(
-    orientation: Orientation = Orientation.VERTICAL,
+    modifier: Modifier = Modifier,
+    orientation: Orientation = Orientation.HORIZONTAL,
     content: @Composable () -> Unit,
 ) {
     ComposeNode<GtkComposeNode<Box>, GtkApplier>(
@@ -43,6 +59,7 @@ fun Box(
             GtkBoxComposeNode(Box.builder().build())
         },
         update = {
+            set(modifier) { applyModifier(it) }
             set(orientation) { this.gObject.orientation = it }
         },
         content = content,

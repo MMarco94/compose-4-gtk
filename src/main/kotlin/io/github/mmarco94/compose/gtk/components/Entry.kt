@@ -1,9 +1,10 @@
-package components
+package io.github.mmarco94.compose.gtk.components
 
-import GtkApplier
-import LeafComposeNode
+import io.github.mmarco94.compose.GtkApplier
+import io.github.mmarco94.compose.LeafComposeNode
 import androidx.compose.runtime.*
 import io.github.jwharm.javagi.gobject.SignalConnection
+import io.github.mmarco94.compose.Modifier
 import org.gnome.gobject.GObject
 import org.gnome.gobject.GObjects
 import org.gnome.gtk.Editable
@@ -24,6 +25,7 @@ private data class TentativeCursorPosition(
 fun Entry(
     text: String,
     onTextChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
     placeholderText: String? = null,
 ) {
     val onTextChange by rememberUpdatedState(onTextChange)
@@ -63,6 +65,7 @@ fun Entry(
 
         GtkEntryComposeNode(entry, onDeleteText, onInsertText)
     }) {
+        set(modifier) { applyModifier(it) }
         set(text to tentativeCursorPosition) { (text, pos) ->
             if (this.gObject.text != text) {
                 this.onDeleteSignalHandler.block()

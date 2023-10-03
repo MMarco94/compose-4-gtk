@@ -1,3 +1,5 @@
+package io.github.mmarco94.compose
+
 import org.gnome.gio.ApplicationFlags
 import org.gnome.adw.*
 import org.gnome.adw.Application

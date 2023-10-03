@@ -1,17 +1,12 @@
-# Kotlin Compose for Adw and Gtk
+package io.github.mmarco94.compose
 
-This library provides a Kotlin Compose interface to interact with native Gtk and Adw components.
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import io.github.mmarco94.compose.gtk.components.*
+import org.gnome.adw.Toast
 
-In practice, this will provide a declarative approach to interact with native UIs.
-
-**At this stage, this is only a proof of concept**
-
-## Example
-
-![Demo](https://raw.githubusercontent.com/MMarco94/kotlin-compose-gtk-adw/main/screenshots/demo.mp4)
-
-
-```kotlin
 fun main(args: Array<String>) {
     application("my.example.HelloApp", args) {
         ApplicationWindow(application, "Test", onClose = ::exitApplication) {
@@ -45,5 +40,3 @@ fun main(args: Array<String>) {
         }
     }
 }
-```
-
