@@ -19,8 +19,8 @@ kotlin {
 
 dependencies {
     implementation(compose.runtime)
-    implementation("io.github.jwharm.javagi:gtk:0.7.1")
-    implementation("io.github.jwharm.javagi:adw:0.7.1")
+    implementation("io.github.jwharm.javagi:gtk:0.7.2")
+    implementation("io.github.jwharm.javagi:adw:0.7.2")
 }
 
 compose.desktop {
