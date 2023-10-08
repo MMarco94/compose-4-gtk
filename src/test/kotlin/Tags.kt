@@ -2,11 +2,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import io.github.mmarco94.compose.modifier.Modifier
 import io.github.mmarco94.compose.application
 import io.github.mmarco94.compose.gtk.components.*
+import io.github.mmarco94.compose.modifier.Modifier
 import io.github.mmarco94.compose.modifier.margin
 import org.gnome.adw.Toast
+import org.gnome.pango.AttrList
+import org.gnome.pango.Pango
 
 fun main(args: Array<String>) {
     application("my.example.HelloApp", args) {
@@ -22,7 +24,7 @@ fun main(args: Array<String>) {
                                 text = text,
                                 onTextChange = { text = it },
                                 placeholderText = "Inset text here",
-                                modifier = Modifier.margin(8)
+                                modifier = Modifier.margin(8),
                             )
                             ScrolledWindow {
                                 HorizontalBox {

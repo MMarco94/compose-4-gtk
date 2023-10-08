@@ -9,6 +9,10 @@ import org.gnome.gobject.GObject
 import org.gnome.gobject.GObjects
 import org.gnome.gtk.Editable
 import org.gnome.gtk.Entry
+import org.gnome.gtk.InputHints
+import org.gnome.gtk.InputPurpose
+import org.gnome.pango.AttrList
+import org.gnome.pango.TabArray
 
 private class GtkEntryComposeNode(
     gObject: Entry,
@@ -21,12 +25,36 @@ private data class TentativeCursorPosition(
     val condition: (String) -> Boolean,
 )
 
+private val emptyAttributes = AttrList()
+
+/**
+ * TODO:
+ *  - setExtraMenu
+ *  - Icons
+ *  - overwriteMode
+ *  - pulse
+ */
 @Composable
 fun Entry(
     text: String,
     onTextChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    attributes: AttrList = emptyAttributes,
     placeholderText: String? = null,
+    editable: Boolean = true,
+    visibility: Boolean = true,
+    activatesDefault: Boolean = false,
+    alignment: Float = 0f,
+    hasFrame: Boolean = true,
+    inputHints: InputHints = InputHints.NONE,
+    inputPurpose: InputPurpose = InputPurpose.FREE_FORM,
+    invisibleChar: Char? = null,
+    maxLength: Int = 0,
+    progressFraction: Double = 0.0,
+    tabs: TabArray? = null,
+    enableUndo: Boolean = true,
+    maxWidthChars: Int = -1,
+    widthChars: Int = -1,
 ) {
     val onTextChange by rememberUpdatedState(onTextChange)
     var tentativeCursorPosition by remember { mutableStateOf<TentativeCursorPosition?>(null) }
@@ -79,6 +107,27 @@ fun Entry(
                 tentativeCursorPosition = null
             }
         }
+        set(attributes) { this.gObject.attributes = it }
         set(placeholderText) { this.gObject.placeholderText = it }
+        set(editable) { this.gObject.editable = it }
+        set(visibility) { this.gObject.visibility = it }
+        set(activatesDefault) { this.gObject.activatesDefault = it }
+        set(alignment) { this.gObject.alignment = it }
+        set(hasFrame) { this.gObject.hasFrame = it }
+        set(inputHints) { this.gObject.inputHints = it }
+        set(inputPurpose) { this.gObject.inputPurpose = it }
+        set(invisibleChar) {
+            if (it == null) {
+                this.gObject.unsetInvisibleChar()
+            } else {
+                this.gObject.invisibleChar = it.code
+            }
+        }
+        set(maxLength) { this.gObject.maxLength = it }
+        set(progressFraction) { this.gObject.progressFraction = it }
+        set(tabs) { this.gObject.tabs = it }
+        set(enableUndo) { this.gObject.enableUndo = it }
+        set(maxWidthChars) { this.gObject.maxWidthChars = it }
+        set(widthChars) { this.gObject.widthChars = it }
     }
 }
