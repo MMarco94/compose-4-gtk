@@ -2,10 +2,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import io.github.mmarco94.compose.Modifier
+import io.github.mmarco94.compose.modifier.Modifier
 import io.github.mmarco94.compose.application
 import io.github.mmarco94.compose.gtk.components.*
-import io.github.mmarco94.compose.margin
+import io.github.mmarco94.compose.modifier.margin
 import org.gnome.adw.Toast
 
 fun main(args: Array<String>) {

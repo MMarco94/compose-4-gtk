@@ -1,4 +1,4 @@
-package io.github.mmarco94.compose
+package io.github.mmarco94.compose.modifier
 
 import org.gnome.gtk.Widget
 
@@ -35,26 +35,7 @@ operator fun Modifier.plus(another: Modifier): Modifier {
     )
 }
 
-fun Modifier.margin(margin: Int) = margin(margin, margin)
-fun Modifier.margin(horizontal: Int, vertical: Int) = margin(horizontal, vertical, horizontal, vertical)
-fun Modifier.margin(
-    start: Int,
-    top: Int,
-    end: Int,
-    bottom: Int,
-): Modifier {
-    return Modifier.of(
-        apply = {
-            it.marginStart = start
-            it.marginTop = top
-            it.marginEnd = end
-            it.marginBottom = bottom
-        },
-        undo = {
-            it.marginStart = 0
-            it.marginTop = 0
-            it.marginEnd = 0
-            it.marginBottom = 0
-        }
-    )
-}
+fun Modifier.combine(
+    apply: (Widget) -> Unit,
+    undo: (Widget) -> Unit,
+) = this + Modifier.of(apply, undo)

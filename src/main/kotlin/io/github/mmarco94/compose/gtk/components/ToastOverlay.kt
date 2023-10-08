@@ -5,7 +5,7 @@ import io.github.mmarco94.compose.GtkComposeNode
 import io.github.mmarco94.compose.SingleChildComposeNode
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
-import io.github.mmarco94.compose.Modifier
+import io.github.mmarco94.compose.modifier.Modifier
 import org.gnome.adw.Toast
 import org.gnome.adw.ToastOverlay
 import org.gnome.gtk.Widget
@@ -36,7 +36,7 @@ fun ToastOverlay(
             val toastOverlay = ToastOverlay.builder().build()
             SingleChildComposeNode(
                 toastOverlay,
-                add = { toastOverlay.child = it as Widget },
+                add = { toastOverlay.child = it.gObject as Widget },
                 remove = { toastOverlay.child = null }
             )
         },

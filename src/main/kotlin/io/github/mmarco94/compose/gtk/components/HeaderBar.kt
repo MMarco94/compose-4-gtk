@@ -5,7 +5,7 @@ import io.github.mmarco94.compose.GtkComposeNode
 import io.github.mmarco94.compose.LeafComposeNode
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
-import io.github.mmarco94.compose.Modifier
+import io.github.mmarco94.compose.modifier.Modifier
 import org.gnome.adw.CenteringPolicy
 import org.gnome.adw.HeaderBar
 

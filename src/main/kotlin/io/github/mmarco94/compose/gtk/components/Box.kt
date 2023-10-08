@@ -4,7 +4,7 @@ import io.github.mmarco94.compose.GtkApplier
 import io.github.mmarco94.compose.GtkComposeNode
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
-import io.github.mmarco94.compose.Modifier
+import io.github.mmarco94.compose.modifier.Modifier
 import org.gnome.gobject.GObject
 import org.gnome.gtk.Box
 import org.gnome.gtk.Orientation
@@ -12,14 +12,14 @@ import org.gnome.gtk.Widget
 
 private class GtkBoxComposeNode(gObject: Box) : GtkComposeNode<Box>(gObject) {
     private val children = mutableListOf<Widget>()
-    override fun add(index: Int, child: GObject) {
-        child as Widget
+    override fun add(index: Int, child: GtkComposeNode<GObject>) {
+        val childWidget = child.gObject as Widget
         when (index) {
-            children.size -> gObject.append(child)
-            0 -> gObject.insertChildAfter(child, null)
-            else -> gObject.insertChildAfter(child, children[index - 1])
+            children.size -> gObject.append(childWidget)
+            0 -> gObject.insertChildAfter(childWidget, null)
+            else -> gObject.insertChildAfter(childWidget, children[index - 1])
         }
-        children.add(index, child)
+        children.add(index, childWidget)
     }
 
     override fun remove(index: Int) {

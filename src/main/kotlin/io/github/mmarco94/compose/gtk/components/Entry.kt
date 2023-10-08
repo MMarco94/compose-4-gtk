@@ -4,7 +4,7 @@ import io.github.mmarco94.compose.GtkApplier
 import io.github.mmarco94.compose.LeafComposeNode
 import androidx.compose.runtime.*
 import io.github.jwharm.javagi.gobject.SignalConnection
-import io.github.mmarco94.compose.Modifier
+import io.github.mmarco94.compose.modifier.Modifier
 import org.gnome.gobject.GObject
 import org.gnome.gobject.GObjects
 import org.gnome.gtk.Editable

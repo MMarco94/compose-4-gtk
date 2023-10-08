@@ -6,18 +6,18 @@ import io.github.mmarco94.compose.GtkApplier
 import io.github.mmarco94.compose.GtkComposeNode
 import io.github.mmarco94.compose.LeafComposeNode
 import io.github.mmarco94.compose.modifier.Modifier
-import org.gnome.gtk.Label
+import org.gnome.gtk.PackType
+import org.gnome.gtk.WindowControls
 
-// TODO: all other properties
 @Composable
-fun Label(
-    text: String,
+fun WindowControls(
     modifier: Modifier = Modifier,
+    side: PackType = PackType.START,
 ) {
-    ComposeNode<GtkComposeNode<Label>, GtkApplier>({
-        LeafComposeNode(Label.builder().build())
+    ComposeNode<GtkComposeNode<WindowControls>, GtkApplier>({
+        LeafComposeNode(WindowControls.builder().build())
     }) {
         set(modifier) { applyModifier(it) }
-        set(text) { this.gObject.text = it }
+        set(side) { gObject.side = it }
     }
 }

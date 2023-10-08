@@ -17,7 +17,7 @@ import org.gnome.gtk.Window
 
 private class GtkApplicationWindowComposeNode(gObject: ApplicationWindow) : SingleChildComposeNode<ApplicationWindow>(
     gObject,
-    add = { content = it as Widget },
+    add = { content = it.gObject as Widget },
     remove = { content = null }
 ) {
     var onClose: SignalConnection<Window.CloseRequest>? = null
@@ -52,7 +52,7 @@ fun ApplicationWindow(
                 this.onClose = this.gObject.onCloseRequest { it(); true }
             }
             set(decorated) { this.gObject.decorated = it }
-            set(defaultHeight to defaultWidth) { (h, w) -> this.gObject.setDefaultSize(h, w) }
+            set(defaultHeight to defaultWidth) { (h, w) -> this.gObject.setDefaultSize(w, h) }
             set(deletable) { this.gObject.deletable = it }
             set(handleMenubarAccel) { this.gObject.handleMenubarAccel = it }
             set(modal) { this.gObject.modal = it }
