@@ -1,18 +1,13 @@
 package io.github.mmarco94.compose.gtk.components
 
-import io.github.mmarco94.compose.GtkApplier
-import io.github.mmarco94.compose.GtkComposeNode
-import io.github.mmarco94.compose.SingleChildComposeNode
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberUpdatedState
 import io.github.jwharm.javagi.gobject.SignalConnection
-import io.github.mmarco94.compose.LeafComposeNode
+import io.github.mmarco94.compose.GtkApplier
+import io.github.mmarco94.compose.SingleChildComposeNode
 import org.gnome.adw.Application
 import org.gnome.adw.ApplicationWindow
-import org.gnome.gtk.Widget
-import org.gnome.gtk.Window
+import org.gnome.gtk.*
 
 
 private class GtkApplicationWindowComposeNode(gObject: ApplicationWindow) : SingleChildComposeNode<ApplicationWindow>(
@@ -20,6 +15,18 @@ private class GtkApplicationWindowComposeNode(gObject: ApplicationWindow) : Sing
     add = { content = it.gObject as Widget },
     remove = { content = null }
 ) {
+    var styles: List<CssProvider> = emptyList()
+        set(value) {
+            styles.forEach { StyleContext.removeProviderForDisplay(gObject.display, it) }
+            field = value
+            styles.forEachIndexed { index, it ->
+                StyleContext.addProviderForDisplay(
+                    gObject.display,
+                    it,
+                    Gtk.STYLE_PROVIDER_PRIORITY_FALLBACK + 1 + index,
+                )
+            }
+        }
     var onClose: SignalConnection<Window.CloseRequest>? = null
 }
 
@@ -30,6 +37,7 @@ fun ApplicationWindow(
     application: Application,
     title: String?,
     onClose: () -> Unit,
+    styles: List<CssProvider> = emptyList(),
     decorated: Boolean = true,
     defaultHeight: Int = 0,
     defaultWidth: Int = 0,
@@ -51,6 +59,7 @@ fun ApplicationWindow(
                 this.onClose?.disconnect()
                 this.onClose = this.gObject.onCloseRequest { it(); true }
             }
+            set(styles) { this.styles = it }
             set(decorated) { this.gObject.decorated = it }
             set(defaultHeight to defaultWidth) { (h, w) -> this.gObject.setDefaultSize(w, h) }
             set(deletable) { this.gObject.deletable = it }
