@@ -40,7 +40,7 @@ publishing {
     publications {
         create<MavenPublication>("maven") {
             groupId = "io.github.mmarco94"
-            artifactId = "compose-4-gtk-adw"
+            artifactId = "compose-4-gtk"
             version = "0.1"
             from(components["kotlin"])
         }

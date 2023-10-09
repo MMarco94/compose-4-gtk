@@ -10,4 +10,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = "compose-4-gtk-adw"
+rootProject.name = "compose-4-gtk"
