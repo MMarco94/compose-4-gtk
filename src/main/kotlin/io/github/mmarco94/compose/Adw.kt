@@ -11,26 +11,24 @@ import org.gnome.gobject.GObject
 import org.gnome.gtk.Window
 import kotlin.system.exitProcess
 
-private class GtkApplicationComposeNode(gObject: Application) : GtkComposeNode<Application>(gObject) {
-    private val children = mutableListOf<Window>()
+private class GtkApplicationComposeNode(gObject: Application) : GtkContainerComposeNode<Application, Window>(gObject) {
     override fun add(index: Int, child: GtkComposeNode<GObject>) {
         val childWindows = child.gObject
         if (childWindows !is Window) {
             throw UnsupportedOperationException()
         }
-        println("Adding window")
-        children.add(index, childWindows)
         childWindows.present()
+        super.add(index, child)
     }
 
     override fun remove(index: Int) {
-        println("Removing window")
-        children.removeAt(index).dispose()
+        children[index].dispose()
+        super.remove(index)
     }
 
     override fun clear() {
         children.forEach { it.dispose() }
-        children.clear()
+        super.clear()
     }
 }
 

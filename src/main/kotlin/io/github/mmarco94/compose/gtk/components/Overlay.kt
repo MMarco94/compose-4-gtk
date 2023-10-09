@@ -12,28 +12,6 @@ import org.gnome.gobject.GObject
 import org.gnome.gtk.Overlay
 import org.gnome.gtk.Widget
 
-private class OverlaysComposeNode(gObject: Overlay) : GtkComposeNode<Overlay>(gObject) {
-    val children = mutableListOf<Widget>()
-
-    override fun add(index: Int, child: GtkComposeNode<GObject>) {
-        val overlay = child.gObject as Widget
-        val toReinsert = children.drop(index)
-        toReinsert.forEach { gObject.removeOverlay(it) }
-        this.children.add(index, overlay)
-        gObject.addOverlay(overlay)
-        toReinsert.forEach { gObject.addOverlay(it) }
-    }
-
-    override fun remove(index: Int) {
-        gObject.removeOverlay(children.removeAt(index))
-    }
-
-    override fun clear() {
-        children.forEach { gObject.removeOverlay(it) }
-        children.clear()
-    }
-}
-
 
 @Composable
 fun Overlay(
@@ -85,7 +63,11 @@ private fun OverlayChildren(
     ComposeNode<GtkComposeNode<Nothing?>, GtkApplier>(
         factory = {
             VirtualComposeNode<Overlay> { overlay ->
-                OverlaysComposeNode(overlay)
+                GtkContainerComposeNode.appendOnly<Overlay, Widget>(
+                    overlay,
+                    add = { addOverlay(it) },
+                    remove = { removeOverlay(it) },
+                )
             }
         },
         update = { },

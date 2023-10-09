@@ -3,23 +3,36 @@ import io.github.mmarco94.compose.gtk.components.*
 import io.github.mmarco94.compose.modifier.*
 import org.gnome.gtk.Align
 import org.gnome.gtk.PackType
+import org.gnome.gtk.Separator
 
 fun main(args: Array<String>) {
     application("my.example.HelloApp", args) {
         ApplicationWindow(application, "Test", onClose = ::exitApplication, defaultWidth = 800) {
-            Overlay(
-                mainChild = {
-                    VerticalBox {
-                        repeat(10) {
-                            Label("Text #$it")
-                        }
+            VerticalBox {
+                HeaderBar(
+                    startWidgets = { Button("Start") {} },
+                    endWidgets = { Button("End") {} },
+                    title = {
+                        Label("Custom title")
                     }
-                },
-                overlays = {
-                    WindowControls(side = PackType.START, modifier = Modifier.alignment(Align.START, Align.START))
-                    WindowControls(side = PackType.END, modifier = Modifier.alignment(Align.END, Align.START))
-                }
-            )
+                )
+
+                Separator()
+
+                Overlay(
+                    mainChild = {
+                        VerticalBox {
+                            repeat(10) {
+                                Label("Text #$it")
+                            }
+                        }
+                    },
+                    overlays = {
+                        WindowControls(side = PackType.START, modifier = Modifier.alignment(Align.START, Align.START))
+                        WindowControls(side = PackType.END, modifier = Modifier.alignment(Align.END, Align.START))
+                    }
+                )
+            }
         }
     }
 }
