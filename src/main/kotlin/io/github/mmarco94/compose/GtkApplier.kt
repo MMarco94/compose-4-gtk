@@ -54,6 +54,56 @@ internal open class SingleChildComposeNode<G : Widget>(
     }
 }
 
+internal class VirtualComposeNode<G : GObject>(
+    val nodeCreator: (G) -> GtkComposeNode<G>,
+) : GtkComposeNode<Nothing?>(null) {
+    private var parentCreator: GtkComposeNode<G>? = null
+    private val children = mutableListOf<GtkComposeNode<GObject>>()
+    override fun add(index: Int, child: GtkComposeNode<GObject>) {
+        children.add(index, child)
+        parentCreator?.add(index, child)
+    }
+
+    override fun remove(index: Int) {
+        children.removeAt(index)
+        parentCreator?.remove(index)
+    }
+
+    override fun clear() {
+        children.clear()
+        parentCreator?.clear()
+    }
+
+    fun setParent(parent: G?) {
+        parentCreator?.clear()
+        parentCreator = if (parent != null) {
+            nodeCreator(parent).also {
+                children.forEachIndexed { index, child -> it.add(index, child) }
+            }
+        } else {
+            null
+        }
+    }
+}
+
+internal class VirtualComposeNodeContainer<G : GObject>(gObject: G) : GtkComposeNode<G>(gObject) {
+    private val children = mutableListOf<VirtualComposeNode<G>>()
+    override fun add(index: Int, child: GtkComposeNode<GObject>) {
+        child as VirtualComposeNode<G>
+        children.add(index, child)
+        child.setParent(gObject)
+    }
+
+    override fun remove(index: Int) {
+        children.removeAt(index).setParent(null)
+    }
+
+    override fun clear() {
+        children.forEach { it.setParent(null) }
+        children.clear()
+    }
+}
+
 internal class GtkApplier(root: GtkComposeNode<GObject>) : AbstractApplier<GtkComposeNode<GObject>>(root) {
     override fun insertBottomUp(index: Int, instance: GtkComposeNode<GObject>) = Unit
     override fun insertTopDown(index: Int, instance: GtkComposeNode<GObject>) {
