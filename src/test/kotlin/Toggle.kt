@@ -4,7 +4,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import io.github.mmarco94.compose.application
 import io.github.mmarco94.compose.gtk.components.*
-import org.gnome.gtk.Button
+import io.github.mmarco94.compose.modifier.Modifier
+import io.github.mmarco94.compose.modifier.sizeRequest
 import org.gnome.gtk.Orientation
 
 fun main(args: Array<String>) {
@@ -14,11 +15,11 @@ fun main(args: Array<String>) {
                 HeaderBar()
 
                 var show by remember { mutableStateOf(false) }
-                Button(if (show) "Hide" else "Show") {
+                ToggleButton("Show  text", show) {
                     show = !show
                 }
                 if (show) {
-                    Label("A random label that can be hidden")
+                    Label("A random label that can be hidden", modifier = Modifier.sizeRequest(300, 150))
                 }
             }
         }
