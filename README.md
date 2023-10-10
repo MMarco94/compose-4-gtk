@@ -92,7 +92,7 @@ In this  example, at any point the `Entry` could ever contain a text that  is no
 
 ## Example
 
-![Demo](https://raw.githubusercontent.com/MMarco94/compose-4-gtk-adw/main/screenshots/demo.gif)
+![Demo](https://raw.githubusercontent.com/MMarco94/compose-4-gtk/main/screenshots/demo.gif)
 
 
 ```kotlin

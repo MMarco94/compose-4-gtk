@@ -7,8 +7,6 @@ import io.github.mmarco94.compose.gtk.components.*
 import io.github.mmarco94.compose.modifier.Modifier
 import io.github.mmarco94.compose.modifier.margin
 import org.gnome.adw.Toast
-import org.gnome.pango.AttrList
-import org.gnome.pango.Pango
 
 fun main(args: Array<String>) {
     application("my.example.HelloApp", args) {
@@ -26,13 +24,11 @@ fun main(args: Array<String>) {
                                 placeholderText = "Inset text here",
                                 modifier = Modifier.margin(8),
                             )
-                            ScrolledWindow {
-                                HorizontalBox {
-                                    val tokens = text.split(' ').filter { it.isNotBlank() }
-                                    tokens.forEach { token ->
-                                        Button(token, modifier = Modifier.margin(8)) {
-                                            addToast(Toast.builder().title("Clicked on $token").build())
-                                        }
+                            FlowBox(homogeneous = true) {
+                                val tokens = text.split(' ').filter { it.isNotBlank() }
+                                tokens.forEach { token ->
+                                    Button(token, modifier = Modifier.margin(8)) {
+                                        addToast(Toast.builder().title("Clicked on $token").build())
                                     }
                                 }
                             }

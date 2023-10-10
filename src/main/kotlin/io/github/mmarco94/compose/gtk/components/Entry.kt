@@ -29,6 +29,7 @@ private val emptyAttributes = AttrList()
 
 /**
  * TODO:
+ *  - handle delete + insert in quick succession (e.g. select and type)
  *  - setExtraMenu
  *  - Icons
  *  - overwriteMode
