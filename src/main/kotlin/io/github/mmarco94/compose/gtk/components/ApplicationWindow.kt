@@ -12,8 +12,7 @@ import org.gnome.gtk.*
 
 private class GtkApplicationWindowComposeNode(gObject: ApplicationWindow) : SingleChildComposeNode<ApplicationWindow>(
     gObject,
-    add = { content = it.gObject as Widget },
-    remove = { content = null }
+    set = { content = it },
 ) {
     var styles: List<CssProvider> = emptyList()
         set(value) {

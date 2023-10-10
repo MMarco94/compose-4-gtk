@@ -1,5 +1,7 @@
 package io.github.mmarco94.compose.modifier
 
+fun Modifier.expand(expand: Boolean = true) = expandVertically(expand).expandHorizontally(expand)
+
 fun Modifier.expandVertically(expand: Boolean = true) = combine(
     apply = { it.vexpand = expand },
     undo = { it.vexpand = false }

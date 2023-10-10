@@ -2,6 +2,10 @@ package io.github.mmarco94.compose.modifier
 
 import org.gnome.gtk.Align
 
+fun Modifier.alignment(both: Align = Align.FILL): Modifier {
+    return alignment(both, both)
+}
+
 fun Modifier.alignment(horizontal: Align = Align.FILL, vertical: Align = Align.FILL): Modifier {
     return horizontalAlignment(horizontal).verticalAlignment(vertical)
 }

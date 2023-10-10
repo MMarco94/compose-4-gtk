@@ -36,8 +36,7 @@ fun ToastOverlay(
             val toastOverlay = ToastOverlay.builder().build()
             SingleChildComposeNode(
                 toastOverlay,
-                add = { toastOverlay.child = it.gObject as Widget },
-                remove = { toastOverlay.child = null }
+                set = { toastOverlay.child = it },
             )
         },
         update = {

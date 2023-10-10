@@ -8,7 +8,6 @@ import io.github.mmarco94.compose.GtkComposeNode
 import io.github.mmarco94.compose.SingleChildComposeNode
 import io.github.mmarco94.compose.VirtualComposeNode
 import io.github.mmarco94.compose.modifier.Modifier
-import org.gnome.gobject.GObject
 import org.gnome.gtk.Overlay
 import org.gnome.gtk.Widget
 
@@ -46,8 +45,7 @@ private fun MainChild(
             VirtualComposeNode<Overlay> { overlay ->
                 SingleChildComposeNode(
                     overlay,
-                    add = { child = it.gObject as Widget },
-                    remove = { child = null },
+                    set = { child = it },
                 )
             }
         },

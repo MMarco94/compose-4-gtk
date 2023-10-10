@@ -31,8 +31,7 @@ fun ScrolledWindow(
         factory = {
             SingleChildComposeNode(
                 ScrolledWindow.builder().build(),
-                add = { child = it.gObject as Widget },
-                remove = { child = null }
+                set = { child = it },
             )
         },
         update = {

@@ -43,8 +43,7 @@ fun Clamp(
         factory = {
             SingleChildComposeNode(
                 Clamp.builder().build(),
-                add = { child = it.gObject as Widget },
-                remove = { child = null }
+                set = { child = it },
             )
         },
         update = {

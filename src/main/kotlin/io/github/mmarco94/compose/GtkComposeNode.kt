@@ -28,28 +28,27 @@ internal open class LeafComposeNode<G : Widget>(gObject: G) : GtkComposeNode<G>(
 
 internal open class SingleChildComposeNode<G : Widget>(
     gObject: G,
-    val add: G.(GtkComposeNode<GObject>) -> Unit,
-    val remove: G.() -> Unit,
+    val set: G.(Widget?) -> Unit,
 ) : GtkComposeNode<G>(gObject) {
-    private var added = false
+    private val stack = mutableListOf<Widget>()
+
+    private fun recompute() {
+        gObject.set(stack.lastOrNull())
+    }
+
     override fun add(index: Int, child: GtkComposeNode<GObject>) {
-        require(!added) { "Multiple child added to ${gObject::class.java.simpleName}" }
-        require(index == 0)
-        added = true
-        gObject.add(child)
+        stack.add(child.gObject as Widget)
+        recompute()
     }
 
     override fun remove(index: Int) {
-        require(index == 0)
-        require(added)
-        added = false
-        gObject.remove()
+        stack.removeFirst()
+        recompute()
     }
 
     override fun clear() {
-        if (added) {
-            remove(0)
-        }
+        stack.clear()
+        recompute()
     }
 }
 
@@ -137,6 +136,7 @@ internal abstract class GtkContainerComposeNode<G : GObject, C : GObject>(gObjec
                 gObject.remove(children[index])
                 super.remove(index)
             }
+
             override fun clear() {
                 children.forEach { gObject.remove(it) }
                 super.clear()

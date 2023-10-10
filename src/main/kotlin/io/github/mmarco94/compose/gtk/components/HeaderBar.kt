@@ -13,6 +13,8 @@ import org.gnome.gtk.Widget
 fun HeaderBar(
     modifier: Modifier = Modifier,
     centeringPolicy: CenteringPolicy = CenteringPolicy.LOOSE,
+    showEndTitleButtons: Boolean = true,
+    showStartTitleButtons: Boolean = true,
     title: (@Composable () -> Unit)? = null,
     startWidgets: @Composable () -> Unit = {},
     endWidgets: @Composable () -> Unit = {},
@@ -24,6 +26,8 @@ fun HeaderBar(
         update = {
             set(modifier) { applyModifier(it) }
             set(centeringPolicy) { this.gObject.centeringPolicy = it }
+            set(showEndTitleButtons) { this.gObject.showEndTitleButtons = it }
+            set(showStartTitleButtons) { this.gObject.showStartTitleButtons = it }
         },
         content = {
             Pack({ packStart(it) }, startWidgets)
@@ -66,8 +70,7 @@ private fun Title(
             VirtualComposeNode<HeaderBar> { header ->
                 SingleChildComposeNode(
                     header,
-                    add = { titleWidget = it.gObject as Widget },
-                    remove = { titleWidget = null },
+                    set = { titleWidget = it },
                 )
             }
         },
