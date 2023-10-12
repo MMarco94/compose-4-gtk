@@ -4,7 +4,10 @@ import io.github.mmarco94.compose.GtkApplier
 import io.github.mmarco94.compose.LeafComposeNode
 import androidx.compose.runtime.*
 import io.github.jwharm.javagi.gobject.SignalConnection
+import io.github.mmarco94.compose.Gtk
 import io.github.mmarco94.compose.modifier.Modifier
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.gnome.gobject.GObject
 import org.gnome.gobject.GObjects
 import org.gnome.gtk.Editable
@@ -27,9 +30,27 @@ private data class TentativeCursorPosition(
 
 private val emptyAttributes = AttrList()
 
+private data class PendingDelete(val startPos: Int, val endPos: Int) {
+
+    fun countDeletedCharacters(end: Int): Int {
+        return if (end > startPos) {
+            (end - startPos).coerceAtMost(endPos - startPos)
+        } else {
+            0
+        }
+    }
+
+    fun apply(str: String): String {
+        return when {
+            startPos == str.length -> str
+            endPos < 0 -> str.take(startPos)
+            else -> str.removeRange(startPos until endPos)
+        }
+    }
+}
+
 /**
  * TODO:
- *  - handle delete + insert in quick succession (e.g. select and type)
  *  - setExtraMenu
  *  - Icons
  *  - overwriteMode
@@ -57,38 +78,56 @@ fun Entry(
     maxWidthChars: Int = -1,
     widthChars: Int = -1,
 ) {
+    val cs = rememberCoroutineScope { Dispatchers.Gtk }
+    val text by rememberUpdatedState(text)
     val onTextChange by rememberUpdatedState(onTextChange)
     var tentativeCursorPosition by remember { mutableStateOf<TentativeCursorPosition?>(null) }
+    var pendingDelete by remember { mutableStateOf<PendingDelete?>(null) }
+
+    fun process() {
+        val pd = pendingDelete
+        if (pd != null) {
+            val newText = pd.apply(text)
+            tentativeCursorPosition = TentativeCursorPosition(
+                position = pd.startPos,
+                condition = { it.length == newText.length },
+            )
+            pendingDelete = null
+            onTextChange(newText)
+        }
+    }
+
     ComposeNode<GtkEntryComposeNode, GtkApplier>({
         val entry = Entry.builder().build()
         val editable = entry.delegate!!
 
-        val onInsertText = editable.onInsertText { text, _, position ->
-            val prevText = entry.text
-            val newText = buildString(prevText.length + text.length) {
+        val onInsertText = editable.onInsertText { textToInsert, _, position ->
+            val pd = pendingDelete
+            var prevText = text
+            var newPosition = position.get()
+            if (pd != null) {
+                prevText = pd.apply(prevText)
+                newPosition -= pd.countDeletedCharacters(newPosition)
+                pendingDelete = null
+            }
+            val newText = buildString(prevText.length + textToInsert.length) {
                 append(prevText)
-                insert(position.get(), text)
+                insert(newPosition, textToInsert)
             }
             onTextChange(newText)
             tentativeCursorPosition = TentativeCursorPosition(
-                position = position.get() + text.length,
+                position = newPosition + textToInsert.length,
                 condition = { it.length == newText.length },
             )
             GObjects.signalStopEmissionByName(editable as GObject, "insert-text")
         }
 
         val onDeleteText = editable.onDeleteText { startPos, endPos ->
-            val prevText = entry.text
-            val newText = when {
-                startPos == prevText.length -> prevText
-                endPos < 0 -> prevText.removeRange(startPos until text.length)
-                else -> prevText.removeRange(startPos until endPos)
-            }
-            onTextChange(newText)
-            tentativeCursorPosition = TentativeCursorPosition(
-                position = startPos,
-                condition = { it.length == newText.length },
-            )
+            require(pendingDelete == null)
+            pendingDelete = PendingDelete(startPos, endPos)
+            // onInsertText might get called immediately after.
+            // I need to be able to handle those things in quick succession.
+            cs.launch { process() }
             GObjects.signalStopEmissionByName(editable as GObject, "delete-text")
         }
 
@@ -105,8 +144,8 @@ fun Entry(
                 if (pos != null && pos.condition(text)) {
                     this.gObject.position = pos.position
                 }
-                tentativeCursorPosition = null
             }
+            tentativeCursorPosition = null
         }
         set(attributes) { this.gObject.attributes = it }
         set(placeholderText) { this.gObject.placeholderText = it }

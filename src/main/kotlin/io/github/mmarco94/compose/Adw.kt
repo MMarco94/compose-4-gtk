@@ -44,7 +44,7 @@ fun application(
     content: @Composable ApplicationScope.() -> Unit,
 ) {
     val app = Application(appId, ApplicationFlags.DEFAULT_FLAGS)
-    val dispatcher = GtkDispatcher()
+    val dispatcher = GtkDispatcher
     runBlocking(dispatcher) {
         withContext(YieldFrameClock) {
             startSnapshotManager()
