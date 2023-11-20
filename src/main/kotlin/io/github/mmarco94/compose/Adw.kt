@@ -22,12 +22,12 @@ private class GtkApplicationComposeNode(gObject: Application) : GtkContainerComp
     }
 
     override fun remove(index: Int) {
-        children[index].dispose()
+        children[index].destroy()
         super.remove(index)
     }
 
     override fun clear() {
-        children.forEach { it.dispose() }
+        children.forEach { it.destroy() }
         super.clear()
     }
 }
@@ -80,7 +80,6 @@ fun application(
             } finally {
                 composition.dispose()
             }
-            app.dispose()
             exitProcess(status)
         }
     }
