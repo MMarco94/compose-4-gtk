@@ -1,4 +1,4 @@
-package io.github.mmarco94.compose.gtk.components
+package io.github.mmarco94.compose.adw.components
 
 import io.github.mmarco94.compose.GtkApplier
 import io.github.mmarco94.compose.GtkComposeNode

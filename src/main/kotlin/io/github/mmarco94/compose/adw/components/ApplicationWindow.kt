@@ -1,19 +1,18 @@
-package io.github.mmarco94.compose.gtk.components
+package io.github.mmarco94.compose.adw.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
 import io.github.jwharm.javagi.gobject.SignalConnection
 import io.github.mmarco94.compose.GtkApplier
 import io.github.mmarco94.compose.SingleChildComposeNode
-import io.github.mmarco94.compose.modifier.Modifier
-import org.gnome.gtk.Application
-import org.gnome.gtk.ApplicationWindow
+import org.gnome.adw.Application
+import org.gnome.adw.ApplicationWindow
 import org.gnome.gtk.*
 
 
 private class GtkApplicationWindowComposeNode(gObject: ApplicationWindow) : SingleChildComposeNode<ApplicationWindow>(
     gObject,
-    set = { child = it },
+    set = { content = it },
 ) {
     var styles: List<CssProvider> = emptyList()
         set(value) {
@@ -34,8 +33,7 @@ private class GtkApplicationWindowComposeNode(gObject: ApplicationWindow) : Sing
 // TODO: fullscreen, maximized, hide on close, icon, active,
 @Composable
 fun ApplicationWindow(
-    application: Application,
-    modifier: Modifier = Modifier,
+    application: org.gnome.gtk.Application,
     title: String?,
     onClose: () -> Unit,
     styles: List<CssProvider> = emptyList(),
@@ -59,7 +57,6 @@ fun ApplicationWindow(
             GtkApplicationWindowComposeNode(window)
         },
         update = {
-            set(modifier) { applyModifier(it) }
             set(application) { this.gObject.application = it }
             set(title) { this.gObject.title = it }
             set(onClose) {

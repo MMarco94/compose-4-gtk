@@ -5,9 +5,8 @@ import androidx.compose.runtime.snapshots.Snapshot
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.consumeEach
-import org.gnome.adw.Application
-import org.gnome.gio.ApplicationFlags
 import org.gnome.gobject.GObject
+import org.gnome.gtk.Application
 import org.gnome.gtk.Window
 import kotlin.system.exitProcess
 
@@ -38,12 +37,11 @@ interface ApplicationScope {
     fun exitApplication()
 }
 
-fun application(
-    appId: String,
+fun Application.initializeApplication(
     args: Array<String>,
     content: @Composable ApplicationScope.() -> Unit,
 ) {
-    val app = Application(appId, ApplicationFlags.DEFAULT_FLAGS)
+    val app = this
     val dispatcher = GtkDispatcher
     runBlocking(dispatcher) {
         withContext(YieldFrameClock) {
@@ -65,7 +63,7 @@ fun application(
 
             val composition = Composition(GtkApplier(GtkApplicationComposeNode(app)), recomposer)
             app.onActivate {
-                dispatcher.active = true
+                GtkDispatcher.active = true
                 composition.setContent {
                     if (isOpen) {
                         appScope.content()
@@ -73,7 +71,7 @@ fun application(
                 }
             }
             val status = app.run(args)
-            dispatcher.active = false
+            GtkDispatcher.active = false
             try {
                 recomposer.close()
                 recomposer.join()
@@ -99,7 +97,7 @@ private fun CoroutineScope.startSnapshotManager() {
 
 private object YieldFrameClock : MonotonicFrameClock {
     override suspend fun <R> withFrameNanos(
-        onFrame: (frameTimeNanos: Long) -> R
+        onFrame: (frameTimeNanos: Long) -> R,
     ): R {
         yield()
         return onFrame(System.nanoTime())

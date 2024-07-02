@@ -1,4 +1,4 @@
-package io.github.mmarco94.compose.gtk.components
+package io.github.mmarco94.compose.adw.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
