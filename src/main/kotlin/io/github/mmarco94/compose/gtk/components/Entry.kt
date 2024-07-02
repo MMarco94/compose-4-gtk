@@ -19,8 +19,8 @@ import org.gnome.pango.TabArray
 
 private class GtkEntryComposeNode(
     gObject: Entry,
-    val onDeleteSignalHandler: SignalConnection<Editable.DeleteText>,
-    val onInsertSignalHandler: SignalConnection<Editable.InsertText>,
+    val onDeleteSignalHandler: SignalConnection<Editable.DeleteTextCallback>,
+    val onInsertSignalHandler: SignalConnection<Editable.InsertTextCallback>,
 ) : LeafComposeNode<Entry>(gObject)
 
 private data class TentativeCursorPosition(
@@ -154,7 +154,7 @@ fun Entry(
         set(activatesDefault) { this.gObject.activatesDefault = it }
         set(alignment) { this.gObject.alignment = it }
         set(hasFrame) { this.gObject.hasFrame = it }
-        set(inputHints) { this.gObject.inputHints = it }
+        set(inputHints) { this.gObject.setInputHints(it) }
         set(inputPurpose) { this.gObject.inputPurpose = it }
         set(invisibleChar) {
             if (it == null) {

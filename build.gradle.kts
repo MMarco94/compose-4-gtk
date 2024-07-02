@@ -1,6 +1,7 @@
 plugins {
-    kotlin("jvm")
-    id("org.jetbrains.compose")
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.compose)
+    alias(libs.plugins.compose.compiler)
     `maven-publish`
 }
 
@@ -11,20 +12,26 @@ repositories {
 }
 
 kotlin {
-    jvmToolchain(21)
+    jvmToolchain(22)
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_22
+    targetCompatibility = JavaVersion.VERSION_22
 }
 
 dependencies {
-    api(compose.runtime)
-    api("io.github.jwharm.javagi:gtk:0.8.0")
-    api("io.github.jwharm.javagi:adw:0.8.0")
+    implementation(compose.runtime)
+    implementation(libs.javagi.gtk)
+    implementation(libs.javagi.adw)
 }
 
 tasks.withType<JavaExec>().all {
+    this.environment("GDK_BACKEND", "wayland")
     this.jvmArgs = listOf(
         "--enable-preview",
         "--enable-native-access=ALL-UNNAMED",
-        "-Djava.library.path=/usr/lib64:/lib64:/lib:/usr/lib:/lib/x86_64-linux-gnu"
+        "-Djava.library.path=/usr/lib"
     )
 }
 

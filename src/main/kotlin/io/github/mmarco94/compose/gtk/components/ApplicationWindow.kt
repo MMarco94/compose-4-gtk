@@ -26,7 +26,7 @@ private class GtkApplicationWindowComposeNode(gObject: ApplicationWindow) : Sing
                 )
             }
         }
-    var onClose: SignalConnection<Window.CloseRequest>? = null
+    var onClose: SignalConnection<Window.CloseRequestCallback>? = null
 }
 
 

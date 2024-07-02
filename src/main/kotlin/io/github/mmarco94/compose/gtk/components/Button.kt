@@ -14,12 +14,12 @@ import org.gnome.gtk.ToggleButton
 import org.gnome.gobject.GObjects
 
 private class GtkButtonComposeNode(gObject: Button) : SingleChildComposeNode<Button>(gObject, { child = it }) {
-    var onClick: SignalConnection<Button.Clicked>? = null
+    var onClick: SignalConnection<Button.ClickedCallback>? = null
 }
 
 private class GtkToggleButtonComposeNode(
     gObject: ToggleButton,
-    var onToggle: SignalConnection<ToggleButton.Toggled>,
+    var onToggle: SignalConnection<ToggleButton.ToggledCallback>,
 ) : SingleChildComposeNode<ToggleButton>(gObject, { child = it })
 
 @Composable

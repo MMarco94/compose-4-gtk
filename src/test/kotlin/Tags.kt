@@ -28,7 +28,7 @@ fun main(args: Array<String>) {
                                 val tokens = text.split(' ').filter { it.isNotBlank() }
                                 tokens.forEach { token ->
                                     Button(token, modifier = Modifier.margin(8)) {
-                                        addToast(Toast.builder().title("Clicked on $token").build())
+                                        addToast(Toast.builder().setTitle("Clicked on $token").build())
                                     }
                                 }
                             }
