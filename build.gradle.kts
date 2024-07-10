@@ -81,6 +81,10 @@ publishing {
                 releasesRepoUrl
             }
             name = "deltadelete"
+            credentials(PasswordCredentials::class)
+            authentication {
+                create<BasicAuthentication>("basic")
+            }
         }
     }
     publications {
