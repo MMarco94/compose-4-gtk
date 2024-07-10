@@ -36,23 +36,29 @@ private class GtkBoxComposeNode(gObject: Box) : GtkContainerComposeNode<Box, Wid
 @Composable
 fun VerticalBox(
     modifier: Modifier = Modifier,
+    spacing: Int = 0,
+    homogeneous: Boolean = false,
     content: @Composable () -> Unit,
 ) {
-    Box(modifier, Orientation.VERTICAL, content)
+    Box(modifier, Orientation.VERTICAL, spacing, homogeneous, content)
 }
 
 @Composable
 fun HorizontalBox(
     modifier: Modifier = Modifier,
+    spacing: Int = 0,
+    homogeneous: Boolean = false,
     content: @Composable () -> Unit,
 ) {
-    Box(modifier, Orientation.HORIZONTAL, content)
+    Box(modifier, Orientation.HORIZONTAL, spacing, homogeneous, content)
 }
 
 @Composable
 fun Box(
     modifier: Modifier = Modifier,
     orientation: Orientation = Orientation.HORIZONTAL,
+    spacing: Int = 0,
+    homogeneous: Boolean = false,
     content: @Composable () -> Unit,
 ) {
     ComposeNode<GtkComposeNode<Box>, GtkApplier>(
@@ -61,7 +67,9 @@ fun Box(
         },
         update = {
             set(modifier) { applyModifier(it) }
+            set(homogeneous) { this.gObject.homogeneous = it }
             set(orientation) { this.gObject.orientation = it }
+            set(spacing) { this.gObject.spacing = it }
         },
         content = content,
     )
