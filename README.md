@@ -2,7 +2,7 @@
 
 This library provides a Kotlin Compose interface to interact with native Gtk4 and Adw (Libadwaita) components.
 
-Tl;dr: with this library you can declaratively and dynamically create UIs with the GTK and Adw frameworks.
+TL;DR: with this library, you can declaratively and dynamically create UIs with the GTK and Adw frameworks.
 
 **At this stage, this is only a proof of concept**
 
@@ -20,7 +20,7 @@ fun main(args: Array<String>) {
 ```
 ----
 
-A window with an header, and three buttons inside: 
+A window with a header, and three buttons inside: 
 ```kotlin
 fun main(args: Array<String>) {
     application("my.example.HelloApp", args) {
@@ -37,7 +37,7 @@ fun main(args: Array<String>) {
 
 ----
 
-An interactive button, that shows or hide a label:
+An interactive button that shows or hides a label:
 ```kotlin
 fun main(args: Array<String>) {
     application("my.example.HelloApp", args) {
@@ -82,11 +82,12 @@ fun main(args: Array<String>) {
 }
 ```
 
-This example highlights one of the main property of Compose: the state is owned by your app, and not by the GTK Widgets.
+This example highlights one of the main properties of Compose:
+the state is owned by your app, and not by the GTK Widgets.
 This means that the source of truth for what the text should be is the `text` variable. 
 See https://developer.android.com/jetpack/compose/state#state-hoisting for more details.
 
-In this  example, at any point the `Entry` could ever contain a text that  is no uppercase. 
+In this example, at any point the `Entry` could ever contain a text that is no uppercase. 
 
 ----
 
