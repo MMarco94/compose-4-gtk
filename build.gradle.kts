@@ -19,14 +19,14 @@ version = "0.0.0-SNAPSHOT"
 gitVersioning.apply {
     refs {
         branch(".+") {
-            version = "\${ref}\${dirty:-SNAPSHOT}"
+            version = "\${ref}-SNAPSHOT"
         }
         tag("v(?<version>.*)") {
-            version = "\${ref.version}\${dirty}"
+            version = "\${ref.version}\${dirty.snapshot}"
         }
     }
     rev {
-        version = "\${commit.short}\${dirty}"
+        version = "\${commit.short}\${dirty.snapshot}"
     }
 }
 
