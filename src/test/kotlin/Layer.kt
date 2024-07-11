@@ -13,6 +13,9 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -30,6 +33,8 @@ import java.net.UnixDomainSocketAddress
 import java.nio.channels.Channels
 import java.nio.channels.SocketChannel
 import java.nio.file.Path
+import java.util.Calendar
+import kotlin.concurrent.timer
 import io.github.mmarco94.compose.gtk.application as gtkApplication
 import io.github.mmarco94.compose.gtk.components.ApplicationWindow as GtkApplicationWindow
 
@@ -68,12 +73,44 @@ fun main(args: Array<String>) {
                     TitleBar()
                 },
                 end = {
-                    PowerMenu()
+                    HorizontalBox(spacing = 8) {
+                        Time()
+                        PowerMenu()
+                    }
                 },
             ) {
                 Workspaces()
             }
         }
+    }
+}
+
+@Composable
+private fun Time() {
+    Box {
+        val getTime: () -> String = getTime@{
+            val currentTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+            val format = currentTime.let {
+                val minute = if (it.minute < 10) "0${it.minute}" else it.minute
+                val second = if (it.second < 10) "0${it.second}" else it.second
+                val day = if (it.dayOfMonth < 10) "0${it.dayOfMonth}" else it.dayOfMonth
+                val month = if (it.monthNumber < 10) "0${it.monthNumber}" else it.monthNumber
+                "${it.hour}:${minute}:${second} $day.${month}.${it.year}"
+            }
+            return@getTime format
+        }
+        var time by remember { mutableStateOf(getTime()) }
+        DisposableEffect(true) {
+            val timer = timer(startAt = Calendar.getInstance().time, daemon = true, period = 500) {
+                time = getTime()
+            }
+            return@DisposableEffect object : DisposableEffectResult {
+                override fun dispose() {
+                    timer.cancel()
+                }
+            }
+        }
+        Label(time)
     }
 }
 

@@ -40,10 +40,11 @@ java {
 }
 
 dependencies {
-    implementation(compose.runtime)
-    implementation(libs.javagi.gtk)
-    implementation(libs.javagi.adw)
-    testImplementation(libs.kotlinx.serialization.json)
+    api(compose.runtime)
+    api(libs.javagi.gtk)
+    api(libs.javagi.adw)
+    implementation(libs.kotlinx.datetime)
+    implementation(libs.kotlinx.serialization.json)
 }
 
 tasks.register<Jar>("dokkaHtmlJar") {

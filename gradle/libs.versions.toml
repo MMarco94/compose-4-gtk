@@ -3,6 +3,7 @@ kotlin = "2.0.0"
 compose = "1.6.11"
 javagi = "0.10.1"
 kotlinx-serialization = "1.6.3"
+kotlinx-datetime = "0.6.0"
 dokka = "1.9.20"
 versioning = "6.4.2"
 
@@ -10,6 +11,7 @@ versioning = "6.4.2"
 javagi-gtk = { group = "io.github.jwharm.javagi", name = "gtk", version.ref = "javagi" }
 javagi-adw = { group = "io.github.jwharm.javagi", name = "adw", version.ref = "javagi" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinx-datetime"}
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
