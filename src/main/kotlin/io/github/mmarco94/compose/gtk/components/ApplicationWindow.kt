@@ -1,15 +1,11 @@
 package io.github.mmarco94.compose.gtk.components
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ComposeNode
-import io.github.jwharm.javagi.gobject.SignalConnection
-import io.github.mmarco94.compose.GtkApplier
-import io.github.mmarco94.compose.SingleChildComposeNode
 import io.github.mmarco94.compose.modifier.Modifier
 import io.github.mmarco94.compose.shared.components.initializeApplicationWindow
 import org.gnome.gtk.Application
 import org.gnome.gtk.ApplicationWindow
-import org.gnome.gtk.*
+import org.gnome.gtk.CssProvider
 
 @Composable
 fun ApplicationWindow(

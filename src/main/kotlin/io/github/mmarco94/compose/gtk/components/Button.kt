@@ -1,17 +1,15 @@
 package io.github.mmarco94.compose.gtk.components
 
-import io.github.mmarco94.compose.GtkApplier
-import io.github.mmarco94.compose.LeafComposeNode
-import io.github.mmarco94.compose.modifier.Modifier
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
 import androidx.compose.runtime.Updater
 import io.github.jwharm.javagi.gobject.SignalConnection
+import io.github.mmarco94.compose.GtkApplier
 import io.github.mmarco94.compose.GtkComposeNode
 import io.github.mmarco94.compose.SingleChildComposeNode
+import io.github.mmarco94.compose.modifier.Modifier
 import org.gnome.gtk.Button
 import org.gnome.gtk.ToggleButton
-import org.gnome.gobject.GObjects
 
 private class GtkButtonComposeNode(gObject: Button) : SingleChildComposeNode<Button>(gObject, { child = it }) {
     var onClick: SignalConnection<Button.ClickedCallback>? = null

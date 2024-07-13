@@ -4,9 +4,9 @@ import androidx.compose.runtime.Composable
 import io.github.mmarco94.compose.modifier.Modifier
 import io.github.mmarco94.compose.shared.components.WindowInitializer
 import io.github.mmarco94.compose.shared.components.initializeApplicationWindow
-import org.gnome.gtk.Application
 import org.gnome.adw.ApplicationWindow
-import org.gnome.gtk.*
+import org.gnome.gtk.Application
+import org.gnome.gtk.CssProvider
 
 @Composable
 fun ApplicationWindow(

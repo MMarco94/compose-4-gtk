@@ -1,7 +1,8 @@
 package io.github.mmarco94.compose.adw
 
-import androidx.compose.runtime.*
-import io.github.mmarco94.compose.*
+import androidx.compose.runtime.Composable
+import io.github.mmarco94.compose.ApplicationScope
+import io.github.mmarco94.compose.initializeApplication
 import org.gnome.gio.ApplicationFlags
 
 fun application(

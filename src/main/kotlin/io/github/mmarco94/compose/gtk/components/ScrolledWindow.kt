@@ -4,12 +4,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
 import io.github.mmarco94.compose.GtkApplier
 import io.github.mmarco94.compose.GtkComposeNode
-import io.github.mmarco94.compose.modifier.Modifier
 import io.github.mmarco94.compose.SingleChildComposeNode
+import io.github.mmarco94.compose.modifier.Modifier
 import org.gnome.gtk.CornerType
 import org.gnome.gtk.PolicyType
 import org.gnome.gtk.ScrolledWindow
-import org.gnome.gtk.Widget
 
 @Composable
 fun ScrolledWindow(

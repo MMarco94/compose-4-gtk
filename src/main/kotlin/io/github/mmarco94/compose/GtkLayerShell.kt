@@ -3,6 +3,13 @@ package io.github.mmarco94.compose
 import io.github.jwharm.javagi.base.GLibLogger
 import io.github.jwharm.javagi.gobject.InstanceCache
 import io.github.jwharm.javagi.interop.Interop
+import io.github.mmarco94.compose.GtkLayerShell.Edge.*
+import io.github.mmarco94.compose.GtkLayerShell.Edge.BOTTOM
+import io.github.mmarco94.compose.GtkLayerShell.Edge.TOP
+import io.github.mmarco94.compose.GtkLayerShell.KeyboardMode.*
+import io.github.mmarco94.compose.GtkLayerShell.Layer.*
+import io.github.mmarco94.compose.GtkLayerShell.Layer.BOTTOM
+import io.github.mmarco94.compose.GtkLayerShell.Layer.TOP
 import org.gnome.gdk.Monitor
 import org.gnome.gobject.GObject
 import org.gnome.gtk.Window
