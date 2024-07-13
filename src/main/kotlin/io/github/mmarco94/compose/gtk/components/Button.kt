@@ -96,3 +96,25 @@ fun ToggleButton(
         }
     )
 }
+
+@Composable
+fun IconButton(
+    iconName: String,
+    modifier: Modifier = Modifier,
+    child: @Composable () -> Unit = {},
+    onClick: () -> Unit,
+) {
+    BaseButton(
+        creator = { GtkButtonComposeNode(Button.builder().build()) },
+        label = "",
+        modifier = modifier,
+        child = child,
+        updater = {
+            set(onClick) {
+                this.onClick?.disconnect()
+                this.onClick = this.gObject.onClicked(it)
+            }
+            set(iconName) { this.gObject.iconName = iconName }
+        }
+    )
+}
