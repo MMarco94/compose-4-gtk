@@ -6,7 +6,6 @@ import io.github.mmarco94.compose.GtkApplier
 import io.github.mmarco94.compose.GtkComposeNode
 import io.github.mmarco94.compose.SingleChildComposeNode
 import io.github.mmarco94.compose.modifier.Modifier
-import org.gnome.gtk.Box
 import org.gnome.gtk.Revealer
 import org.gnome.gtk.RevealerTransitionType
 

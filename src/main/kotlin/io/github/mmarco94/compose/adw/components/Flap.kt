@@ -14,7 +14,6 @@ import org.gnome.adw.FlapTransitionType
 import org.gnome.adw.FoldThresholdPolicy
 import org.gnome.gtk.Orientation
 import org.gnome.gtk.PackType
-import org.gnome.gtk.Widget
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 

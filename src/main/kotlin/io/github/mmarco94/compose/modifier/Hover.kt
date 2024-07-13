@@ -1,6 +1,6 @@
 package io.github.mmarco94.compose.modifier
 
-import org.gnome.gtk.*
+import org.gnome.gtk.EventControllerMotion
 
 fun Modifier.hover(
     exit: () -> Unit = {},

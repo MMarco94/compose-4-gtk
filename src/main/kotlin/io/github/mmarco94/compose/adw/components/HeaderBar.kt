@@ -2,7 +2,12 @@ package io.github.mmarco94.compose.adw.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
-import io.github.mmarco94.compose.*
+import io.github.mmarco94.compose.GtkApplier
+import io.github.mmarco94.compose.GtkComposeNode
+import io.github.mmarco94.compose.GtkContainerComposeNode
+import io.github.mmarco94.compose.SingleChildComposeNode
+import io.github.mmarco94.compose.VirtualComposeNode
+import io.github.mmarco94.compose.VirtualComposeNodeContainer
 import io.github.mmarco94.compose.modifier.Modifier
 import org.gnome.adw.CenteringPolicy
 import org.gnome.adw.HeaderBar

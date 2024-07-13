@@ -1,4 +1,4 @@
-package kbar;
+package kbar
 
 import androidx.compose.runtime.*
 import com.sun.security.auth.module.UnixSystem
@@ -19,6 +19,7 @@ import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import org.gnome.gdk.Display
 import org.gnome.gio.UnixSocketAddress
 import org.gnome.gtk.Align
 import org.gnome.gtk.Application
@@ -39,9 +40,7 @@ import io.github.mmarco94.compose.gtk.application as gtkApplication
 import io.github.mmarco94.compose.gtk.components.ApplicationWindow as GtkApplicationWindow
 
 val Application.iconTheme: IconTheme by lazy {
-    IconTheme.builder()
-        .setThemeName("Win11-blue-dark")
-        .build()
+    IconTheme.getForDisplay(Display.getDefault())
 }
 
 fun main(args: Array<String>) {
@@ -86,7 +85,7 @@ fun main(args: Array<String>) {
 }
 
 @Composable
-private fun Time() {
+fun Time() {
     Box {
         val getTime: () -> String = getTime@{
             val currentTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
@@ -115,7 +114,7 @@ private fun Time() {
 }
 
 @Composable
-private fun ApplicationScope.TitleBar() {
+fun ApplicationScope.TitleBar() {
     var title by remember { mutableStateOf("Hello World") }
     var icon: IconPaintable? by remember { mutableStateOf(null) }
     LaunchedEffect(true) {
@@ -150,36 +149,32 @@ private fun ApplicationScope.TitleBar() {
 }
 
 @Composable
-private fun ApplicationScope.PowerMenu() {
+fun ApplicationScope.PowerMenu() {
     var reveal by remember { mutableStateOf(false) }
     HorizontalBox(modifier = Modifier.horizontalAlignment(Align.END)
         .hover({ reveal = false }) { _, _ -> reveal = true }) {
-        SymbolicIcon("system-shutdown-symbolic", application.iconTheme, size = 28)
+        SymbolicIcon(
+            "system-shutdown-symbolic",
+            application.iconTheme,
+            modifier = Modifier.tooltipMarkup("<span foreground=\"red\" size=\"x-large\">Power</span><i>menu</i>!")
+        )
         Revealer(
             reveal,
             transitionType = RevealerTransitionType.SLIDE_RIGHT,
             transitionDuration = 200
         ) {
             HorizontalBox(modifier = Modifier.horizontalAlignment(Align.END)) {
-                Button("", child = {
-                    SymbolicIcon("system-shutdown-symbolic", application.iconTheme, size = 28)
-                }) {
-                    exec("systemctl shutdown")
+                IconButton("system-shutdown-symbolic") {
+                    exec("notify-send -i system-shutdown-symbolic 'Shutdown clicked!'")
                 }
-                Button("", child = {
-                    SymbolicIcon("system-reboot-symbolic", application.iconTheme)
-                }) {
-                    exec("systemctl reboot")
+                IconButton("system-reboot-symbolic") {
+                    exec("notify-send -i system-reboot-symbolic 'Reboot clicked!'")
                 }
-                Button("", child = {
-                    SymbolicIcon("system-hibernate-symbolic", application.iconTheme)
-                }) {
-                    exec("hyprctl dispatch dpms off")
+                IconButton("system-hibernate-symbolic") {
+                    exec("notify-send -i system-hibernate-symbolic 'Hibernate clicked!'")
                 }
-                Button("", child = {
-                    SymbolicIcon("system-lock-screen-symbolic", application.iconTheme)
-                }) {
-                    exec("hyprlock --immediate")
+                IconButton("system-lock-screen-symbolic") {
+                    exec("notify-send -i system-lock-screen-symbolic 'Lock clicked!'")
                 }
             }
         }
@@ -208,9 +203,7 @@ fun SymbolicIcon(
 }
 
 @Composable
-fun Workspaces(
-
-) {
+fun Workspaces() {
     HorizontalBox(
         modifier = Modifier.horizontalAlignment(Align.CENTER).click(true) { -> println("Something") },
         spacing = 8,

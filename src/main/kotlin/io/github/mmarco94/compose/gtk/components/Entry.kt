@@ -1,10 +1,17 @@
 package io.github.mmarco94.compose.gtk.components
 
-import io.github.mmarco94.compose.GtkApplier
-import io.github.mmarco94.compose.LeafComposeNode
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ComposeNode
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import io.github.jwharm.javagi.gobject.SignalConnection
 import io.github.mmarco94.compose.Gtk
+import io.github.mmarco94.compose.GtkApplier
+import io.github.mmarco94.compose.LeafComposeNode
 import io.github.mmarco94.compose.modifier.Modifier
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
