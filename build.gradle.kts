@@ -19,14 +19,14 @@ version = "0.0.0-SNAPSHOT"
 gitVersioning.apply {
     refs {
         branch(".+") {
-            version = "\${ref}\${dirty:-SNAPSHOT}"
+            version = "\${ref}-SNAPSHOT"
         }
         tag("v(?<version>.*)") {
-            version = "\${ref.version}\${dirty}"
+            version = "\${ref.version}\${dirty.snapshot}"
         }
     }
     rev {
-        version = "\${commit.short}\${dirty}"
+        version = "\${commit.short}\${dirty.snapshot}"
     }
 }
 
@@ -40,10 +40,11 @@ java {
 }
 
 dependencies {
-    implementation(compose.runtime)
-    implementation(libs.javagi.gtk)
-    implementation(libs.javagi.adw)
-    testImplementation(libs.kotlinx.serialization.json)
+    api(compose.runtime)
+    api(libs.javagi.gtk)
+    api(libs.javagi.adw)
+    implementation(libs.kotlinx.datetime)
+    implementation(libs.kotlinx.serialization.json)
 }
 
 tasks.register<Jar>("dokkaHtmlJar") {
