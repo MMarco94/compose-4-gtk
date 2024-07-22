@@ -1,4 +1,6 @@
 # A Kotlin Compose library for Gtk4 and Adw
+[![Latest release](https://maven.deltadelete.ru/api/badge/latest/releases/io/github/mmarco94/compose-4-gtk?color=40c14a&name=release&prefix=v)](https://maven.deltadelete.ru/#/releases/io/github/mmarco94/compose-4-gtk)
+[![Latest snapshot](https://maven.deltadelete.ru/api/badge/latest/snapshots/io/github/mmarco94/compose-4-gtk?color=f48041&name=snapshot&prefix=v)](https://maven.deltadelete.ru/#/snapshots/io/github/mmarco94/compose-4-gtk)
 
 This library provides a Kotlin Compose interface to interact with native Gtk4 and Adw (Libadwaita) components.
 
