@@ -17,6 +17,13 @@ interface Modifier {
             override fun apply(w: Widget) = apply(w)
             override fun undo(w: Widget) = undo(w)
         }
+
+        fun of(
+            apply: (Widget) -> Unit,
+        ) = object : Modifier {
+            override fun apply(w: Widget) = apply(w)
+            override fun undo(w: Widget) = Unit
+        }
     }
 }
 
