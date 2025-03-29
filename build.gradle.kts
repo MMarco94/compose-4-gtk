@@ -31,12 +31,12 @@ gitVersioning.apply {
 }
 
 kotlin {
-    jvmToolchain(22)
+    jvmToolchain(23)
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_22
-    targetCompatibility = JavaVersion.VERSION_22
+    sourceCompatibility = JavaVersion.VERSION_23
+    targetCompatibility = JavaVersion.VERSION_23
 }
 
 dependencies {
@@ -69,25 +69,6 @@ tasks.withType<JavaCompile>().all {
 }
 
 publishing {
-    repositories {
-        maven {
-            val releasesRepoUrl = uri("https://maven.deltadelete.ru/releases")
-            val snapshotsRepoUrl =  uri("https://maven.deltadelete.ru/snapshots")
-            url = if (
-                version.toString().endsWith("SNAPSHOT")
-                ) {
-                snapshotsRepoUrl
-            }
-            else {
-                releasesRepoUrl
-            }
-            name = "deltadelete"
-            credentials(PasswordCredentials::class)
-            authentication {
-                create<BasicAuthentication>("basic")
-            }
-        }
-    }
     publications {
         create<MavenPublication>("maven") {
             groupId = "io.github.mmarco94"

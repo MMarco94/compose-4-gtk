@@ -15,7 +15,13 @@ import org.gnome.gtk.Window
 
 private class GtkApplicationWindowComposeNode(gObject: ApplicationWindow) : SingleChildComposeNode<ApplicationWindow>(
     gObject,
-    set = { child = it },
+    set = {
+        if (this is org.gnome.adw.ApplicationWindow) {
+            content = it
+        } else {
+            child = it
+        }
+    },
 ) {
     var styles: List<CssProvider> = emptyList()
         set(value) {
