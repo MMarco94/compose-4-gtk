@@ -4,7 +4,7 @@ import io.github.mmarco94.compose.modifier.Modifier
 import org.gnome.gobject.GObject
 import org.gnome.gtk.Widget
 
-internal abstract class GtkComposeNode<out G : GObject?>(
+abstract class GtkComposeNode<out G : GObject?>(
     val gObject: G,
 ) {
     var modifier: Modifier = Modifier

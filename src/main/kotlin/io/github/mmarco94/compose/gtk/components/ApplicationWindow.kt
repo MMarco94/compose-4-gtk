@@ -43,6 +43,7 @@ fun ApplicationWindow(
         modal = modal,
         resizable = resizable,
         init = init,
+        setContent = { this.child = it },
         content = content
     )
 }

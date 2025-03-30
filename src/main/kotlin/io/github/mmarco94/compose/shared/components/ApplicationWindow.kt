@@ -2,27 +2,25 @@ package io.github.mmarco94.compose.shared.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
+import androidx.compose.runtime.DisallowComposableCalls
+import androidx.compose.runtime.Updater
 import io.github.jwharm.javagi.gobject.SignalConnection
 import io.github.mmarco94.compose.GtkApplier
+import io.github.mmarco94.compose.GtkComposeNode
 import io.github.mmarco94.compose.SingleChildComposeNode
 import io.github.mmarco94.compose.modifier.Modifier
 import org.gnome.gtk.ApplicationWindow
 import org.gnome.gtk.CssProvider
 import org.gnome.gtk.Gtk
 import org.gnome.gtk.StyleContext
+import org.gnome.gtk.Widget
 import org.gnome.gtk.Window
 
 
-private class GtkApplicationWindowComposeNode(gObject: ApplicationWindow) : SingleChildComposeNode<ApplicationWindow>(
-    gObject,
-    set = {
-        if (this is org.gnome.adw.ApplicationWindow) {
-            content = it
-        } else {
-            child = it
-        }
-    },
-) {
+private class GtkApplicationWindowComposeNode<AW : ApplicationWindow>(
+    gObject: AW,
+    set: AW.(Widget?) -> Unit,
+) : SingleChildComposeNode<AW>(gObject, set) {
     var styles: List<CssProvider> = emptyList()
         set(value) {
             styles.forEach { StyleContext.removeProviderForDisplay(gObject.display, it) }
@@ -40,7 +38,7 @@ private class GtkApplicationWindowComposeNode(gObject: ApplicationWindow) : Sing
 
 // TODO: fullscreen, maximized, hide on close, icon, active,
 @Composable
-fun <B : ApplicationWindow.Builder<*>> initializeApplicationWindow(
+fun <AW : ApplicationWindow, B : ApplicationWindow.Builder<*>> initializeApplicationWindow(
     builder: () -> B,
     application: org.gnome.gtk.Application,
     modifier: Modifier = Modifier,
@@ -55,16 +53,18 @@ fun <B : ApplicationWindow.Builder<*>> initializeApplicationWindow(
     handleMenubarAccel: Boolean = true,
     modal: Boolean = false,
     resizable: Boolean = true,
-    init: WindowInitializer = {},
+    init: AW.() -> Unit = {},
+    setContent: AW.(Widget?) -> Unit,
+    update: @DisallowComposableCalls Updater<out GtkComposeNode<AW>>.() -> Unit = {},
     content: @Composable () -> Unit,
 ) {
-    ComposeNode<GtkApplicationWindowComposeNode, GtkApplier>(
+    ComposeNode<GtkApplicationWindowComposeNode<AW>, GtkApplier>(
         factory = {
             val window = builder()
                 .setFullscreened(fullscreen)
-                .build()
+                .build() as AW
             window.init()
-            GtkApplicationWindowComposeNode(window)
+            GtkApplicationWindowComposeNode(window, setContent)
         },
         update = {
             set(modifier) { applyModifier(it) }
@@ -87,6 +87,7 @@ fun <B : ApplicationWindow.Builder<*>> initializeApplicationWindow(
             set(handleMenubarAccel) { this.gObject.handleMenubarAccel = it }
             set(modal) { this.gObject.modal = it }
             set(resizable) { this.gObject.resizable = it }
+            this.update()
         },
         content = content,
     )

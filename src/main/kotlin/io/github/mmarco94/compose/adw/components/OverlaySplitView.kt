@@ -1,12 +1,47 @@
 package io.github.mmarco94.compose.adw.components
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ComposeNode
+import androidx.compose.runtime.*
 import io.github.mmarco94.compose.*
 import io.github.mmarco94.compose.modifier.Modifier
 import org.gnome.adw.OverlaySplitView
 import org.gnome.gtk.PackType
 
+interface OverlaySplitViewScope {
+    val showSidebar: Boolean
+    fun showSidebar()
+    fun hideSidebar()
+}
+
+private class OverlaySplitViewImpl : OverlaySplitViewScope {
+    override var showSidebar by mutableStateOf(true)
+    var overlaySplitView: OverlaySplitView? = null
+        set(widget) {
+            require(field == null)
+            if (widget != null) {
+                widget.showSidebar = showSidebar
+                widget.onNotify("show-sidebar") {
+                    showSidebar = widget.showSidebar
+                }
+                field = widget
+            }
+        }
+
+    override fun showSidebar() {
+        showSidebar(true)
+    }
+
+    override fun hideSidebar() {
+        showSidebar(false)
+    }
+
+    private fun showSidebar(show: Boolean) {
+        when (val w = overlaySplitView) {
+            null -> showSidebar = show
+            else -> w.showSidebar = show
+        }
+    }
+
+}
 
 /**
  * TODO:
@@ -17,38 +52,39 @@ fun OverlaySplitView(
     sidebar: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     collapsed: Boolean = false,
-    showSidebar: Boolean = true,
+    pinSidebar: Boolean = false,
     sidebarPosition: PackType = PackType.START,
     sidebarWidthFraction: Double = 0.25,
     enableHideGesture: Boolean = true,
     enableShowGesture: Boolean = true,
-    content: @Composable () -> Unit,
+    content: @Composable OverlaySplitViewScope.() -> Unit,
 ) {
+    val scope = remember { OverlaySplitViewImpl() }
     ComposeNode<GtkComposeNode<OverlaySplitView>, GtkApplier>(
         factory = {
-            VirtualComposeNodeContainer(
-                OverlaySplitView
-                    .builder()
-                    // Set to true, otherwise the sidebar visibility ca drift from `showSidebar`
-                    .setPinSidebar(true)
-                    .build()
-            )
+            val splitView = OverlaySplitView
+                .builder()
+                .build()
+            VirtualComposeNodeContainer(splitView)
         },
         update = {
             set(modifier) { applyModifier(it) }
             set(collapsed) { this.gObject.collapsed = it }
-            set(showSidebar) { this.gObject.showSidebar = it }
+            set(pinSidebar) { this.gObject.pinSidebar = it }
             set(sidebarPosition) { this.gObject.sidebarPosition = it }
             set(sidebarWidthFraction) { this.gObject.sidebarWidthFraction = it }
             set(enableHideGesture) { this.gObject.enableHideGesture = it }
             set(enableShowGesture) { this.gObject.enableShowGesture = it }
+            set(scope) { scope.overlaySplitView = this.gObject }
         },
         content = {
             Sidebar {
                 sidebar()
             }
             Content {
-                content()
+                scope.apply {
+                    content()
+                }
             }
         },
     )

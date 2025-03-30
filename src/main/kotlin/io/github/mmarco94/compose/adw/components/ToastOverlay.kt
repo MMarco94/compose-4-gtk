@@ -2,6 +2,7 @@ package io.github.mmarco94.compose.adw.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
+import androidx.compose.runtime.remember
 import io.github.mmarco94.compose.GtkApplier
 import io.github.mmarco94.compose.GtkComposeNode
 import io.github.mmarco94.compose.SingleChildComposeNode
@@ -29,7 +30,7 @@ fun ToastOverlay(
     modifier: Modifier = Modifier,
     content: @Composable ToastOverlayScope.() -> Unit,
 ) {
-    val overlayScope = ToastOverlayScopeImpl()
+    val overlayScope = remember { ToastOverlayScopeImpl() }
     ComposeNode<GtkComposeNode<ToastOverlay>, GtkApplier>(
         factory = {
             val toastOverlay = ToastOverlay.builder().build()
