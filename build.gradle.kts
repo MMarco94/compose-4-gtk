@@ -14,6 +14,7 @@ repositories {
     google()
 }
 
+group = "io.github.mmarco94"
 version = "0.0.0-SNAPSHOT"
 
 gitVersioning.apply {
@@ -43,36 +44,19 @@ dependencies {
     api(compose.runtime)
     api(libs.javagi.gtk)
     api(libs.javagi.adw)
-    implementation(libs.kotlinx.datetime)
-    implementation(libs.kotlinx.serialization.json)
+    testImplementation(libs.kotlinx.datetime)
+    testImplementation(libs.kotlinx.serialization.json)
 }
 
 tasks.register<Jar>("dokkaHtmlJar") {
     dependsOn(tasks.dokkaHtml)
-    from(tasks.dokkaHtml.flatMap { it.outputDirectory })
+    from(tasks.dokkaGeneratePublicationHtml.flatMap { it.outputDirectory })
     archiveClassifier.set("javadoc")
-}
-
-tasks.withType<JavaExec>().all {
-    this.environment("GDK_BACKEND", "wayland")
-    this.jvmArgs = listOf(
-        "--enable-preview",
-        "--enable-native-access=ALL-UNNAMED",
-        "-Djava.library.path=/usr/lib"
-    )
-}
-
-tasks.withType<JavaCompile>().all {
-    this.options.compilerArgs = listOf(
-        "--enable-preview",
-    )
 }
 
 publishing {
     publications {
         create<MavenPublication>("maven") {
-            groupId = "io.github.mmarco94"
-            artifactId = "compose-4-gtk"
             from(components["kotlin"])
             artifact(tasks.getByName("dokkaHtmlJar"))
             artifact(tasks.getByName("kotlinSourcesJar"))
