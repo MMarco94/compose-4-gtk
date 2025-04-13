@@ -1,13 +1,6 @@
 package io.github.mmarco94.compose
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Composition
-import androidx.compose.runtime.MonotonicFrameClock
-import androidx.compose.runtime.Recomposer
-import androidx.compose.runtime.Stable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.Snapshot
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
@@ -48,6 +41,8 @@ interface ApplicationScope {
     fun exitApplication()
 }
 
+val LocalApplication = staticCompositionLocalOf<Application> { throw RuntimeException("not in a GTK application") }
+
 fun Application.initializeApplication(
     args: Array<String>,
     content: @Composable ApplicationScope.() -> Unit,
@@ -77,7 +72,9 @@ fun Application.initializeApplication(
                 GtkDispatcher.active = true
                 composition.setContent {
                     if (isOpen) {
-                        appScope.content()
+                        CompositionLocalProvider(LocalApplication provides app) {
+                            appScope.content()
+                        }
                     }
                 }
             }

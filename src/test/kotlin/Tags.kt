@@ -14,7 +14,7 @@ import org.gnome.adw.Toast
 
 fun main(args: Array<String>) {
     application("my.example.HelloApp", args) {
-        ApplicationWindow(application, "Test", onClose = ::exitApplication) {
+        ApplicationWindow("Test", onClose = ::exitApplication) {
             ToastOverlay {
                 VerticalBox {
                     HeaderBar()

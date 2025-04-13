@@ -7,7 +7,6 @@ import io.github.mmarco94.compose.shared.components.initializeApplicationWindow
 import org.gnome.adw.ApplicationWindow
 import org.gnome.adw.Breakpoint
 import org.gnome.adw.BreakpointCondition
-import org.gnome.gtk.Application
 import org.gnome.gtk.CssProvider
 
 interface ApplicationWindowScope {
@@ -68,7 +67,6 @@ private class ApplicationWindowScopeImpl : ApplicationWindowScope {
 
 @Composable
 fun ApplicationWindow(
-    application: Application,
     title: String?,
     onClose: () -> Unit,
     modifier: Modifier = Modifier,
@@ -90,7 +88,6 @@ fun ApplicationWindow(
             ApplicationWindow.builder()
         },
         modifier = modifier,
-        application = application,
         title = title,
         styles = styles,
         deletable = deletable,
