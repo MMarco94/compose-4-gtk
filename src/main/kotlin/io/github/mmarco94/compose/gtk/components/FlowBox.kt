@@ -6,28 +6,36 @@ import io.github.mmarco94.compose.GtkApplier
 import io.github.mmarco94.compose.GtkComposeNode
 import io.github.mmarco94.compose.GtkContainerComposeNode
 import io.github.mmarco94.compose.modifier.Modifier
+import io.github.mmarco94.compose.requiresAddToParent
 import org.gnome.gobject.GObject
 import org.gnome.gtk.Adjustment
 import org.gnome.gtk.FlowBox
 import org.gnome.gtk.Orientation
 import org.gnome.gtk.Widget
 
-
 private class GtkFlowBoxComposeNode(gObject: FlowBox) : GtkContainerComposeNode<FlowBox, Widget>(gObject) {
     override fun add(index: Int, child: GtkComposeNode<GObject>) {
         val childWidget = child.gObject as Widget
-        gObject.insert(childWidget, index)
+        if (childWidget.requiresAddToParent) {
+            gObject.insert(childWidget, index)
+        }
         super.add(index, child)
     }
 
     override fun remove(index: Int) {
-        gObject.remove(children[index])
+        val childWidget = children[index]
+        if (childWidget.requiresAddToParent) {
+            gObject.remove(childWidget)
+        }
         super.remove(index)
     }
 
     override fun clear() {
         // TODO: use removeAll on GTK 4.12+
-        children.forEach { gObject.remove(it) }
+        children
+            .asSequence()
+            .filter { it.requiresAddToParent }
+            .forEach { gObject.remove(it) }
         super.clear()
     }
 }
