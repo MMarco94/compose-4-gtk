@@ -7,6 +7,7 @@ import androidx.compose.runtime.Updater
 import io.github.jwharm.javagi.gobject.SignalConnection
 import io.github.mmarco94.compose.GtkApplier
 import io.github.mmarco94.compose.GtkComposeNode
+import io.github.mmarco94.compose.LocalApplication
 import io.github.mmarco94.compose.SingleChildComposeNode
 import io.github.mmarco94.compose.modifier.Modifier
 import org.gnome.gtk.ApplicationWindow
@@ -40,7 +41,6 @@ private class GtkApplicationWindowComposeNode<AW : ApplicationWindow>(
 @Composable
 fun <AW : ApplicationWindow, B : ApplicationWindow.Builder<*>> initializeApplicationWindow(
     builder: () -> B,
-    application: org.gnome.gtk.Application,
     modifier: Modifier = Modifier,
     title: String?,
     onClose: () -> Unit,
@@ -58,17 +58,18 @@ fun <AW : ApplicationWindow, B : ApplicationWindow.Builder<*>> initializeApplica
     update: @DisallowComposableCalls Updater<out GtkComposeNode<AW>>.() -> Unit = {},
     content: @Composable () -> Unit,
 ) {
+    val application = LocalApplication.current
     ComposeNode<GtkApplicationWindowComposeNode<AW>, GtkApplier>(
         factory = {
             val window = builder()
                 .setFullscreened(fullscreen)
                 .build() as AW
             window.init()
+            window.application = application
             GtkApplicationWindowComposeNode(window, setContent)
         },
         update = {
             set(modifier) { applyModifier(it) }
-            set(application) { this.gObject.application = it }
             set(title) { this.gObject.title = it }
             set(onClose) {
                 this.onClose?.disconnect()

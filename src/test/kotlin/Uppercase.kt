@@ -10,7 +10,7 @@ import org.gnome.gtk.Orientation
 
 fun main(args: Array<String>) {
     application("my.example.HelloApp", args) {
-        ApplicationWindow(application, "Test", onClose = ::exitApplication) {
+        ApplicationWindow("Test", onClose = ::exitApplication) {
             Box(orientation = Orientation.VERTICAL) {
                 HeaderBar()
 

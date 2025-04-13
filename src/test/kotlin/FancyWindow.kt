@@ -10,7 +10,7 @@ import org.gnome.gtk.PackType
 
 fun main(args: Array<String>) {
     application("my.example.HelloApp", args) {
-        ApplicationWindow(application, "Test", onClose = ::exitApplication, defaultWidth = 800) {
+        ApplicationWindow("Test", onClose = ::exitApplication, defaultWidth = 800) {
             VerticalBox {
                 Overlay(
                     mainChild = {

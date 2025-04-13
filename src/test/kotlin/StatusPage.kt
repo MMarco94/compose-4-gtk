@@ -13,7 +13,6 @@ import org.gnome.adw.SpinnerPaintable
 fun main(args: Array<String>) {
     application("my.example.HelloApp", args) {
         ApplicationWindow(
-            application,
             "StatusPage",
             onClose = ::exitApplication,
             defaultWidth = 800,

@@ -3,13 +3,11 @@ package io.github.mmarco94.compose.gtk.components
 import androidx.compose.runtime.Composable
 import io.github.mmarco94.compose.modifier.Modifier
 import io.github.mmarco94.compose.shared.components.initializeApplicationWindow
-import org.gnome.gtk.Application
 import org.gnome.gtk.ApplicationWindow
 import org.gnome.gtk.CssProvider
 
 @Composable
 fun ApplicationWindow(
-    application: Application,
     modifier: Modifier = Modifier,
     title: String?,
     onClose: () -> Unit,
@@ -30,7 +28,6 @@ fun ApplicationWindow(
             ApplicationWindow.builder()
         },
         modifier = modifier,
-        application = application,
         title = title,
         styles = styles,
         deletable = deletable,
