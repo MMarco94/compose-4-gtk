@@ -1,6 +1,7 @@
 package io.github.mmarco94.compose
 
 import io.github.mmarco94.compose.modifier.Modifier
+import org.gnome.adw.Dialog
 import org.gnome.gobject.GObject
 import org.gnome.gtk.Widget
 
@@ -33,7 +34,10 @@ internal open class SingleChildComposeNode<G : Widget>(
     private val stack = mutableListOf<Widget>()
 
     private fun recompute() {
-        gObject.set(stack.lastOrNull())
+        val widget = stack.lastOrNull()
+        if (widget.requiresAddToParent) {
+            gObject.set(widget)
+        }
     }
 
     override fun add(index: Int, child: GtkComposeNode<GObject>) {
@@ -145,3 +149,5 @@ internal abstract class GtkContainerComposeNode<G : GObject, C : GObject>(gObjec
     }
 }
 
+val Widget?.requiresAddToParent
+    get() = this !is Dialog

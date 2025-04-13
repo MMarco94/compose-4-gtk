@@ -2,8 +2,8 @@ package io.github.mmarco94.compose.gtk.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
+import io.github.mmarco94.compose.*
 import io.github.mmarco94.compose.GtkApplier
-import io.github.mmarco94.compose.GtkComposeNode
 import io.github.mmarco94.compose.GtkContainerComposeNode
 import io.github.mmarco94.compose.SingleChildComposeNode
 import io.github.mmarco94.compose.VirtualComposeNode
@@ -18,18 +18,26 @@ import org.gnome.gtk.Widget
 private class GtkListBoxComposeNode(gObject: ListBox) : GtkContainerComposeNode<ListBox, Widget>(gObject) {
     override fun add(index: Int, child: GtkComposeNode<GObject>) {
         val childWidget = child.gObject as Widget
-        gObject.insert(childWidget, index)
+        if (childWidget.requiresAddToParent) {
+            gObject.insert(childWidget, index)
+        }
         super.add(index, child)
     }
 
     override fun remove(index: Int) {
-        gObject.remove(children[index])
+        val childWidget = children[index]
+        if (childWidget.requiresAddToParent) {
+            gObject.remove(childWidget)
+        }
         super.remove(index)
     }
 
     override fun clear() {
         // TODO adw 4.12 has removeAll
-        children.forEach { gObject.remove(it) }
+        children
+            .asSequence()
+            .filter { it.requiresAddToParent }
+            .forEach { gObject.remove(it) }
         super.clear()
     }
 }

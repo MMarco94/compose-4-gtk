@@ -6,6 +6,7 @@ import io.github.mmarco94.compose.GtkApplier
 import io.github.mmarco94.compose.GtkComposeNode
 import io.github.mmarco94.compose.GtkContainerComposeNode
 import io.github.mmarco94.compose.modifier.Modifier
+import io.github.mmarco94.compose.requiresAddToParent
 import org.gnome.gobject.GObject
 import org.gnome.gtk.Box
 import org.gnome.gtk.Orientation
@@ -14,21 +15,29 @@ import org.gnome.gtk.Widget
 private class GtkBoxComposeNode(gObject: Box) : GtkContainerComposeNode<Box, Widget>(gObject) {
     override fun add(index: Int, child: GtkComposeNode<GObject>) {
         val childWidget = child.gObject as Widget
-        when (index) {
-            children.size -> gObject.append(childWidget)
-            0 -> gObject.insertChildAfter(childWidget, null)
-            else -> gObject.insertChildAfter(childWidget, children[index - 1])
+        if (childWidget.requiresAddToParent) {
+            when (index) {
+                children.size -> gObject.append(childWidget)
+                0 -> gObject.insertChildAfter(childWidget, null)
+                else -> gObject.insertChildAfter(childWidget, children[index - 1])
+            }
         }
         super.add(index, child)
     }
 
     override fun remove(index: Int) {
-        gObject.remove(children[index])
+        val childWidget = children[index]
+        if (childWidget.requiresAddToParent) {
+            gObject.remove(childWidget)
+        }
         super.remove(index)
     }
 
     override fun clear() {
-        children.forEach { gObject.remove(it) }
+        children
+            .asSequence()
+            .filter { it.requiresAddToParent }
+            .forEach { gObject.remove(it) }
         super.clear()
     }
 }
