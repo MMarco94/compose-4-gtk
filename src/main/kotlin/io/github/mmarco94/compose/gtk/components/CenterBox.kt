@@ -21,7 +21,7 @@ fun CenterBox(
     start: @Composable () -> Unit = {},
     end: @Composable () -> Unit = {},
     baselinePosition: BaselinePosition = BaselinePosition.CENTER,
-    //shrinkCenterLast: Boolean = true, TODO: gtk 4.12
+    shrinkCenterLast: Boolean = true,
     center: @Composable () -> Unit,
 ) {
     ComposeNode<GtkComposeWidget<CenterBox>, GtkApplier>(
@@ -32,7 +32,7 @@ fun CenterBox(
             set(modifier) { applyModifier(it) }
             set(orientation) { this.widget.orientation = it }
             set(baselinePosition) { this.widget.baselinePosition = it }
-            //set(shrinkCenterLast) { this.gObject.shrinkCenterLast = it }
+            set(shrinkCenterLast) { this.widget.shrinkCenterLast = it }
         },
         content = {
             Child({ startWidget = it }, content = start)
