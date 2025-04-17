@@ -24,7 +24,7 @@ fun main(args: Array<String>) {
                 HeaderBar()
                 Banner(
                     title = bannerTitle,
-                    "Hide me!",
+                    buttonLabel = "Hide me!",
                     revealed = isRevealed.value,
                     useMarkup = true,
                     onButtonClicked = {
