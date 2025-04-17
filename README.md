@@ -1,5 +1,7 @@
 # A Kotlin Compose library for Gtk4 and Adw
 
+![Welcome](https://raw.githubusercontent.com/MMarco94/compose-4-gtk/main/screenshots/welcome.png)
+
 This library provides a Kotlin Compose interface to interact with native Gtk4 and Adw (Libadwaita) components.
 
 TL;DR: with this library, you can declaratively and dynamically create UIs with the GTK and Adw frameworks.
