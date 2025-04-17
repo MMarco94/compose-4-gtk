@@ -18,7 +18,7 @@ fun Banner(
     title: String? = null,
     buttonLabel: String? = null,
     revealed: Boolean = true,
-    useMarkup: Boolean = false,
+    useMarkup: Boolean = true,
     onButtonClicked: (() -> Unit)? = null,
 ) {
     ComposeNode<AdwBannerComposeNode, GtkApplier>({
@@ -34,6 +34,8 @@ fun Banner(
                 this.onButtonClicked = this.gObject.onButtonClicked {
                     onButtonClicked()
                 }
+            } else {
+                this.onButtonClicked = null
             }
         }
     }
