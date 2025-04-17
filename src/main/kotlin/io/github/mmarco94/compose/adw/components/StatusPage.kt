@@ -32,8 +32,9 @@ fun StatusPage(
             set(description) { this.widget.description = it }
             set(iconName) { this.widget.iconName = it }
             set(paintable) {
-                (it?.paintable as? SpinnerPaintable)
-                    ?.let { spinnerPaintable -> spinnerPaintable.widget = this.widget }
+                // TODO: avoid this cast
+                (this.widget.paintable as? SpinnerPaintable)?.widget = null
+                (it?.paintable as? SpinnerPaintable)?.widget = this.widget
                 this.widget.paintable = it?.paintable
             }
         },
