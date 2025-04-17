@@ -9,30 +9,20 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.yield
-import org.gnome.gobject.GObject
 import org.gnome.gtk.Application
 import org.gnome.gtk.Window
 import kotlin.system.exitProcess
 
-private class GtkApplicationComposeNode(gObject: Application) : GtkContainerComposeNode<Application, Window>(gObject) {
-    override fun add(index: Int, child: GtkComposeNode<GObject>) {
-        val childWindows = child.gObject
-        if (childWindows !is Window) {
-            throw UnsupportedOperationException()
+private class GtkApplicationComposeNode : GtkComposeNode {
+    override fun addNode(index: Int, child: GtkComposeNode) {
+        if (child !is GtkComposeWidget<*> || child.widget !is Window) {
+            throw UnsupportedOperationException("Only windows can be attached to Application")
         }
-        childWindows.present()
-        super.add(index, child)
     }
 
-    override fun remove(index: Int) {
-        children[index].destroy()
-        super.remove(index)
-    }
+    override fun removeNode(index: Int) = Unit
 
-    override fun clear() {
-        children.forEach { it.destroy() }
-        super.clear()
-    }
+    override fun clearNodes() = Unit
 }
 
 @Stable
@@ -67,7 +57,7 @@ fun Application.initializeApplication(
                 recomposer.runRecomposeAndApplyChanges()
             }
 
-            val composition = Composition(GtkApplier(GtkApplicationComposeNode(app)), recomposer)
+            val composition = Composition(GtkApplier(GtkApplicationComposeNode()), recomposer)
             app.onActivate {
                 GtkDispatcher.active = true
                 composition.setContent {

@@ -3,7 +3,7 @@ package io.github.mmarco94.compose.adw.components
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
 import io.github.mmarco94.compose.GtkApplier
-import io.github.mmarco94.compose.GtkComposeNode
+import io.github.mmarco94.compose.GtkComposeWidget
 import io.github.mmarco94.compose.SingleChildComposeNode
 import io.github.mmarco94.compose.gtk.components.Image
 import io.github.mmarco94.compose.modifier.Modifier
@@ -19,7 +19,7 @@ fun StatusPage(
     paintable: Image.Paintable? = null,
     content: @Composable () -> Unit = {},
 ) {
-    ComposeNode<GtkComposeNode<StatusPage>, GtkApplier>(
+    ComposeNode<GtkComposeWidget<StatusPage>, GtkApplier>(
         factory = {
             SingleChildComposeNode(
                 StatusPage.builder().build(),
@@ -28,13 +28,13 @@ fun StatusPage(
         },
         update = {
             set(modifier) { applyModifier(it) }
-            set(title) { this.gObject.title = it }
-            set(description) { this.gObject.description = it }
-            set(iconName) { this.gObject.iconName = it }
+            set(title) { this.widget.title = it }
+            set(description) { this.widget.description = it }
+            set(iconName) { this.widget.iconName = it }
             set(paintable) {
                 (it?.paintable as? SpinnerPaintable)
-                    ?.let { spinnerPaintable -> spinnerPaintable.widget = this.gObject }
-                this.gObject.paintable = it?.paintable
+                    ?.let { spinnerPaintable -> spinnerPaintable.widget = this.widget }
+                this.widget.paintable = it?.paintable
             }
         },
         content = content,

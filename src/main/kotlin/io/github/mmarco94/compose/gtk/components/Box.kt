@@ -2,42 +2,32 @@ package io.github.mmarco94.compose.gtk.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
+import io.github.mmarco94.compose.GtkComposeWidget
 import io.github.mmarco94.compose.GtkApplier
-import io.github.mmarco94.compose.GtkComposeNode
 import io.github.mmarco94.compose.GtkContainerComposeNode
 import io.github.mmarco94.compose.modifier.Modifier
-import io.github.mmarco94.compose.requiresAddToParent
-import org.gnome.gobject.GObject
 import org.gnome.gtk.Box
 import org.gnome.gtk.Orientation
 import org.gnome.gtk.Widget
 
 private class GtkBoxComposeNode(gObject: Box) : GtkContainerComposeNode<Box, Widget>(gObject) {
-    override fun add(index: Int, child: GtkComposeNode<GObject>) {
-        val childWidget = child.gObject as Widget
-        if (childWidget.requiresAddToParent) {
-            when (index) {
-                children.size -> gObject.append(childWidget)
-                0 -> gObject.insertChildAfter(childWidget, null)
-                else -> gObject.insertChildAfter(childWidget, children[index - 1])
-            }
+    override fun add(index: Int, child: GtkComposeWidget<Widget>) {
+        when (index) {
+            children.size -> widget.append(child.widget)
+            0 -> widget.insertChildAfter(child.widget, null)
+            else -> widget.insertChildAfter(child.widget, children[index - 1])
         }
         super.add(index, child)
     }
 
     override fun remove(index: Int) {
-        val childWidget = children[index]
-        if (childWidget.requiresAddToParent) {
-            gObject.remove(childWidget)
-        }
+        val child = children[index]
+        widget.remove(child)
         super.remove(index)
     }
 
     override fun clear() {
-        children
-            .asSequence()
-            .filter { it.requiresAddToParent }
-            .forEach { gObject.remove(it) }
+        children.forEach { widget.remove(it) }
         super.clear()
     }
 }
@@ -70,15 +60,15 @@ fun Box(
     homogeneous: Boolean = false,
     content: @Composable () -> Unit,
 ) {
-    ComposeNode<GtkComposeNode<Box>, GtkApplier>(
+    ComposeNode<GtkComposeWidget<Box>, GtkApplier>(
         factory = {
             GtkBoxComposeNode(Box.builder().build())
         },
         update = {
             set(modifier) { applyModifier(it) }
-            set(homogeneous) { this.gObject.homogeneous = it }
-            set(orientation) { this.gObject.orientation = it }
-            set(spacing) { this.gObject.spacing = it }
+            set(homogeneous) { this.widget.homogeneous = it }
+            set(orientation) { this.widget.orientation = it }
+            set(spacing) { this.widget.spacing = it }
         },
         content = content,
     )

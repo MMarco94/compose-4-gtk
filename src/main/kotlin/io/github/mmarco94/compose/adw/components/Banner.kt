@@ -24,14 +24,14 @@ fun Banner(
     ComposeNode<AdwBannerComposeNode, GtkApplier>({
         AdwBannerComposeNode(Banner.builder().build())
     }) {
-        set(title) { this.gObject.title = it }
-        set(buttonLabel) { this.gObject.buttonLabel = it }
-        set(revealed) { this.gObject.revealed = it }
-        set(useMarkup) { this.gObject.useMarkup = it }
+        set(title) { this.widget.title = it }
+        set(buttonLabel) { this.widget.buttonLabel = it }
+        set(revealed) { this.widget.revealed = it }
+        set(useMarkup) { this.widget.useMarkup = it }
         set(onButtonClicked) {
             this.onButtonClicked?.disconnect()
             if (onButtonClicked != null) {
-                this.onButtonClicked = this.gObject.onButtonClicked {
+                this.onButtonClicked = this.widget.onButtonClicked {
                     onButtonClicked()
                 }
             } else {

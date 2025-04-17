@@ -102,7 +102,7 @@ fun ApplicationWindow(
         init = init,
         setContent = { this.content = it },
         update = {
-            set(scope) { scope.window = this.gObject }
+            set(scope) { scope.window = this.widget }
         },
         content = {
             scope.apply {

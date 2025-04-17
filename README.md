@@ -12,7 +12,7 @@ An empty window:
 ```kotlin
 fun main(args: Array<String>) {
     application("my.example.HelloApp", args) {
-        ApplicationWindow("Test", onClose = ::exitApplication) {
+        ApplicationWindow(application, "Test", onClose = ::exitApplication) {
             // Your content here
         }
     }
@@ -24,7 +24,7 @@ A window with a header, and three buttons inside:
 ```kotlin
 fun main(args: Array<String>) {
     application("my.example.HelloApp", args) {
-        ApplicationWindow("Test", onClose = ::exitApplication) {
+        ApplicationWindow(application, "Test", onClose = ::exitApplication) {
             HeaderBar()
 
             Button("Button 1") { println("Clicked!") }
@@ -41,7 +41,7 @@ An interactive button that shows or hides a label:
 ```kotlin
 fun main(args: Array<String>) {
     application("my.example.HelloApp", args) {
-        ApplicationWindow("Test", onClose = ::exitApplication) {
+        ApplicationWindow(application, "Test", onClose = ::exitApplication) {
             Box(orientation = Orientation.VERTICAL) {
                 HeaderBar()
 
@@ -66,7 +66,7 @@ An `Entry`, that will make all text uppercase:
 ```kotlin
 fun main(args: Array<String>) {
     application("my.example.HelloApp", args) {
-        ApplicationWindow("Test", onClose = ::exitApplication) {
+        ApplicationWindow(application, "Test", onClose = ::exitApplication) {
             Box(orientation = Orientation.VERTICAL) {
                 HeaderBar()
 
@@ -99,7 +99,7 @@ In this example, at any point the `Entry` could ever contain a text that is no u
 ```kotlin
 fun main(args: Array<String>) {
     application("my.example.HelloApp", args) {
-        ApplicationWindow("Test", onClose = ::exitApplication) {
+        ApplicationWindow(application, "Test", onClose = ::exitApplication) {
             ToastOverlay {
                 VerticalBox {
                     HeaderBar()

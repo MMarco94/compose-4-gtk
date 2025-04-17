@@ -5,7 +5,7 @@ import androidx.compose.runtime.ComposeNode
 import androidx.compose.runtime.Updater
 import io.github.jwharm.javagi.gobject.SignalConnection
 import io.github.mmarco94.compose.GtkApplier
-import io.github.mmarco94.compose.GtkComposeNode
+import io.github.mmarco94.compose.GtkComposeWidget
 import io.github.mmarco94.compose.SingleChildComposeNode
 import io.github.mmarco94.compose.modifier.Modifier
 import org.gnome.gtk.Button
@@ -21,7 +21,7 @@ private class GtkToggleButtonComposeNode(
 ) : SingleChildComposeNode<ToggleButton>(gObject, { child = it })
 
 @Composable
-private fun <B : GtkComposeNode<Button>> BaseButton(
+private fun <B : GtkComposeWidget<Button>> BaseButton(
     creator: () -> B,
     label: String,
     modifier: Modifier = Modifier,
@@ -32,7 +32,7 @@ private fun <B : GtkComposeNode<Button>> BaseButton(
         creator,
         update = {
             set(modifier) { applyModifier(it) }
-            set(label) { this.gObject.label = it }
+            set(label) { this.widget.label = it }
             updater()
         },
         content = child
@@ -54,7 +54,7 @@ fun Button(
         updater = {
             set(onClick) {
                 this.onClick?.disconnect()
-                this.onClick = this.gObject.onClicked(it)
+                this.onClick = this.widget.onClicked(it)
             }
         }
     )
@@ -79,15 +79,15 @@ fun ToggleButton(
         updater = {
             set(active) {
                 this.onToggle.block()
-                this.gObject.active = it
+                this.widget.active = it
                 this.onToggle.unblock()
             }
             set(toggled) {
                 this.onToggle.disconnect()
-                this.onToggle = this.gObject.onToggled {
+                this.onToggle = this.widget.onToggled {
                     toggled()
                     this.onToggle.block()
-                    this.gObject.active = active
+                    this.widget.active = active
                     this.onToggle.unblock()
                 }
             }
@@ -110,9 +110,9 @@ fun IconButton(
         updater = {
             set(onClick) {
                 this.onClick?.disconnect()
-                this.onClick = this.gObject.onClicked(it)
+                this.onClick = this.widget.onClicked(it)
             }
-            set(iconName) { this.gObject.iconName = iconName }
+            set(iconName) { this.widget.iconName = iconName }
         }
     )
 }

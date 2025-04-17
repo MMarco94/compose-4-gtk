@@ -2,8 +2,8 @@ package io.github.mmarco94.compose.gtk.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
+import io.github.mmarco94.compose.*
 import io.github.mmarco94.compose.GtkApplier
-import io.github.mmarco94.compose.GtkComposeNode
 import io.github.mmarco94.compose.GtkContainerComposeNode
 import io.github.mmarco94.compose.SingleChildComposeNode
 import io.github.mmarco94.compose.VirtualComposeNode
@@ -19,7 +19,7 @@ fun Overlay(
     modifier: Modifier = Modifier,
     overlays: @Composable () -> Unit,
 ) {
-    ComposeNode<GtkComposeNode<Overlay>, GtkApplier>(
+    ComposeNode<GtkComposeWidget<Overlay>, GtkApplier>(
         factory = {
             VirtualComposeNodeContainer(Overlay.builder().build())
         },
@@ -41,7 +41,7 @@ fun Overlay(
 private fun MainChild(
     content: @Composable () -> Unit,
 ) {
-    ComposeNode<GtkComposeNode<Nothing?>, GtkApplier>(
+    ComposeNode<GtkComposeNode, GtkApplier>(
         factory = {
             VirtualComposeNode<Overlay> { overlay ->
                 SingleChildComposeNode(
@@ -59,7 +59,7 @@ private fun MainChild(
 private fun OverlayChildren(
     content: @Composable () -> Unit,
 ) {
-    ComposeNode<GtkComposeNode<Nothing?>, GtkApplier>(
+    ComposeNode<GtkComposeNode, GtkApplier>(
         factory = {
             VirtualComposeNode<Overlay> { overlay ->
                 GtkContainerComposeNode.appendOnly<Overlay, Widget>(

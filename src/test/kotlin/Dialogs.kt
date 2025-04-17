@@ -19,46 +19,52 @@ fun main(args: Array<String>) {
             defaultHeight = 800,
         ) {
             var floatingDialog by remember { mutableStateOf(false) }
-            Dialog(
-                title = "Floating dialog",
-                isPresented = floatingDialog,
-                presentationMode = DialogPresentationMode.FLOATING,
-                onClose = { floatingDialog = false },
-            ) {
-                VerticalBox {
-                    HeaderBar()
-                    Label("Say something", modifier = Modifier.margin(64))
+            if (floatingDialog) {
+                Dialog(
+                    presentationMode = DialogPresentationMode.FLOATING,
+                    title = "Floating dialog",
+                    onClose = {
+                        // Doing nothing, let's keep it open
+                    },
+                ) {
+                    VerticalBox {
+                        HeaderBar()
+                        Label("Say something", modifier = Modifier.margin(64))
+                        Button("close") { floatingDialog = false }
+                    }
                 }
             }
 
             var bottomSheetDialog by remember { mutableStateOf(false) }
-            Dialog(
-                title = "Bottom sheet dialog",
-                isPresented = bottomSheetDialog,
-                presentationMode = DialogPresentationMode.BOTTOM_SHEET,
-                onClose = { bottomSheetDialog = false },
-            ) {
-                Label("Say something", modifier = Modifier.margin(64))
+            if (bottomSheetDialog) {
+                Dialog(
+                    presentationMode = DialogPresentationMode.BOTTOM_SHEET,
+                    title = "Bottom sheet dialog",
+                    onClose = { bottomSheetDialog = false },
+                ) {
+                    Label("Say something", modifier = Modifier.margin(64))
+                }
             }
 
             var aboutDialog by remember { mutableStateOf(false) }
-            AboutDialog(
-                applicationName = "Application",
-                applicationIcon = "help-about",
-                developerName = "Developer Name",
-                artists = arrayOf("Joe Dalton", "Jack Dalton", "William Dalton"),
-                designers = arrayOf("Jane Doe", "John Doe"),
-                licenseType = License.GPL_3_0,
-                issueUrl = "http://www.example.org",
-                releaseNotes = "<ul><li>first change</li><li>second change</li></ul>",
-                version = "1.2.3",
-                website = "http://www.example.org",
-                isPresented = aboutDialog,
-                title = "About",
-                contentWidth = 400,
-                contentHeight = 600,
-                onClose = { aboutDialog = false },
-            )
+            if (aboutDialog) {
+                AboutDialog(
+                    applicationName = "Application",
+                    applicationIcon = "help-about",
+                    developerName = "Developer Name",
+                    artists = listOf("Joe Dalton", "Jack Dalton", "William Dalton"),
+                    designers = listOf("Jane Doe", "John Doe"),
+                    licenseType = License.GPL_3_0,
+                    issueUrl = "https://www.example.org",
+                    releaseNotes = "<ul><li>first change</li><li>second change</li></ul>",
+                    version = "1.2.3",
+                    website = "https://www.example.org",
+                    title = "About",
+                    contentWidth = 400,
+                    contentHeight = 600,
+                    onClose = { aboutDialog = false },
+                )
+            }
 
             VerticalBox {
                 HeaderBar()
@@ -67,6 +73,11 @@ fun main(args: Array<String>) {
                     modifier = Modifier.margin(16),
                     spacing = 16,
                 ) {
+                    ToggleButton(
+                        label = "Toggle dialog",
+                        active = floatingDialog,
+                        toggled = { floatingDialog = !floatingDialog }
+                    )
                     Button(
                         modifier = Modifier.horizontalAlignment(Align.CENTER),
                         label = "Floating dialog",

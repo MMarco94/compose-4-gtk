@@ -2,40 +2,28 @@ package io.github.mmarco94.compose.gtk.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
+import io.github.mmarco94.compose.*
 import io.github.mmarco94.compose.GtkApplier
-import io.github.mmarco94.compose.GtkComposeNode
 import io.github.mmarco94.compose.GtkContainerComposeNode
 import io.github.mmarco94.compose.modifier.Modifier
-import io.github.mmarco94.compose.requiresAddToParent
-import org.gnome.gobject.GObject
 import org.gnome.gtk.Adjustment
 import org.gnome.gtk.FlowBox
 import org.gnome.gtk.Orientation
 import org.gnome.gtk.Widget
 
 private class GtkFlowBoxComposeNode(gObject: FlowBox) : GtkContainerComposeNode<FlowBox, Widget>(gObject) {
-    override fun add(index: Int, child: GtkComposeNode<GObject>) {
-        val childWidget = child.gObject as Widget
-        if (childWidget.requiresAddToParent) {
-            gObject.insert(childWidget, index)
-        }
+    override fun add(index: Int, child: GtkComposeWidget<Widget>) {
+        widget.insert(child.widget, index)
         super.add(index, child)
     }
 
     override fun remove(index: Int) {
-        val childWidget = children[index]
-        if (childWidget.requiresAddToParent) {
-            gObject.remove(childWidget)
-        }
+        widget.remove(children[index])
         super.remove(index)
     }
 
     override fun clear() {
-        // TODO: use removeAll on GTK 4.12+
-        children
-            .asSequence()
-            .filter { it.requiresAddToParent }
-            .forEach { gObject.remove(it) }
+        widget.removeAll()
         super.clear()
     }
 }
@@ -63,21 +51,21 @@ fun FlowBox(
     minChildrenPerLine: Int = 0,
     content: @Composable () -> Unit,
 ) {
-    ComposeNode<GtkComposeNode<FlowBox>, GtkApplier>(
+    ComposeNode<GtkComposeWidget<FlowBox>, GtkApplier>(
         factory = {
             GtkFlowBoxComposeNode(FlowBox.builder().build())
         },
         update = {
             set(modifier) { applyModifier(it) }
-            set(orientation) { this.gObject.orientation = it }
-            set(activateOnSingleClick) { this.gObject.activateOnSingleClick = it }
-            set(columnSpacing) { this.gObject.columnSpacing = it }
-            set(rowSpacing) { this.gObject.rowSpacing = it }
-            set(horizontalAdjustment) { this.gObject.setHadjustment(horizontalAdjustment) }
-            set(verticalAdjustment) { this.gObject.setVadjustment(verticalAdjustment) }
-            set(homogeneous) { this.gObject.homogeneous = it }
-            set(maxChildrenPerLine) { this.gObject.maxChildrenPerLine = it }
-            set(minChildrenPerLine) { this.gObject.minChildrenPerLine = it }
+            set(orientation) { this.widget.orientation = it }
+            set(activateOnSingleClick) { this.widget.activateOnSingleClick = it }
+            set(columnSpacing) { this.widget.columnSpacing = it }
+            set(rowSpacing) { this.widget.rowSpacing = it }
+            set(horizontalAdjustment) { this.widget.setHadjustment(horizontalAdjustment) }
+            set(verticalAdjustment) { this.widget.setVadjustment(verticalAdjustment) }
+            set(homogeneous) { this.widget.homogeneous = it }
+            set(maxChildrenPerLine) { this.widget.maxChildrenPerLine = it }
+            set(minChildrenPerLine) { this.widget.minChildrenPerLine = it }
         },
         content = content,
     )

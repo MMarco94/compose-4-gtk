@@ -1,17 +1,16 @@
 package io.github.mmarco94.compose
 
 import androidx.compose.runtime.AbstractApplier
-import org.gnome.gobject.GObject
 
-internal class GtkApplier(root: GtkComposeNode<GObject>) : AbstractApplier<GtkComposeNode<GObject>>(root) {
-    override fun insertBottomUp(index: Int, instance: GtkComposeNode<GObject>) = Unit
-    override fun insertTopDown(index: Int, instance: GtkComposeNode<GObject>) {
-        current.add(index, instance)
+internal class GtkApplier(root: GtkComposeNode) : AbstractApplier<GtkComposeNode>(root) {
+    override fun insertBottomUp(index: Int, instance: GtkComposeNode) = Unit
+    override fun insertTopDown(index: Int, instance: GtkComposeNode) {
+        current.addNode(index, instance)
     }
 
     override fun remove(index: Int, count: Int) {
         repeat(count) {
-            current.remove(index)
+            current.removeNode(index)
         }
     }
 
@@ -20,6 +19,6 @@ internal class GtkApplier(root: GtkComposeNode<GObject>) : AbstractApplier<GtkCo
     }
 
     override fun onClear() {
-        current.clear()
+        current.clearNodes()
     }
 }

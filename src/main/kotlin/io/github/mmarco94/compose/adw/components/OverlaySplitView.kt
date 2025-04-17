@@ -60,7 +60,7 @@ fun OverlaySplitView(
     content: @Composable OverlaySplitViewScope.() -> Unit,
 ) {
     val scope = remember { OverlaySplitViewImpl() }
-    ComposeNode<GtkComposeNode<OverlaySplitView>, GtkApplier>(
+    ComposeNode<GtkComposeWidget<OverlaySplitView>, GtkApplier>(
         factory = {
             val splitView = OverlaySplitView
                 .builder()
@@ -69,13 +69,13 @@ fun OverlaySplitView(
         },
         update = {
             set(modifier) { applyModifier(it) }
-            set(collapsed) { this.gObject.collapsed = it }
-            set(pinSidebar) { this.gObject.pinSidebar = it }
-            set(sidebarPosition) { this.gObject.sidebarPosition = it }
-            set(sidebarWidthFraction) { this.gObject.sidebarWidthFraction = it }
-            set(enableHideGesture) { this.gObject.enableHideGesture = it }
-            set(enableShowGesture) { this.gObject.enableShowGesture = it }
-            set(scope) { scope.overlaySplitView = this.gObject }
+            set(collapsed) { this.widget.collapsed = it }
+            set(pinSidebar) { this.widget.pinSidebar = it }
+            set(sidebarPosition) { this.widget.sidebarPosition = it }
+            set(sidebarWidthFraction) { this.widget.sidebarWidthFraction = it }
+            set(enableHideGesture) { this.widget.enableHideGesture = it }
+            set(enableShowGesture) { this.widget.enableShowGesture = it }
+            set(scope) { scope.overlaySplitView = this.widget }
         },
         content = {
             Sidebar {
@@ -94,7 +94,7 @@ fun OverlaySplitView(
 private fun Content(
     content: @Composable () -> Unit,
 ) {
-    ComposeNode<GtkComposeNode<Nothing?>, GtkApplier>(
+    ComposeNode<GtkComposeNode, GtkApplier>(
         factory = {
             VirtualComposeNode<OverlaySplitView> { overlay ->
                 SingleChildComposeNode(
@@ -112,7 +112,7 @@ private fun Content(
 private fun Sidebar(
     content: @Composable () -> Unit,
 ) {
-    ComposeNode<GtkComposeNode<Nothing?>, GtkApplier>(
+    ComposeNode<GtkComposeNode, GtkApplier>(
         factory = {
             VirtualComposeNode<OverlaySplitView> { overlay ->
                 SingleChildComposeNode(

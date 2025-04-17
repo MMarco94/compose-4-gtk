@@ -2,8 +2,8 @@ package io.github.mmarco94.compose.adw.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
+import io.github.mmarco94.compose.*
 import io.github.mmarco94.compose.GtkApplier
-import io.github.mmarco94.compose.GtkComposeNode
 import io.github.mmarco94.compose.GtkContainerComposeNode
 import io.github.mmarco94.compose.SingleChildComposeNode
 import io.github.mmarco94.compose.VirtualComposeNode
@@ -24,15 +24,15 @@ fun HeaderBar(
     startWidgets: @Composable () -> Unit = {},
     endWidgets: @Composable () -> Unit = {},
 ) {
-    ComposeNode<GtkComposeNode<HeaderBar>, GtkApplier>(
+    ComposeNode<GtkComposeWidget<HeaderBar>, GtkApplier>(
         {
             VirtualComposeNodeContainer(HeaderBar.builder().build())
         },
         update = {
             set(modifier) { applyModifier(it) }
-            set(centeringPolicy) { this.gObject.centeringPolicy = it }
-            set(showEndTitleButtons) { this.gObject.showEndTitleButtons = it }
-            set(showStartTitleButtons) { this.gObject.showStartTitleButtons = it }
+            set(centeringPolicy) { this.widget.centeringPolicy = it }
+            set(showEndTitleButtons) { this.widget.showEndTitleButtons = it }
+            set(showStartTitleButtons) { this.widget.showStartTitleButtons = it }
         },
         content = {
             Pack({ packStart(it) }, startWidgets)
@@ -51,7 +51,7 @@ private fun Pack(
     packer: HeaderBar.(Widget) -> Unit,
     content: @Composable () -> Unit = {},
 ) {
-    ComposeNode<GtkComposeNode<Nothing?>, GtkApplier>(
+    ComposeNode<GtkComposeNode, GtkApplier>(
         {
             VirtualComposeNode<HeaderBar> { header ->
                 GtkContainerComposeNode.appendOnly<HeaderBar, Widget>(
@@ -70,7 +70,7 @@ private fun Pack(
 private fun Title(
     title: @Composable () -> Unit = {},
 ) {
-    ComposeNode<GtkComposeNode<Nothing?>, GtkApplier>(
+    ComposeNode<GtkComposeNode, GtkApplier>(
         {
             VirtualComposeNode<HeaderBar> { header ->
                 SingleChildComposeNode(

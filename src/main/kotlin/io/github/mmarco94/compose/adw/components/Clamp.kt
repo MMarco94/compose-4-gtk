@@ -3,7 +3,7 @@ package io.github.mmarco94.compose.adw.components
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
 import io.github.mmarco94.compose.GtkApplier
-import io.github.mmarco94.compose.GtkComposeNode
+import io.github.mmarco94.compose.GtkComposeWidget
 import io.github.mmarco94.compose.SingleChildComposeNode
 import io.github.mmarco94.compose.modifier.Modifier
 import org.gnome.adw.Clamp
@@ -38,7 +38,7 @@ fun Clamp(
     tighteningThreshold: Int = 400,
     content: @Composable () -> Unit,
 ) {
-    ComposeNode<GtkComposeNode<Clamp>, GtkApplier>(
+    ComposeNode<GtkComposeWidget<Clamp>, GtkApplier>(
         factory = {
             SingleChildComposeNode(
                 Clamp.builder().build(),
@@ -47,9 +47,9 @@ fun Clamp(
         },
         update = {
             set(modifier) { applyModifier(it) }
-            set(orientation) { this.gObject.orientation = it }
-            set(maximumSize) { this.gObject.maximumSize = it }
-            set(tighteningThreshold) { this.gObject.tighteningThreshold = it }
+            set(orientation) { this.widget.orientation = it }
+            set(maximumSize) { this.widget.maximumSize = it }
+            set(tighteningThreshold) { this.widget.tighteningThreshold = it }
         },
         content = content,
     )

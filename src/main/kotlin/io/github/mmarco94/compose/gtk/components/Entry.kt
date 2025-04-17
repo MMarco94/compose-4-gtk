@@ -142,39 +142,39 @@ fun Entry(
     }) {
         set(modifier) { applyModifier(it) }
         set(text to tentativeCursorPosition) { (text, pos) ->
-            if (this.gObject.text != text) {
+            if (this.widget.text != text) {
                 this.onDeleteSignalHandler.block()
                 this.onInsertSignalHandler.block()
-                this.gObject.text = text
+                this.widget.text = text
                 this.onInsertSignalHandler.unblock()
                 this.onDeleteSignalHandler.unblock()
                 if (pos != null && pos.condition(text)) {
-                    this.gObject.position = pos.position
+                    this.widget.position = pos.position
                 }
             }
             tentativeCursorPosition = null
         }
-        set(attributes) { this.gObject.attributes = it }
-        set(placeholderText) { this.gObject.placeholderText = it }
-        set(editable) { this.gObject.editable = it }
-        set(visibility) { this.gObject.visibility = it }
-        set(activatesDefault) { this.gObject.activatesDefault = it }
-        set(alignment) { this.gObject.alignment = it }
-        set(hasFrame) { this.gObject.hasFrame = it }
-        set(inputHints) { this.gObject.setInputHints(it) }
-        set(inputPurpose) { this.gObject.inputPurpose = it }
+        set(attributes) { this.widget.attributes = it }
+        set(placeholderText) { this.widget.placeholderText = it }
+        set(editable) { this.widget.editable = it }
+        set(visibility) { this.widget.visibility = it }
+        set(activatesDefault) { this.widget.activatesDefault = it }
+        set(alignment) { this.widget.alignment = it }
+        set(hasFrame) { this.widget.hasFrame = it }
+        set(inputHints) { this.widget.setInputHints(it) }
+        set(inputPurpose) { this.widget.inputPurpose = it }
         set(invisibleChar) {
             if (it == null) {
-                this.gObject.unsetInvisibleChar()
+                this.widget.unsetInvisibleChar()
             } else {
-                this.gObject.invisibleChar = it.code
+                this.widget.invisibleChar = it.code
             }
         }
-        set(maxLength) { this.gObject.maxLength = it }
-        set(progressFraction) { this.gObject.progressFraction = it }
-        set(tabs) { this.gObject.tabs = it }
-        set(enableUndo) { this.gObject.enableUndo = it }
-        set(maxWidthChars) { this.gObject.maxWidthChars = it }
-        set(widthChars) { this.gObject.widthChars = it }
+        set(maxLength) { this.widget.maxLength = it }
+        set(progressFraction) { this.widget.progressFraction = it }
+        set(tabs) { this.widget.tabs = it }
+        set(enableUndo) { this.widget.enableUndo = it }
+        set(maxWidthChars) { this.widget.maxWidthChars = it }
+        set(widthChars) { this.widget.widthChars = it }
     }
 }

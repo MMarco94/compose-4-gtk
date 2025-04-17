@@ -2,8 +2,8 @@ package io.github.mmarco94.compose.gtk.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
+import io.github.mmarco94.compose.*
 import io.github.mmarco94.compose.GtkApplier
-import io.github.mmarco94.compose.GtkComposeNode
 import io.github.mmarco94.compose.SingleChildComposeNode
 import io.github.mmarco94.compose.VirtualComposeNode
 import io.github.mmarco94.compose.VirtualComposeNodeContainer
@@ -17,13 +17,13 @@ fun Frame(
     label: (@Composable () -> Unit)? = null,
     child: @Composable () -> Unit,
 ) {
-    ComposeNode<GtkComposeNode<Frame>, GtkApplier>(
+    ComposeNode<GtkComposeWidget<Frame>, GtkApplier>(
         factory = {
             VirtualComposeNodeContainer(Frame.builder().build())
         },
         update = {
             set(modifier) { applyModifier(it) }
-            set(labelXAlign) { this.gObject.labelAlign = labelXAlign }
+            set(labelXAlign) { this.widget.labelAlign = labelXAlign }
         },
         content = {
             if (label != null) {
@@ -38,7 +38,7 @@ fun Frame(
 private fun Child(
     content: @Composable () -> Unit,
 ) {
-    ComposeNode<GtkComposeNode<Nothing?>, GtkApplier>(
+    ComposeNode<GtkComposeNode, GtkApplier>(
         factory = {
             VirtualComposeNode<Frame> { overlay ->
                 SingleChildComposeNode(overlay) { child = it }
@@ -53,7 +53,7 @@ private fun Child(
 private fun Label(
     content: @Composable () -> Unit,
 ) {
-    ComposeNode<GtkComposeNode<Nothing?>, GtkApplier>(
+    ComposeNode<GtkComposeNode, GtkApplier>(
         factory = {
             VirtualComposeNode<Frame> { overlay ->
                 SingleChildComposeNode(overlay) { labelWidget = it }

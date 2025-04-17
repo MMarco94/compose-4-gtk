@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
 import androidx.compose.runtime.remember
 import io.github.mmarco94.compose.GtkApplier
-import io.github.mmarco94.compose.GtkComposeNode
+import io.github.mmarco94.compose.GtkComposeWidget
 import io.github.mmarco94.compose.SingleChildComposeNode
 import io.github.mmarco94.compose.modifier.Modifier
 import org.gnome.adw.Toast
@@ -13,7 +13,6 @@ import org.gnome.adw.ToastOverlay
 interface ToastOverlayScope {
     /**
      * Shows a Toast
-     * TODO: should the toast be a GTK widget? Probably not
      */
     fun addToast(toast: Toast)
 }
@@ -31,7 +30,7 @@ fun ToastOverlay(
     content: @Composable ToastOverlayScope.() -> Unit,
 ) {
     val overlayScope = remember { ToastOverlayScopeImpl() }
-    ComposeNode<GtkComposeNode<ToastOverlay>, GtkApplier>(
+    ComposeNode<GtkComposeWidget<ToastOverlay>, GtkApplier>(
         factory = {
             val toastOverlay = ToastOverlay.builder().build()
             SingleChildComposeNode(
@@ -41,7 +40,7 @@ fun ToastOverlay(
         },
         update = {
             set(modifier) { applyModifier(it) }
-            set(overlayScope) { it.toastOverlay = this.gObject }
+            set(overlayScope) { it.toastOverlay = this.widget }
         },
         content = {
             overlayScope.content()
