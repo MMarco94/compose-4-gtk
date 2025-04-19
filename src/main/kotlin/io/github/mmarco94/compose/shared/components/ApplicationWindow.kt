@@ -9,7 +9,6 @@ import io.github.mmarco94.compose.modifier.Modifier
 import org.gnome.gtk.ApplicationWindow
 import org.gnome.gtk.CssProvider
 import org.gnome.gtk.Gtk
-import org.gnome.gtk.StyleContext
 import org.gnome.gtk.Widget
 import org.gnome.gtk.Window
 
@@ -19,10 +18,10 @@ private class GtkApplicationWindowComposeNode<AW : ApplicationWindow>(
 ) : SingleChildComposeNode<AW>(window, set) {
     var styles: List<CssProvider> = emptyList()
         set(value) {
-            styles.forEach { StyleContext.removeProviderForDisplay(widget.display, it) }
+            styles.forEach { Gtk.styleContextRemoveProviderForDisplay(widget.display, it) }
             field = value
             styles.forEachIndexed { index, it ->
-                StyleContext.addProviderForDisplay(
+                Gtk.styleContextAddProviderForDisplay(
                     widget.display,
                     it,
                     Gtk.STYLE_PROVIDER_PRIORITY_FALLBACK + 1 + index,
