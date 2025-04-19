@@ -11,7 +11,7 @@ import org.gnome.gtk.FlowBox
 import org.gnome.gtk.Orientation
 import org.gnome.gtk.Widget
 
-private class GtkFlowBoxComposeNode(gObject: FlowBox) : GtkContainerComposeNode<FlowBox, Widget>(gObject) {
+private class GtkFlowBoxComposeNode(gObject: FlowBox) : GtkContainerComposeNode<FlowBox>(gObject) {
     override fun add(index: Int, child: GtkComposeWidget<Widget>) {
         widget.insert(child.widget, index)
         super.add(index, child)

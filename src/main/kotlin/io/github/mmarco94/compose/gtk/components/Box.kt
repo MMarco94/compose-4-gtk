@@ -10,7 +10,7 @@ import org.gnome.gtk.Box
 import org.gnome.gtk.Orientation
 import org.gnome.gtk.Widget
 
-private class GtkBoxComposeNode(gObject: Box) : GtkContainerComposeNode<Box, Widget>(gObject) {
+private class GtkBoxComposeNode(gObject: Box) : GtkContainerComposeNode<Box>(gObject) {
     override fun add(index: Int, child: GtkComposeWidget<Widget>) {
         when (index) {
             children.size -> widget.append(child.widget)

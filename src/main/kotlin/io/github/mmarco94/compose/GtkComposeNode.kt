@@ -164,11 +164,11 @@ internal class VirtualComposeNodeContainer<W : Widget>(widget: W) : GtkComposeWi
     }
 }
 
-internal abstract class GtkContainerComposeNode<W : Widget, C : Widget>(widget: W) : GtkComposeContainer<W>(widget) {
-    private val _children = mutableListOf<C>()
-    protected val children: List<C> = _children
+internal abstract class GtkContainerComposeNode<W : Widget>(widget: W) : GtkComposeContainer<W>(widget) {
+    private val _children = mutableListOf<Widget>()
+    protected val children: List<Widget> = _children
     override fun add(index: Int, child: GtkComposeWidget<Widget>) {
-        val childWidget = child.widget as C
+        val childWidget = child.widget
         _children.add(index, childWidget)
     }
 
@@ -181,16 +181,16 @@ internal abstract class GtkContainerComposeNode<W : Widget, C : Widget>(widget: 
     }
 
     companion object {
-        fun <W : Widget, C : Widget> appendOnly(
+        fun <W : Widget> appendOnly(
             widget: W,
-            add: W.(C) -> Unit,
-            remove: W.(C) -> Unit,
-        ) = object : GtkContainerComposeNode<W, C>(widget) {
+            add: W.(Widget) -> Unit,
+            remove: W.(Widget) -> Unit,
+        ) = object : GtkContainerComposeNode<W>(widget) {
             override fun add(index: Int, child: GtkComposeWidget<Widget>) {
                 val toReinsert = children.drop(index)
                 super.add(index, child)
                 toReinsert.forEach { widget.remove(it) }
-                widget.add(child.widget as C)
+                widget.add(child.widget)
                 toReinsert.forEach { widget.add(it) }
             }
 

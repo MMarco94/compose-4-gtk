@@ -14,7 +14,7 @@ import org.gnome.gtk.ListBox
 import org.gnome.gtk.SelectionMode
 import org.gnome.gtk.Widget
 
-private class GtkListBoxComposeNode(gObject: ListBox) : GtkContainerComposeNode<ListBox, Widget>(gObject) {
+private class GtkListBoxComposeNode(gObject: ListBox) : GtkContainerComposeNode<ListBox>(gObject) {
     override fun add(index: Int, child: GtkComposeWidget<Widget>) {
         widget.insert(child.widget, index)
         super.add(index, child)

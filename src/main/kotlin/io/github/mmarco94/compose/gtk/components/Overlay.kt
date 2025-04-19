@@ -62,7 +62,7 @@ private fun OverlayChildren(
     ComposeNode<GtkComposeNode, GtkApplier>(
         factory = {
             VirtualComposeNode<Overlay> { overlay ->
-                GtkContainerComposeNode.appendOnly<Overlay, Widget>(
+                GtkContainerComposeNode.appendOnly(
                     overlay,
                     add = { addOverlay(it) },
                     remove = { removeOverlay(it) },

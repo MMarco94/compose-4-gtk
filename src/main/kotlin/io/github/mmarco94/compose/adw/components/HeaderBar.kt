@@ -54,7 +54,7 @@ private fun Pack(
     ComposeNode<GtkComposeNode, GtkApplier>(
         {
             VirtualComposeNode<HeaderBar> { header ->
-                GtkContainerComposeNode.appendOnly<HeaderBar, Widget>(
+                GtkContainerComposeNode.appendOnly(
                     header,
                     add = { packer(it) },
                     remove = { remove(it) },
