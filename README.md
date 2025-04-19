@@ -22,26 +22,19 @@ kotlin {
     jvmToolchain(23)
 }
 
+repositories {
+    mavenCentral()
+    google()
+    maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+    maven("https://www.jitpack.io")
+}
+
 ...
 
 dependencies {
     ...
     implementation("com.github.MMarco94:compose-4-gtk:-SNAPSHOT")
     ...
-}
-```
-
-And your `settings.gradle.kts`:
-```kotlin
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        mavenLocal()
-        google()
-        mavenCentral()
-        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-        maven("https://www.jitpack.io")
-    }
 }
 ```
 
