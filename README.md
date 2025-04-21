@@ -169,3 +169,27 @@ fun main(args: Array<String>) {
 }
 ```
 
+----
+
+## GIO Resources
+
+This library provides a convenience function to load `gresource` files in the JAR's resources:
+
+```kotlin
+fun main(args: Array<String>) {
+    useGioResource("resources.gresource") {
+        application("my.example.hello-app", args) {
+            ApplicationWindow("Embedded picture", onClose = ::exitApplication) {
+                Picture(
+                    ImageSource.forResource("/my/example/hello-app/images/lulu.jpg"),
+                    contentFit = ContentFit.COVER,
+                    modifier = Modifier.expand(),
+                )
+            }
+        }
+    }
+}
+```
+
+In this example, `resources.gresource` is a GIO resource bundle compiled with `glib-compile-resources`, and included in
+the JAR. 

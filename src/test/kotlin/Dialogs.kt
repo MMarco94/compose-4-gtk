@@ -11,7 +11,7 @@ import org.gnome.gtk.Align
 import org.gnome.gtk.License
 
 fun main(args: Array<String>) {
-    application("my.example.HelloApp", args) {
+    application("my.example.hello-app", args) {
         ApplicationWindow(
             "Dialogs",
             onClose = ::exitApplication,

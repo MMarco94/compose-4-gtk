@@ -13,7 +13,7 @@ import io.github.mmarco94.compose.modifier.margin
 import org.gnome.adw.Toast
 
 fun main(args: Array<String>) {
-    application("my.example.HelloApp", args) {
+    application("my.example.hello-app", args) {
         ApplicationWindow("Test", onClose = ::exitApplication) {
             ToastOverlay {
                 VerticalBox {

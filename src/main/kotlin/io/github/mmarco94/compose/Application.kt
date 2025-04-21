@@ -2,13 +2,9 @@ package io.github.mmarco94.compose
 
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.Snapshot
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.consumeEach
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
-import kotlinx.coroutines.yield
 import org.gnome.gtk.Application
 import org.gnome.gtk.Window
 import kotlin.system.exitProcess

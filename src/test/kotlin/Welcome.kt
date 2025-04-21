@@ -10,7 +10,7 @@ import io.github.mmarco94.compose.modifier.expandVertically
 import org.gnome.gtk.Align
 
 fun main(args: Array<String>) {
-    application("my.example.HelloApp", args) {
+    application("my.example.hello-app", args) {
         ApplicationWindow(
             "compose-4-gtk",
             onClose = ::exitApplication,

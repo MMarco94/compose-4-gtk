@@ -12,7 +12,7 @@ import io.github.mmarco94.compose.gtk.components.VerticalBox
 import kotlin.random.Random
 
 fun main(args: Array<String>) {
-    application("my.example.HelloApp", args) {
+    application("my.example.hello-app", args) {
         ApplicationWindow("Test", onClose = ::exitApplication) {
             VerticalBox {
                 HeaderBar()
