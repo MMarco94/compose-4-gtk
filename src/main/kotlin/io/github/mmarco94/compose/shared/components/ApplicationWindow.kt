@@ -87,13 +87,21 @@ fun <AW : ApplicationWindow, B : ApplicationWindow.Builder<*>> initializeApplica
             set(fullscreen) {
                 val mustChange = it != this.widget.isFullscreen
                 if (mustChange) {
-                    this.widget.fullscreen()
+                    if (fullscreen) {
+                        this.widget.fullscreen()
+                    } else {
+                        this.widget.unfullscreen()
+                    }
                 }
             }
             set(maximized) {
                 val mustChange = it != this.widget.isMaximized
                 if (mustChange) {
-                    this.widget.maximize()
+                    if (maximized) {
+                        this.widget.maximize()
+                    } else {
+                        this.widget.unmaximize()
+                    }
                 }
             }
             set(handleMenubarAccel) { this.widget.handleMenubarAccel = it }
