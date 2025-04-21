@@ -48,6 +48,7 @@ fun <AW : ApplicationWindow, B : ApplicationWindow.Builder<*>> initializeApplica
     defaultWidth: Int = 0,
     deletable: Boolean = true,
     fullscreen: Boolean = false,
+    maximized: Boolean = false,
     handleMenubarAccel: Boolean = true,
     modal: Boolean = false,
     resizable: Boolean = true,
@@ -86,7 +87,21 @@ fun <AW : ApplicationWindow, B : ApplicationWindow.Builder<*>> initializeApplica
             set(fullscreen) {
                 val mustChange = it != this.widget.isFullscreen
                 if (mustChange) {
-                    this.widget.fullscreen()
+                    if (fullscreen) {
+                        this.widget.fullscreen()
+                    } else {
+                        this.widget.unfullscreen()
+                    }
+                }
+            }
+            set(maximized) {
+                val mustChange = it != this.widget.isMaximized
+                if (mustChange) {
+                    if (maximized) {
+                        this.widget.maximize()
+                    } else {
+                        this.widget.unmaximize()
+                    }
                 }
             }
             set(handleMenubarAccel) { this.widget.handleMenubarAccel = it }
@@ -101,5 +116,3 @@ fun <AW : ApplicationWindow, B : ApplicationWindow.Builder<*>> initializeApplica
         },
     )
 }
-
-typealias WindowInitializer = ApplicationWindow.() -> Unit

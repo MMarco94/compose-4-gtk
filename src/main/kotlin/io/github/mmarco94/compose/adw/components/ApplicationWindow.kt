@@ -2,7 +2,6 @@ package io.github.mmarco94.compose.adw.components
 
 import androidx.compose.runtime.*
 import io.github.mmarco94.compose.modifier.Modifier
-import io.github.mmarco94.compose.shared.components.WindowInitializer
 import io.github.mmarco94.compose.shared.components.initializeApplicationWindow
 import org.gnome.adw.ApplicationWindow
 import org.gnome.adw.Breakpoint
@@ -76,10 +75,11 @@ fun ApplicationWindow(
     defaultWidth: Int = 0,
     deletable: Boolean = true,
     fullscreen: Boolean = false,
+    maximized: Boolean = false,
     handleMenubarAccel: Boolean = true,
     modal: Boolean = false,
     resizable: Boolean = true,
-    init: WindowInitializer = {},
+    init: ApplicationWindow.() -> Unit = {},
     content: @Composable ApplicationWindowScope.() -> Unit,
 ) {
     val scope = remember { ApplicationWindowScopeImpl() }
@@ -96,6 +96,7 @@ fun ApplicationWindow(
         defaultHeight = defaultHeight,
         defaultWidth = defaultWidth,
         fullscreen = fullscreen,
+        maximized = maximized,
         handleMenubarAccel = handleMenubarAccel,
         modal = modal,
         resizable = resizable,

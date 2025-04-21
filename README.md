@@ -45,7 +45,7 @@ An empty window:
 ```kotlin
 fun main(args: Array<String>) {
     application("my.example.HelloApp", args) {
-        ApplicationWindow(application, "Test", onClose = ::exitApplication) {
+        ApplicationWindow("Test", onClose = ::exitApplication) {
             // Your content here
         }
     }
@@ -59,7 +59,7 @@ A window with a header, and three buttons inside:
 ```kotlin
 fun main(args: Array<String>) {
     application("my.example.HelloApp", args) {
-        ApplicationWindow(application, "Test", onClose = ::exitApplication) {
+        ApplicationWindow("Test", onClose = ::exitApplication) {
             HeaderBar()
 
             Button("Button 1") { println("Clicked!") }
@@ -77,7 +77,7 @@ An interactive button that shows or hides a label:
 ```kotlin
 fun main(args: Array<String>) {
     application("my.example.HelloApp", args) {
-        ApplicationWindow(application, "Test", onClose = ::exitApplication) {
+        ApplicationWindow("Test", onClose = ::exitApplication) {
             Box(orientation = Orientation.VERTICAL) {
                 HeaderBar()
 
@@ -104,7 +104,7 @@ An `Entry`, that will make all text uppercase:
 ```kotlin
 fun main(args: Array<String>) {
     application("my.example.HelloApp", args) {
-        ApplicationWindow(application, "Test", onClose = ::exitApplication) {
+        ApplicationWindow("Test", onClose = ::exitApplication) {
             Box(orientation = Orientation.VERTICAL) {
                 HeaderBar()
 
@@ -136,7 +136,7 @@ In this example, at any point the `Entry` could ever contain a text that is no u
 ```kotlin
 fun main(args: Array<String>) {
     application("my.example.HelloApp", args) {
-        ApplicationWindow(application, "Test", onClose = ::exitApplication) {
+        ApplicationWindow("Test", onClose = ::exitApplication) {
             ToastOverlay {
                 VerticalBox {
                     HeaderBar()
@@ -169,3 +169,27 @@ fun main(args: Array<String>) {
 }
 ```
 
+----
+
+## GIO Resources
+
+This library provides a convenience function to load `gresource` files in the JAR's resources:
+
+```kotlin
+fun main(args: Array<String>) {
+    useGioResource("resources.gresource") {
+        application("my.example.hello-app", args) {
+            ApplicationWindow("Embedded picture", onClose = ::exitApplication) {
+                Picture(
+                    ImageSource.forResource("/my/example/hello-app/images/lulu.jpg"),
+                    contentFit = ContentFit.COVER,
+                    modifier = Modifier.expand(),
+                )
+            }
+        }
+    }
+}
+```
+
+In this example, `resources.gresource` is a GIO resource bundle compiled with `glib-compile-resources`, and included in
+the JAR. 

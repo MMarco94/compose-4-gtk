@@ -63,3 +63,16 @@ publishing {
         }
     }
 }
+
+// TODO: used on examples. They should probably be moved in a separate module to avoid polluting the main build file
+tasks.register("compileTestResources") {
+    exec {
+        workingDir = file("src/test/gresources")
+        commandLine =
+            listOf("glib-compile-resources", "--target=../resources/resources.gresource", "resources.gresource.xml")
+    }
+}
+
+tasks.named("assembleTestResources") {
+    dependsOn("compileTestResources")
+}

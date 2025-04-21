@@ -12,24 +12,27 @@ import io.github.mmarco94.compose.gtk.components.VerticalBox
 import kotlin.random.Random
 
 fun main(args: Array<String>) {
-    application("my.example.HelloApp", args) {
+    application("my.example.hello-app", args) {
         ApplicationWindow("Test", onClose = ::exitApplication) {
             VerticalBox {
                 HeaderBar()
                 var show by remember { mutableStateOf(false) }
                 var allowClose by remember { mutableStateOf(true) }
                 var fullscreen by remember { mutableStateOf(false) }
+                var maximized by remember { mutableStateOf(false) }
                 var title by remember { mutableStateOf("Random window") }
 
                 Button("Show normal") { show = !show }
                 ToggleButton("Allow close", allowClose) { allowClose = !allowClose }
                 ToggleButton("Fullscreen", fullscreen) { fullscreen = !fullscreen }
+                ToggleButton("Maximized", maximized) { maximized = !maximized }
                 Button("Randomize title") { title = "Random Window ${Random.nextInt()}" }
 
                 if (show) {
                     ApplicationWindow(
                         title = title,
                         fullscreen = fullscreen,
+                        maximized = maximized,
                         onClose = {
                             if (allowClose) {
                                 show = false
