@@ -116,5 +116,3 @@ fun <AW : ApplicationWindow, B : ApplicationWindow.Builder<*>> initializeApplica
         },
     )
 }
-
-typealias WindowInitializer = ApplicationWindow.() -> Unit
