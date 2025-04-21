@@ -26,9 +26,12 @@ fun main(args: Array<String>) {
                     overlays = {
                         WindowControls(
                             side = PackType.START,
-                            modifier = Modifier.alignment(Align.START, Align.START)
+                            modifier = Modifier.alignment(Align.START, Align.START),
                         )
-                        WindowControls(side = PackType.END, modifier = Modifier.alignment(Align.END, Align.START))
+                        WindowControls(
+                            side = PackType.END,
+                            modifier = Modifier.alignment(Align.END, Align.START),
+                        )
                     },
                 )
                 HeaderBar(
