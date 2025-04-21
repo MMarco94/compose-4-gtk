@@ -1,7 +1,7 @@
 package io.github.mmarco94.compose.adw.components
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ComposeNode
+import androidx.compose.runtime.*
+import io.github.jwharm.javagi.gobject.SignalConnection
 import io.github.mmarco94.compose.GtkApplier
 import io.github.mmarco94.compose.GtkComposeWidget
 import io.github.mmarco94.compose.GtkContainerComposeNode
@@ -12,6 +12,10 @@ import org.gnome.gtk.Orientation
 import org.gnome.gtk.Widget
 
 private class AdwCarouselComposeNode(gObject: Carousel) : GtkContainerComposeNode<Carousel>(gObject) {
+    var state: CarouselState? = null
+    var animateScrollTo: Boolean? = null
+    var onPageChanged: SignalConnection<Carousel.PageChangedCallback>? = null
+
     override fun add(index: Int, child: GtkComposeWidget<Widget>) {
         when (index) {
             children.size -> widget.append(child.widget)
@@ -33,8 +37,21 @@ private class AdwCarouselComposeNode(gObject: Carousel) : GtkContainerComposeNod
     }
 }
 
+class CarouselState(val pageCount: Int) {
+    private var _currentPage by mutableStateOf(0)
+
+    var currentPage: Int
+        get() = _currentPage
+        set(value) {
+            if (value in 0 until pageCount) {
+                _currentPage = value
+            }
+        }
+}
+
 @Composable
 fun Carousel(
+    state: CarouselState,
     modifier: Modifier = Modifier,
     orientation: Orientation = Orientation.HORIZONTAL,
     allowLongSwipes: Boolean = false,
@@ -44,12 +61,14 @@ fun Carousel(
     revealDuration: Int = 0,
     scrollParams: SpringParams = SpringParams(1.0, 0.5, 500.0),
     spacing: Int = 0,
-    onPageChanged: (Int) -> Unit = {},
-    content: @Composable () -> Unit,
+    animateScrollTo: Boolean = true,
+    onPageChanged: ((Int) -> Unit)? = null,
+    content: @Composable (page: Int) -> Unit,
 ) {
-    ComposeNode<GtkComposeWidget<Carousel>, GtkApplier>(
+    ComposeNode<AdwCarouselComposeNode, GtkApplier>(
         factory = { AdwCarouselComposeNode(Carousel()) },
         update = {
+            set(state) { this.state = state }
             set(modifier) { applyModifier(it) }
             set(orientation) { this.widget.orientation = it }
             set(allowLongSwipes) { this.widget.allowLongSwipes = it }
@@ -59,8 +78,29 @@ fun Carousel(
             set(revealDuration) { this.widget.revealDuration = it }
             set(scrollParams) { this.widget.scrollParams = it }
             set(spacing) { this.widget.spacing = it }
-            set(onPageChanged) { this.widget.onPageChanged { onPageChanged(it) } }
+            set(animateScrollTo) { this.animateScrollTo = animateScrollTo }
+
+            val currentPage = state.currentPage
+            update(currentPage) {
+                if (widget.visible && widget.mapped) {
+                    widget.scrollTo(widget.getNthPage(currentPage), animateScrollTo)
+                }
+            }
+
+            set(onPageChanged) {
+                this.onPageChanged?.disconnect()
+                this.onPageChanged = this.widget.onPageChanged { index ->
+                    state.currentPage = index
+                    if (onPageChanged != null) {
+                        onPageChanged(index)
+                    }
+                }
+            }
         },
-        content = content,
+        content = {
+            repeat(state.pageCount) { index ->
+                content(index)
+            }
+        },
     )
 }
