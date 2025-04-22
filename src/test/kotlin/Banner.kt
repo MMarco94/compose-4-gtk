@@ -17,7 +17,7 @@ fun main(args: Array<String>) {
         "<i><span foreground=\"red\" size=\"x-large\">Hell</span><span foreground=\"green\" size=\"x-large\">o wo</span><span foreground=\"blue\" size=\"x-large\">rld!</span></i>"
 
     application("my.example.hello-app", args) {
-        ApplicationWindow("Test", onClose = ::exitApplication, defaultWidth = 600, defaultHeight = 400) {
+        ApplicationWindow(title = "Banner", onClose = ::exitApplication, defaultWidth = 600, defaultHeight = 400) {
             val isRevealed = remember { mutableStateOf(false) }
 
             VerticalBox {
