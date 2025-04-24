@@ -17,22 +17,36 @@ private class GtkSwitchComposeNode(
 @Composable
 fun Switch(
     modifier: Modifier = Modifier,
-    active: Boolean = false,
-    state: Boolean = active,
+    active: Boolean,
+    sensitive: Boolean = true,
     onToggle: ((Boolean) -> Unit)? = null,
 ) {
     ComposeNode<GtkSwitchComposeNode, GtkApplier>({
-        GtkSwitchComposeNode(Switch.builder().build())
+        val switch = Switch.builder().setActive(active).build()
+        GtkSwitchComposeNode(switch)
     }) {
         set(modifier) { applyModifier(it) }
-        set(active) { this.widget.active = it }
-        set(state) { this.widget.state = it }
+        set(active) {
+            this.onStateSet?.block()
+            this.widget.active = it
+            this.onStateSet?.unblock()
+        }
+        set(sensitive) { this.widget.sensitive = it }
+
         set(onToggle) {
             this.onStateSet?.disconnect()
+
             if (it != null) {
                 this.onStateSet = this.widget.onStateSet { newState ->
                     it(newState)
-                    false
+                    if (newState == active) {
+                        false
+                    }
+                    this.onStateSet?.block()
+                    this.widget.active = active
+                    this.widget.state = active
+                    this.onStateSet?.unblock()
+                    true
                 }
             } else {
                 this.onStateSet = null
