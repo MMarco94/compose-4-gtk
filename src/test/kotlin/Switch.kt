@@ -1,5 +1,7 @@
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import io.github.mmarco94.compose.adw.application
 import io.github.mmarco94.compose.adw.components.ApplicationWindow
 import io.github.mmarco94.compose.adw.components.HeaderBar
@@ -20,29 +22,35 @@ fun main(args: Array<String>) {
 
                 StatusPage(title = "Switch", description = "A simple on/off control") {
                     VerticalBox(spacing = 16) {
-                        val isSwitchOneActive = remember { mutableStateOf(true) }
-                        val isSwitchTwoActive = remember { mutableStateOf(false) }
+                        var isSwitchActive by remember { mutableStateOf(false) }
 
                         VerticalBox(spacing = 8) {
                             Switch(
                                 modifier = Modifier.alignment(Align.CENTER),
-                                active = !isSwitchTwoActive.value,
+                                active = isSwitchActive,
                             ) { newState ->
-                                isSwitchOneActive.value = newState
-                                println(newState)
+                                isSwitchActive = newState
                             }
-                            Label(if (isSwitchOneActive.value) "On" else "Off")
+                            Label(if (isSwitchActive) "On" else "Off")
                         }
 
                         VerticalBox(spacing = 8) {
                             Switch(
                                 modifier = Modifier.alignment(Align.CENTER),
-                                active = !isSwitchOneActive.value,
+                                active = false,
                             ) { newState ->
-                                isSwitchTwoActive.value = newState
-                                println(newState)
+                                println("Doesn't change state")
                             }
-                            Label(if (isSwitchTwoActive.value) "On" else "Off")
+                            Label("Off")
+                        }
+
+                        VerticalBox(spacing = 8) {
+                            Switch(
+                                modifier = Modifier.alignment(Align.CENTER),
+                                active = false,
+                                sensitive = false,
+                            )
+                            Label("Disabled")
                         }
                     }
                 }
