@@ -1,14 +1,23 @@
 import androidx.compose.runtime.*
 import io.github.mmarco94.compose.adw.application
-import io.github.mmarco94.compose.adw.components.AboutDialog
+import io.github.mmarco94.compose.adw.components.*
 import io.github.mmarco94.compose.adw.components.ApplicationWindow
-import io.github.mmarco94.compose.adw.components.Dialog
-import io.github.mmarco94.compose.adw.components.HeaderBar
 import io.github.mmarco94.compose.gtk.components.*
 import io.github.mmarco94.compose.modifier.*
 import org.gnome.adw.DialogPresentationMode
+import org.gnome.adw.ResponseAppearance
 import org.gnome.gtk.Align
 import org.gnome.gtk.License
+
+private val cancelResponse = AlertDialogResponse(
+    id = "cancel",
+    label = "_Cancel",
+)
+private val replaceResponse = AlertDialogResponse(
+    id = "replace",
+    label = "_Replace",
+    appearance = ResponseAppearance.DESTRUCTIVE,
+)
 
 fun main(args: Array<String>) {
     application("my.example.hello-app", args) {
@@ -66,6 +75,28 @@ fun main(args: Array<String>) {
                 )
             }
 
+            var alertDialog by remember { mutableStateOf(false) }
+            if (alertDialog) {
+                AlertDialog(
+                    heading = "Replace file?",
+                    body = "A file named \"example.png\" already exists. Do you want to replace it?",
+                    followsContentSize = true,
+                    responses = listOf(
+                        cancelResponse,
+                        replaceResponse,
+                    ),
+                    defaultResponse = cancelResponse,
+                    onResponse = { response ->
+                        if (response == replaceResponse) {
+                            println("Replace the file")
+                        }
+                    },
+                    onClose = {
+                        alertDialog = false
+                    },
+                )
+            }
+
             VerticalBox {
                 HeaderBar()
 
@@ -92,6 +123,11 @@ fun main(args: Array<String>) {
                         modifier = Modifier.horizontalAlignment(Align.CENTER),
                         label = "About dialog",
                         onClick = { aboutDialog = true },
+                    )
+                    Button(
+                        modifier = Modifier.horizontalAlignment(Align.CENTER),
+                        label = "Alert dialog",
+                        onClick = { alertDialog = true },
                     )
                 }
             }
