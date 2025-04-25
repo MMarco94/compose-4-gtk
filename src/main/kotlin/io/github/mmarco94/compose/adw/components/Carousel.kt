@@ -5,8 +5,11 @@ import io.github.jwharm.javagi.gobject.SignalConnection
 import io.github.mmarco94.compose.GtkApplier
 import io.github.mmarco94.compose.GtkComposeWidget
 import io.github.mmarco94.compose.GtkContainerComposeNode
+import io.github.mmarco94.compose.LeafComposeNode
 import io.github.mmarco94.compose.modifier.Modifier
 import org.gnome.adw.Carousel
+import org.gnome.adw.CarouselIndicatorDots
+import org.gnome.adw.CarouselIndicatorLines
 import org.gnome.adw.SpringParams
 import org.gnome.gtk.Orientation
 import org.gnome.gtk.Widget
@@ -38,15 +41,15 @@ private class AdwCarouselComposeNode(gObject: Carousel) : GtkContainerComposeNod
 }
 
 class CarouselState(val pageCount: Int) {
-    private var _currentPage by mutableStateOf(0)
+    var carousel: Carousel? = null
+    var currentPage by mutableStateOf(0)
+        private set
 
-    var currentPage: Int
-        get() = _currentPage
-        set(value) {
-            if (value in 0 until pageCount) {
-                _currentPage = value
-            }
+    fun scrollTo(pageNumber: Int) {
+        if (pageNumber in 0 until pageCount) {
+            currentPage = pageNumber
         }
+    }
 }
 
 @Composable
@@ -66,7 +69,11 @@ fun Carousel(
     content: @Composable (page: Int) -> Unit,
 ) {
     ComposeNode<AdwCarouselComposeNode, GtkApplier>(
-        factory = { AdwCarouselComposeNode(Carousel()) },
+        factory = {
+            val gObject = Carousel()
+            state.carousel = gObject
+            AdwCarouselComposeNode(gObject)
+        },
         update = {
             set(state) { this.state = state }
             set(modifier) { applyModifier(it) }
@@ -90,7 +97,7 @@ fun Carousel(
             set(onPageChanged) {
                 this.onPageChanged?.disconnect()
                 this.onPageChanged = this.widget.onPageChanged { index ->
-                    state.currentPage = index
+                    state.scrollTo(index)
                     if (onPageChanged != null) {
                         onPageChanged(index)
                     }
@@ -103,4 +110,34 @@ fun Carousel(
             }
         },
     )
+}
+
+@Composable
+fun CarouselIndicatorDots(
+    carouselState: CarouselState,
+    modifier: Modifier = Modifier,
+    orientation: Orientation = Orientation.HORIZONTAL,
+) {
+    ComposeNode<GtkComposeWidget<CarouselIndicatorDots>, GtkApplier>({
+        LeafComposeNode(CarouselIndicatorDots.builder().build())
+    }) {
+        set(carouselState) { this.widget.carousel = it.carousel }
+        set(modifier) { applyModifier(it) }
+        set(orientation) { this.widget.orientation = it }
+    }
+}
+
+@Composable
+fun CarouselIndicatorLines(
+    carouselState: CarouselState,
+    modifier: Modifier = Modifier,
+    orientation: Orientation = Orientation.HORIZONTAL,
+) {
+    ComposeNode<GtkComposeWidget<CarouselIndicatorLines>, GtkApplier>({
+        LeafComposeNode(CarouselIndicatorLines.builder().build())
+    }) {
+        set(carouselState) { this.widget.carousel = it.carousel }
+        set(modifier) { applyModifier(it) }
+        set(orientation) { this.widget.orientation = it }
+    }
 }

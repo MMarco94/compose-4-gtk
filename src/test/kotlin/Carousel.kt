@@ -8,7 +8,9 @@ import io.github.mmarco94.compose.gtk.components.Box
 import io.github.mmarco94.compose.gtk.components.Button
 import io.github.mmarco94.compose.gtk.components.Label
 import io.github.mmarco94.compose.gtk.components.ToggleButton
+import io.github.mmarco94.compose.gtk.components.VerticalBox
 import io.github.mmarco94.compose.modifier.Modifier
+import io.github.mmarco94.compose.modifier.expand
 import io.github.mmarco94.compose.modifier.margin
 import org.gnome.gtk.Orientation
 
@@ -22,32 +24,41 @@ fun main(args: Array<String>) {
             val allowScrollWheel = remember { mutableStateOf(true) }
             val animateScrollTo = remember { mutableStateOf(true) }
 
-            Box(orientation = Orientation.VERTICAL) {
+            VerticalBox {
                 HeaderBar(title = { Label("Current page: ${pageState.currentPage}") })
 
-                Carousel(
-                    state = pageState,
-                    orientation = orientation.value,
-                    allowLongSwipes = allowLongSwipes.value,
-                    allowMouseDrag = allowMouseDrag.value,
-                    allowScrollWheel = allowScrollWheel.value,
-                    spacing = 80,
-                    animateScrollTo = animateScrollTo.value,
-                    onPageChanged = { index ->
-                        println("Page changed to $index")
-                        println("State current page changed to ${pageState.currentPage}")
-                    },
-                ) { page ->
-                    when (page) {
-                        0 -> Presentation()
-                        1 -> Settings(allowLongSwipes, allowMouseDrag, allowScrollWheel)
-                        2 -> MoreSettings(orientation)
-                        else -> {
-                            StatusPage(title = "Page $page") {
-                                Label("Status page $page")
+                Box(
+                    orientation = if (orientation.value == Orientation.HORIZONTAL) Orientation.VERTICAL else Orientation.HORIZONTAL,
+                    modifier = Modifier.margin(8, 0)
+                ) {
+                    Carousel(
+                        state = pageState,
+                        modifier = Modifier.expand(true),
+                        orientation = orientation.value,
+                        allowLongSwipes = allowLongSwipes.value,
+                        allowMouseDrag = allowMouseDrag.value,
+                        allowScrollWheel = allowScrollWheel.value,
+                        spacing = 80,
+                        animateScrollTo = animateScrollTo.value,
+                        onPageChanged = { index ->
+                            println("Page changed to $index")
+                            println("State current page changed to ${pageState.currentPage}")
+                        },
+                    ) { page ->
+                        when (page) {
+                            0 -> Presentation()
+                            1 -> Settings(allowLongSwipes, allowMouseDrag, allowScrollWheel)
+                            2 -> MoreSettings(orientation)
+                            else -> {
+                                StatusPage(title = "Page $page") {
+                                    Label("Status page $page")
+                                }
                             }
                         }
                     }
+
+                    CarouselIndicatorDots(pageState, orientation = orientation.value)
+                    CarouselIndicatorLines(pageState, orientation = orientation.value)
                 }
 
                 Box(orientation = Orientation.VERTICAL, modifier = Modifier.margin(16), spacing = 16) {
@@ -55,7 +66,7 @@ fun main(args: Array<String>) {
                         animateScrollTo.value = !animateScrollTo.value
                     }
                     Button("Scroll to page 4") {
-                        pageState.currentPage = 4
+                        pageState.scrollTo(4)
                     }
                 }
             }
