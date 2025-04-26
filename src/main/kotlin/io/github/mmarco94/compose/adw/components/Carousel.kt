@@ -121,6 +121,9 @@ fun Carousel(
         },
         content = {
             repeat(state.pageCount) { index ->
+                // This is necessary to have a predictable number of pages, regardless to how many composable
+                // per page the caller adds.
+                // Moreover, it prevents undesired scrolling when swapping a composable in a page.
                 CenterBox {
                     content(index)
                 }
