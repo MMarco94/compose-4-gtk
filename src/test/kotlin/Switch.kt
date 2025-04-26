@@ -22,7 +22,7 @@ fun main(args: Array<String>) {
 
                 StatusPage(title = "Switch", description = "A simple on/off control") {
                     VerticalBox(spacing = 16) {
-                        var isSwitchActive by remember { mutableStateOf(false) }
+                        var isSwitchActive by remember { mutableStateOf(true) }
 
                         VerticalBox(spacing = 8) {
                             Switch(
@@ -37,19 +37,19 @@ fun main(args: Array<String>) {
                         VerticalBox(spacing = 8) {
                             Switch(
                                 modifier = Modifier.alignment(Align.CENTER),
-                                active = false,
+                                active = isSwitchActive,
                             ) { newState ->
                                 println("Doesn't change state")
                             }
-                            Label("Off")
+                            Label("Mirror & read-only")
                         }
 
                         VerticalBox(spacing = 8) {
                             Switch(
                                 modifier = Modifier.alignment(Align.CENTER),
-                                active = false,
-                                sensitive = false,
-                            )
+                                active = isSwitchActive,
+                                enabled = false,
+                            ){}
                             Label("Disabled")
                         }
                     }

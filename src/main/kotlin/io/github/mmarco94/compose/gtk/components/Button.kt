@@ -112,7 +112,7 @@ fun IconButton(
                 this.onClick?.disconnect()
                 this.onClick = this.widget.onClicked(it)
             }
-            set(iconName) { this.widget.iconName = iconName }
+            set(iconName) { this.widget.iconName = it }
         }
     )
 }
