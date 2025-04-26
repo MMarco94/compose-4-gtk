@@ -17,11 +17,11 @@ import io.github.mmarco94.compose.modifier.margin
 import org.gnome.gtk.Orientation
 
 fun main(args: Array<String>) {
-    application("my.example.HelloApp", args) {
-        ApplicationWindow("Test", onClose = ::exitApplication) {
+    application("my.example.hello-app", args) {
+        ApplicationWindow("Carousel", onClose = ::exitApplication) {
             var pageCount by remember { mutableStateOf(8) }
-            val carouselState = rememberCarouselState(pageCount)
             val orientation = remember { mutableStateOf(Orientation.HORIZONTAL) }
+            val carouselState = rememberCarouselState(pageCount, orientation.value)
             val allowLongSwipes = remember { mutableStateOf(false) }
             val allowMouseDrag = remember { mutableStateOf(true) }
             val allowScrollWheel = remember { mutableStateOf(true) }
@@ -36,7 +36,6 @@ fun main(args: Array<String>) {
                     Carousel(
                         state = carouselState,
                         modifier = Modifier.expand(true),
-                        orientation = orientation.value,
                         allowLongSwipes = allowLongSwipes.value,
                         allowMouseDrag = allowMouseDrag.value,
                         allowScrollWheel = allowScrollWheel.value,
@@ -51,9 +50,8 @@ fun main(args: Array<String>) {
                             1 -> Settings(allowLongSwipes, allowMouseDrag, allowScrollWheel)
                             2 -> MoreSettings(orientation)
                             else -> {
-                                StatusPage(title = "Page $page") {
+                                StatusPage(title = "Page $page", description = "Status page $page") {
                                     VerticalBox {
-                                        Label("Status page $page")
                                         if (page == pageCount - 1) {
                                             Label("You reached the end!")
                                             Button("Add page") {
@@ -66,8 +64,8 @@ fun main(args: Array<String>) {
                         }
                     }
 
-                    CarouselIndicatorDots(carouselState, orientation = orientation.value)
-                    CarouselIndicatorLines(carouselState, orientation = orientation.value)
+                    CarouselIndicatorDots(carouselState)
+                    CarouselIndicatorLines(carouselState)
                 }
 
                 Box(orientation = Orientation.VERTICAL, modifier = Modifier.margin(16), spacing = 16) {

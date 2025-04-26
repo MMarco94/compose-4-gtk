@@ -9,6 +9,8 @@ import io.github.mmarco94.compose.LeafComposeNode
 import io.github.mmarco94.compose.gtk.components.Box
 import io.github.mmarco94.compose.gtk.components.CenterBox
 import io.github.mmarco94.compose.gtk.components.Frame
+import io.github.mmarco94.compose.gtk.components.HorizontalBox
+import io.github.mmarco94.compose.gtk.components.VerticalBox
 import io.github.mmarco94.compose.modifier.Modifier
 import org.gnome.adw.Carousel
 import org.gnome.adw.CarouselIndicatorDots
@@ -18,11 +20,9 @@ import org.gnome.gtk.Orientation
 import org.gnome.gtk.Widget
 
 private class AdwCarouselComposeNode(gObject: Carousel) : GtkContainerComposeNode<Carousel>(gObject) {
-    var state: CarouselState? = null
     var onPageChanged: SignalConnection<Carousel.PageChangedCallback>? = null
 
     override fun add(index: Int, child: GtkComposeWidget<Widget>) {
-        println("Add child $index")
         when (index) {
             children.size -> widget.append(child.widget)
             0 -> widget.insertAfter(child.widget, null)
@@ -32,7 +32,6 @@ private class AdwCarouselComposeNode(gObject: Carousel) : GtkContainerComposeNod
     }
 
     override fun remove(index: Int) {
-        println("Remove child $index")
         val child = children[index]
         widget.remove(child)
         super.remove(index)
@@ -48,13 +47,15 @@ sealed interface CarouselState {
     val carousel: Carousel?
     val currentPage: Int
     val pageCount: Int
+    val orientation: Orientation
     fun scrollTo(pageNumber: Int, animate: Boolean = true)
 }
 
 @Composable
-fun rememberCarouselState(pageCount: Int): CarouselState {
+fun rememberCarouselState(pageCount: Int, orientation: Orientation = Orientation.HORIZONTAL): CarouselState {
     val state = remember { CarouselStateImpl() }
     state.pageCount = pageCount
+    state.orientation = orientation
     return state
 }
 
@@ -67,6 +68,7 @@ private class CarouselStateImpl : CarouselState {
         }
     override var pageCount by mutableStateOf(0)
     override var currentPage by mutableStateOf(0)
+    override var orientation by mutableStateOf(Orientation.HORIZONTAL)
 
     override fun scrollTo(pageNumber: Int, animate: Boolean) {
         val c = carousel ?: return
@@ -78,7 +80,6 @@ private class CarouselStateImpl : CarouselState {
 fun Carousel(
     state: CarouselState,
     modifier: Modifier = Modifier,
-    orientation: Orientation = Orientation.HORIZONTAL,
     allowLongSwipes: Boolean = false,
     allowMouseDrag: Boolean = true,
     allowScrollWheel: Boolean = true,
@@ -99,9 +100,8 @@ fun Carousel(
             AdwCarouselComposeNode(gObject)
         },
         update = {
-            set(state) { this.state = state }
             set(modifier) { applyModifier(it) }
-            set(orientation) { this.widget.orientation = it }
+            set(state.orientation) { this.widget.orientation = it }
             set(allowLongSwipes) { this.widget.allowLongSwipes = it }
             set(allowMouseDrag) { this.widget.allowMouseDrag = it }
             set(allowScrollWheel) { this.widget.allowScrollWheel = it }
@@ -113,8 +113,8 @@ fun Carousel(
                 this.onPageChanged?.disconnect()
                 this.onPageChanged = this.widget.onPageChanged { index ->
                     stateImpl.currentPage = index
-                    if (onPageChanged != null) {
-                        onPageChanged(index)
+                    if (it != null) {
+                        it(index)
                     }
                 }
             }
@@ -124,7 +124,7 @@ fun Carousel(
                 // This is necessary to have a predictable number of pages, regardless to how many composable
                 // per page the caller adds.
                 // Moreover, it prevents undesired scrolling when swapping a composable in a page.
-                CenterBox {
+                VerticalBox(homogeneous = true) {
                     content(index)
                 }
             }
@@ -136,14 +136,13 @@ fun Carousel(
 fun CarouselIndicatorDots(
     carouselState: CarouselState,
     modifier: Modifier = Modifier,
-    orientation: Orientation = Orientation.HORIZONTAL,
 ) {
     ComposeNode<GtkComposeWidget<CarouselIndicatorDots>, GtkApplier>({
         LeafComposeNode(CarouselIndicatorDots.builder().build())
     }) {
         set(carouselState.carousel) { this.widget.carousel = it }
         set(modifier) { applyModifier(it) }
-        set(orientation) { this.widget.orientation = it }
+        set(carouselState.orientation) { this.widget.orientation = it }
     }
 }
 
@@ -151,13 +150,12 @@ fun CarouselIndicatorDots(
 fun CarouselIndicatorLines(
     carouselState: CarouselState,
     modifier: Modifier = Modifier,
-    orientation: Orientation = Orientation.HORIZONTAL,
 ) {
     ComposeNode<GtkComposeWidget<CarouselIndicatorLines>, GtkApplier>({
         LeafComposeNode(CarouselIndicatorLines.builder().build())
     }) {
         set(carouselState.carousel) { this.widget.carousel = it }
         set(modifier) { applyModifier(it) }
-        set(orientation) { this.widget.orientation = it }
+        set(carouselState.orientation) { this.widget.orientation = it }
     }
 }
