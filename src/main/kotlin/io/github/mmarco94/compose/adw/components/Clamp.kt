@@ -6,7 +6,7 @@ import io.github.mmarco94.compose.GtkApplier
 import io.github.mmarco94.compose.GtkComposeWidget
 import io.github.mmarco94.compose.SingleChildComposeNode
 import io.github.mmarco94.compose.modifier.Modifier
-import org.gnome.adw.Clamp
+import org.gnome.adw.Clamp as GtkClamp
 import org.gnome.gtk.Orientation
 
 
@@ -38,10 +38,10 @@ fun Clamp(
     tighteningThreshold: Int = 400,
     content: @Composable () -> Unit,
 ) {
-    ComposeNode<GtkComposeWidget<Clamp>, GtkApplier>(
+    ComposeNode<GtkComposeWidget<GtkClamp>, GtkApplier>(
         factory = {
             SingleChildComposeNode(
-                Clamp.builder().build(),
+                GtkClamp.builder().build(),
                 set = { child = it },
             )
         },

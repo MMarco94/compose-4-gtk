@@ -6,11 +6,11 @@ import io.github.mmarco94.compose.GtkComposeWidget
 import io.github.mmarco94.compose.GtkApplier
 import io.github.mmarco94.compose.GtkContainerComposeNode
 import io.github.mmarco94.compose.modifier.Modifier
-import org.gnome.gtk.Box
+import org.gnome.gtk.Box as GtkBox
 import org.gnome.gtk.Orientation
 import org.gnome.gtk.Widget
 
-private class GtkBoxComposeNode(gObject: Box) : GtkContainerComposeNode<Box>(gObject) {
+private class GtkBoxComposeNode(gObject: GtkBox) : GtkContainerComposeNode<GtkBox>(gObject) {
     override fun add(index: Int, child: GtkComposeWidget<Widget>) {
         when (index) {
             children.size -> widget.append(child.widget)
@@ -60,9 +60,9 @@ fun Box(
     homogeneous: Boolean = false,
     content: @Composable () -> Unit,
 ) {
-    ComposeNode<GtkComposeWidget<Box>, GtkApplier>(
+    ComposeNode<GtkComposeWidget<GtkBox>, GtkApplier>(
         factory = {
-            GtkBoxComposeNode(Box.builder().build())
+            GtkBoxComposeNode(GtkBox.builder().build())
         },
         update = {
             set(modifier) { applyModifier(it) }

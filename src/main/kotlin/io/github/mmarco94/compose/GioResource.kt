@@ -2,7 +2,6 @@ package io.github.mmarco94.compose
 
 import org.gnome.gio.Gio
 import org.gnome.gio.Resource
-import org.gnome.glib.Bytes
 
 /**
  * Loads a Java resource as a `gresource` file.
@@ -12,7 +11,7 @@ fun Class<*>.getGioResource(javaResourceName: String): Resource {
     val data = getResourceAsStream(javaResourceName).use { inputStream ->
         inputStream!!.readAllBytes()
     }
-    return Resource.fromData(Bytes.take(data))
+    return Resource.fromData(data)
 }
 
 /**
