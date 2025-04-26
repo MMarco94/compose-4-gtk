@@ -6,6 +6,9 @@ import io.github.mmarco94.compose.GtkApplier
 import io.github.mmarco94.compose.GtkComposeWidget
 import io.github.mmarco94.compose.GtkContainerComposeNode
 import io.github.mmarco94.compose.LeafComposeNode
+import io.github.mmarco94.compose.gtk.components.Box
+import io.github.mmarco94.compose.gtk.components.CenterBox
+import io.github.mmarco94.compose.gtk.components.Frame
 import io.github.mmarco94.compose.modifier.Modifier
 import org.gnome.adw.Carousel
 import org.gnome.adw.CarouselIndicatorDots
@@ -16,10 +19,10 @@ import org.gnome.gtk.Widget
 
 private class AdwCarouselComposeNode(gObject: Carousel) : GtkContainerComposeNode<Carousel>(gObject) {
     var state: CarouselState? = null
-    var animateScrollTo: Boolean? = null
     var onPageChanged: SignalConnection<Carousel.PageChangedCallback>? = null
 
     override fun add(index: Int, child: GtkComposeWidget<Widget>) {
+        println("Add child $index")
         when (index) {
             children.size -> widget.append(child.widget)
             0 -> widget.insertAfter(child.widget, null)
@@ -29,6 +32,7 @@ private class AdwCarouselComposeNode(gObject: Carousel) : GtkContainerComposeNod
     }
 
     override fun remove(index: Int) {
+        println("Remove child $index")
         val child = children[index]
         widget.remove(child)
         super.remove(index)
@@ -40,15 +44,33 @@ private class AdwCarouselComposeNode(gObject: Carousel) : GtkContainerComposeNod
     }
 }
 
-class CarouselState(val pageCount: Int) {
-    var carousel: Carousel? = null
-    var currentPage by mutableStateOf(0)
-        private set
+sealed interface CarouselState {
+    val carousel: Carousel?
+    val currentPage: Int
+    val pageCount: Int
+    fun scrollTo(pageNumber: Int, animate: Boolean = true)
+}
 
-    fun scrollTo(pageNumber: Int) {
-        if (pageNumber in 0 until pageCount) {
-            currentPage = pageNumber
+@Composable
+fun rememberCarouselState(pageCount: Int): CarouselState {
+    val state = remember { CarouselStateImpl() }
+    state.pageCount = pageCount
+    return state
+}
+
+private class CarouselStateImpl : CarouselState {
+    override var carousel: Carousel? = null
+        set(value) {
+            check(field == null) { "CarouselState can be associated to a single Carousel" }
+            requireNotNull(value)
+            field = value
         }
+    override var pageCount by mutableStateOf(0)
+    override var currentPage by mutableStateOf(0)
+
+    override fun scrollTo(pageNumber: Int, animate: Boolean) {
+        val c = carousel ?: return
+        c.scrollTo(c.getNthPage(pageNumber), animate)
     }
 }
 
@@ -64,14 +86,16 @@ fun Carousel(
     revealDuration: Int = 0,
     scrollParams: SpringParams = SpringParams(1.0, 0.5, 500.0),
     spacing: Int = 0,
-    animateScrollTo: Boolean = true,
     onPageChanged: ((Int) -> Unit)? = null,
     content: @Composable (page: Int) -> Unit,
 ) {
+    val stateImpl: CarouselStateImpl = when (state) {
+        is CarouselStateImpl -> state
+    }
     ComposeNode<AdwCarouselComposeNode, GtkApplier>(
         factory = {
             val gObject = Carousel()
-            state.carousel = gObject
+            stateImpl.carousel = gObject
             AdwCarouselComposeNode(gObject)
         },
         update = {
@@ -85,19 +109,10 @@ fun Carousel(
             set(revealDuration) { this.widget.revealDuration = it }
             set(scrollParams) { this.widget.scrollParams = it }
             set(spacing) { this.widget.spacing = it }
-            set(animateScrollTo) { this.animateScrollTo = animateScrollTo }
-
-            val currentPage = state.currentPage
-            update(currentPage) {
-                if (widget.visible && widget.mapped) {
-                    widget.scrollTo(widget.getNthPage(currentPage), animateScrollTo)
-                }
-            }
-
             set(onPageChanged) {
                 this.onPageChanged?.disconnect()
                 this.onPageChanged = this.widget.onPageChanged { index ->
-                    state.scrollTo(index)
+                    stateImpl.currentPage = index
                     if (onPageChanged != null) {
                         onPageChanged(index)
                     }
@@ -106,7 +121,9 @@ fun Carousel(
         },
         content = {
             repeat(state.pageCount) { index ->
-                content(index)
+                CenterBox {
+                    content(index)
+                }
             }
         },
     )
@@ -121,7 +138,7 @@ fun CarouselIndicatorDots(
     ComposeNode<GtkComposeWidget<CarouselIndicatorDots>, GtkApplier>({
         LeafComposeNode(CarouselIndicatorDots.builder().build())
     }) {
-        set(carouselState) { this.widget.carousel = it.carousel }
+        set(carouselState.carousel) { this.widget.carousel = it }
         set(modifier) { applyModifier(it) }
         set(orientation) { this.widget.orientation = it }
     }
@@ -136,7 +153,7 @@ fun CarouselIndicatorLines(
     ComposeNode<GtkComposeWidget<CarouselIndicatorLines>, GtkApplier>({
         LeafComposeNode(CarouselIndicatorLines.builder().build())
     }) {
-        set(carouselState) { this.widget.carousel = it.carousel }
+        set(carouselState.carousel) { this.widget.carousel = it }
         set(modifier) { applyModifier(it) }
         set(orientation) { this.widget.orientation = it }
     }

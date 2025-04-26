@@ -1,7 +1,9 @@
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import io.github.mmarco94.compose.adw.application
 import io.github.mmarco94.compose.adw.components.*
 import io.github.mmarco94.compose.gtk.components.Box
@@ -17,32 +19,31 @@ import org.gnome.gtk.Orientation
 fun main(args: Array<String>) {
     application("my.example.HelloApp", args) {
         ApplicationWindow("Test", onClose = ::exitApplication) {
-            val pageState = remember { CarouselState(8) }
+            var pageCount by remember { mutableStateOf(8) }
+            val carouselState = rememberCarouselState(pageCount)
             val orientation = remember { mutableStateOf(Orientation.HORIZONTAL) }
             val allowLongSwipes = remember { mutableStateOf(false) }
             val allowMouseDrag = remember { mutableStateOf(true) }
             val allowScrollWheel = remember { mutableStateOf(true) }
-            val animateScrollTo = remember { mutableStateOf(true) }
 
             VerticalBox {
-                HeaderBar(title = { Label("Current page: ${pageState.currentPage}") })
+                HeaderBar(title = { Label("Current page: ${carouselState.currentPage}/${carouselState.pageCount}") })
 
                 Box(
                     orientation = if (orientation.value == Orientation.HORIZONTAL) Orientation.VERTICAL else Orientation.HORIZONTAL,
                     modifier = Modifier.margin(8, 0)
                 ) {
                     Carousel(
-                        state = pageState,
+                        state = carouselState,
                         modifier = Modifier.expand(true),
                         orientation = orientation.value,
                         allowLongSwipes = allowLongSwipes.value,
                         allowMouseDrag = allowMouseDrag.value,
                         allowScrollWheel = allowScrollWheel.value,
                         spacing = 80,
-                        animateScrollTo = animateScrollTo.value,
                         onPageChanged = { index ->
                             println("Page changed to $index")
-                            println("State current page changed to ${pageState.currentPage}")
+                            println("State current page changed to ${carouselState.currentPage}")
                         },
                     ) { page ->
                         when (page) {
@@ -51,22 +52,33 @@ fun main(args: Array<String>) {
                             2 -> MoreSettings(orientation)
                             else -> {
                                 StatusPage(title = "Page $page") {
-                                    Label("Status page $page")
+                                    VerticalBox {
+                                        Label("Status page $page")
+                                        if (page == pageCount - 1) {
+                                            Label("You reached the end!")
+                                            Button("Add page") {
+                                                pageCount += 1
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
 
-                    CarouselIndicatorDots(pageState, orientation = orientation.value)
-                    CarouselIndicatorLines(pageState, orientation = orientation.value)
+                    CarouselIndicatorDots(carouselState, orientation = orientation.value)
+                    CarouselIndicatorLines(carouselState, orientation = orientation.value)
                 }
 
                 Box(orientation = Orientation.VERTICAL, modifier = Modifier.margin(16), spacing = 16) {
-                    ToggleButton("Animate scroll to", active = animateScrollTo.value) {
-                        animateScrollTo.value = !animateScrollTo.value
+                    Button("Snap scroll to page 4") {
+                        carouselState.scrollTo(4, animate = false)
                     }
-                    Button("Scroll to page 4") {
-                        pageState.scrollTo(4)
+                    Button("Scroll to last") {
+                        carouselState.scrollTo(pageCount - 1)
+                    }
+                    Button("Scroll to first") {
+                        carouselState.scrollTo(0)
                     }
                 }
             }
@@ -85,7 +97,7 @@ fun Presentation() {
 fun Settings(
     allowLongSwipes: MutableState<Boolean>,
     allowMouseDrag: MutableState<Boolean>,
-    allowScrollWheel: MutableState<Boolean>
+    allowScrollWheel: MutableState<Boolean>,
 ) {
     StatusPage(title = "Settings") {
         Box(orientation = Orientation.VERTICAL, modifier = Modifier.margin(16), spacing = 16) {

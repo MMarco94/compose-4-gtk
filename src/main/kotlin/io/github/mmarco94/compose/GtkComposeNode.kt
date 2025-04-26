@@ -98,6 +98,9 @@ internal open class SingleChildComposeNode<W : Widget>(
     }
 
     override fun add(index: Int, child: GtkComposeWidget<Widget>) {
+        if (stack.isNotEmpty()) {
+            throw IllegalStateException("${widget.javaClass.simpleName} can have at most one child node")
+        }
         stack.add(child.widget)
         recompute()
     }
