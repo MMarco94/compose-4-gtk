@@ -6,18 +6,17 @@ import io.github.mmarco94.compose.GtkApplier
 import io.github.mmarco94.compose.GtkComposeWidget
 import io.github.mmarco94.compose.GtkContainerComposeNode
 import io.github.mmarco94.compose.LeafComposeNode
-import io.github.mmarco94.compose.gtk.components.Box
-import io.github.mmarco94.compose.gtk.components.CenterBox
-import io.github.mmarco94.compose.gtk.components.Frame
-import io.github.mmarco94.compose.gtk.components.HorizontalBox
 import io.github.mmarco94.compose.gtk.components.VerticalBox
 import io.github.mmarco94.compose.modifier.Modifier
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.gnome.adw.Carousel
 import org.gnome.adw.CarouselIndicatorDots
 import org.gnome.adw.CarouselIndicatorLines
 import org.gnome.adw.SpringParams
 import org.gnome.gtk.Orientation
 import org.gnome.gtk.Widget
+
+private val logger = KotlinLogging.logger {}
 
 private class AdwCarouselComposeNode(gObject: Carousel) : GtkContainerComposeNode<Carousel>(gObject) {
     var onPageChanged: SignalConnection<Carousel.PageChangedCallback>? = null
@@ -71,8 +70,17 @@ private class CarouselStateImpl : CarouselState {
     override var orientation by mutableStateOf(Orientation.HORIZONTAL)
 
     override fun scrollTo(pageNumber: Int, animate: Boolean) {
-        val c = carousel ?: return
-        c.scrollTo(c.getNthPage(pageNumber), animate)
+        val c = carousel
+        if (c == null) {
+            logger.warn { "Cannot scroll to $pageNumber: Carousel not initialized yet" }
+            return
+        }
+        val widget = c.getNthPage(pageNumber)
+        if (widget == null) {
+            logger.warn { "Cannot scroll to $pageNumber: page not initialized yet" }
+            return
+        }
+        c.scrollTo(widget, animate)
     }
 }
 
