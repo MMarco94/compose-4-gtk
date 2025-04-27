@@ -80,7 +80,7 @@ abstract class GtkComposeContainer<out W : Widget>(widget: W) : GtkComposeWidget
     protected abstract fun clear()
 }
 
-internal open class LeafComposeNode<G : Widget>(gObject: G) : GtkComposeWidget<G>(gObject) {
+internal open class LeafComposeNode<G : Widget>(widget: G) : GtkComposeWidget<G>(widget) {
     override fun addNode(index: Int, child: GtkComposeNode) = throw UnsupportedOperationException()
     override fun removeNode(index: Int) = throw UnsupportedOperationException()
     override fun clearNodes() = throw UnsupportedOperationException()
