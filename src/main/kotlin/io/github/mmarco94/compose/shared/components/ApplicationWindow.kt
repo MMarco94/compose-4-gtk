@@ -3,7 +3,6 @@ package io.github.mmarco94.compose.shared.components
 import androidx.compose.runtime.*
 import io.github.jwharm.javagi.gobject.SignalConnection
 import io.github.mmarco94.compose.*
-import io.github.mmarco94.compose.GtkApplier
 import io.github.mmarco94.compose.SingleChildComposeNode
 import io.github.mmarco94.compose.modifier.Modifier
 import org.gnome.gtk.ApplicationWindow
@@ -57,30 +56,25 @@ internal fun <AW : ApplicationWindow, B : ApplicationWindow.Builder<*>> initiali
     content: @Composable (AW) -> Unit,
 ) {
     val application = LocalApplication.current
-    val compositionContext = rememberCompositionContext()
-    val window = remember {
-        builder().build() as AW
-    }
-    val composeNode = remember {
-        GtkApplicationWindowComposeNode(window, setContent)
-    }
+    val composeNode = GtkSubComposition(
+        createNode = {
+            val window = builder().build() as AW
+            GtkApplicationWindowComposeNode(window, setContent)
+        },
+        content = { composeNode ->
+            CompositionLocalProvider(LocalApplicationWindow provides composeNode.widget) {
+                content(composeNode.widget)
+            }
+        }
+    )
+    val window = composeNode.widget
 
     DisposableEffect(Unit) {
-        val composition = Composition(
-            GtkApplier(composeNode),
-            compositionContext,
-        )
         window.init()
         window.application = application
         window.present()
-        composition.setContent {
-            CompositionLocalProvider(LocalApplicationWindow provides window) {
-                content(window)
-            }
-        }
         onDispose {
             window.destroy()
-            composition.dispose()
         }
     }
     remember(modifier) { composeNode.applyModifier(modifier) }

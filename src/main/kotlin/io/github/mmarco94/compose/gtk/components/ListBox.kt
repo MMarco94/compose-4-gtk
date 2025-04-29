@@ -15,19 +15,19 @@ import org.gnome.gtk.SelectionMode
 import org.gnome.gtk.Widget
 
 private class GtkListBoxComposeNode(gObject: ListBox) : GtkContainerComposeNode<ListBox>(gObject) {
-    override fun add(index: Int, child: GtkComposeWidget<Widget>) {
+    override fun addNode(index: Int, child: GtkComposeWidget<Widget>) {
         widget.insert(child.widget, index)
-        super.add(index, child)
+        super.addNode(index, child)
     }
 
-    override fun remove(index: Int) {
+    override fun removeNode(index: Int) {
         widget.remove(children[index])
-        super.remove(index)
+        super.removeNode(index)
     }
 
-    override fun clear() {
+    override fun clearNodes() {
         widget.removeAll()
-        super.clear()
+        super.clearNodes()
     }
 }
 

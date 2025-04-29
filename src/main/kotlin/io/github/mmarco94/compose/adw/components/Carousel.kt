@@ -21,24 +21,24 @@ private val logger = KotlinLogging.logger {}
 private class AdwCarouselComposeNode(gObject: Carousel) : GtkContainerComposeNode<Carousel>(gObject) {
     var onPageChanged: SignalConnection<Carousel.PageChangedCallback>? = null
 
-    override fun add(index: Int, child: GtkComposeWidget<Widget>) {
+    override fun addNode(index: Int, child: GtkComposeWidget<Widget>) {
         when (index) {
             children.size -> widget.append(child.widget)
             0 -> widget.insertAfter(child.widget, null)
             else -> widget.insertAfter(child.widget, children[index - 1])
         }
-        super.add(index, child)
+        super.addNode(index, child)
     }
 
-    override fun remove(index: Int) {
+    override fun removeNode(index: Int) {
         val child = children[index]
         widget.remove(child)
-        super.remove(index)
+        super.removeNode(index)
     }
 
-    override fun clear() {
+    override fun clearNodes() {
         children.forEach { widget.remove(it) }
-        super.clear()
+        super.clearNodes()
     }
 }
 

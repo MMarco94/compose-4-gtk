@@ -1,11 +1,8 @@
 package io.github.mmarco94.compose
 
 import io.github.mmarco94.compose.modifier.Modifier
-import io.github.mmarco94.compose.utils.inPlaceMap
-import org.gnome.adw.Dialog
 import org.gnome.gobject.GObject
 import org.gnome.gtk.Widget
-import org.gnome.gtk.Window
 
 /**
  * A base node in the Compose tree.
@@ -33,51 +30,17 @@ abstract class GtkComposeWidget<out W : Widget>(val widget: W) : GtkComposeNode 
 
 /**
  * A node in the Compose tree that corresponds to a GTK [Widget] that can contain other widgets.
- * By default, this class handles the addition of "phantom children", for example Dialogs and Windows.
- * TODO: should phantom children be "propagated" to the parent, until there's a parent that can handle them?
  */
 abstract class GtkComposeContainer<out W : Widget>(widget: W) : GtkComposeWidget<W>(widget) {
-    private val phantomChildren = mutableListOf<Int>()
 
-    protected open fun canBeAttached(child: Widget): Boolean {
-        return child !is Dialog && child !is Window
-    }
-
-    private fun toAttachableIndex(index: Int): Int {
-        return index - phantomChildren.count { it < index }
-    }
-
-    override fun addNode(index: Int, child: GtkComposeNode) {
-        if (child is GtkComposeWidget<*> && canBeAttached(child.widget)) {
-            add(toAttachableIndex(index), child)
-        } else {
-            phantomChildren.inPlaceMap {
-                when {
-                    it >= index -> it + 1
-                    else -> it
-                }
-            }
-            phantomChildren.add(index)
+    final override fun addNode(index: Int, child: GtkComposeNode) {
+        if (child !is GtkComposeWidget<*>) {
+            throw IllegalArgumentException("GtkComposeContainer only works with GtkComposeWidget")
         }
+        addNode(index, child)
     }
 
-    override fun removeNode(index: Int) {
-        val iof = phantomChildren.indexOf(index)
-        if (iof >= 0) {
-            phantomChildren.removeAt(iof)
-        } else {
-            remove(toAttachableIndex(index))
-        }
-    }
-
-    override fun clearNodes() {
-        phantomChildren.clear()
-        clear()
-    }
-
-    protected abstract fun add(index: Int, child: GtkComposeWidget<Widget>)
-    protected abstract fun remove(index: Int)
-    protected abstract fun clear()
+    protected abstract fun addNode(index: Int, child: GtkComposeWidget<Widget>)
 }
 
 internal open class LeafComposeNode<G : Widget>(widget: G) : GtkComposeWidget<G>(widget) {
@@ -97,7 +60,7 @@ internal open class SingleChildComposeNode<W : Widget>(
         this.widget.set(widget)
     }
 
-    override fun add(index: Int, child: GtkComposeWidget<Widget>) {
+    override fun addNode(index: Int, child: GtkComposeWidget<Widget>) {
         if (stack.isNotEmpty()) {
             throw IllegalStateException("${widget.javaClass.simpleName} can have at most one child node")
         }
@@ -105,12 +68,12 @@ internal open class SingleChildComposeNode<W : Widget>(
         recompute()
     }
 
-    override fun remove(index: Int) {
+    override fun removeNode(index: Int) {
         stack.removeFirst()
         recompute()
     }
 
-    override fun clear() {
+    override fun clearNodes() {
         stack.clear()
         recompute()
     }
@@ -170,16 +133,16 @@ internal class VirtualComposeNodeContainer<W : Widget>(widget: W) : GtkComposeWi
 internal abstract class GtkContainerComposeNode<W : Widget>(widget: W) : GtkComposeContainer<W>(widget) {
     private val _children = mutableListOf<Widget>()
     protected val children: List<Widget> = _children
-    override fun add(index: Int, child: GtkComposeWidget<Widget>) {
+    override fun addNode(index: Int, child: GtkComposeWidget<Widget>) {
         val childWidget = child.widget
         _children.add(index, childWidget)
     }
 
-    override fun remove(index: Int) {
+    override fun removeNode(index: Int) {
         _children.removeAt(index)
     }
 
-    override fun clear() {
+    override fun clearNodes() {
         _children.clear()
     }
 
@@ -189,22 +152,22 @@ internal abstract class GtkContainerComposeNode<W : Widget>(widget: W) : GtkComp
             add: W.(Widget) -> Unit,
             remove: W.(Widget) -> Unit,
         ) = object : GtkContainerComposeNode<W>(widget) {
-            override fun add(index: Int, child: GtkComposeWidget<Widget>) {
+            override fun addNode(index: Int, child: GtkComposeWidget<Widget>) {
                 val toReinsert = children.drop(index)
-                super.add(index, child)
+                super.addNode(index, child)
                 toReinsert.forEach { widget.remove(it) }
                 widget.add(child.widget)
                 toReinsert.forEach { widget.add(it) }
             }
 
-            override fun remove(index: Int) {
+            override fun removeNode(index: Int) {
                 widget.remove(children[index])
-                super.remove(index)
+                super.removeNode(index)
             }
 
-            override fun clear() {
+            override fun clearNodes() {
                 children.forEach { widget.remove(it) }
-                super.clear()
+                super.clearNodes()
             }
         }
     }
