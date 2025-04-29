@@ -5,6 +5,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Runnable
 import org.gnome.glib.GLib
 import kotlin.coroutines.CoroutineContext
+import kotlin.system.exitProcess
 
 @Suppress("UnusedReceiverParameter")
 val Dispatchers.Gtk get() = GtkDispatcher
