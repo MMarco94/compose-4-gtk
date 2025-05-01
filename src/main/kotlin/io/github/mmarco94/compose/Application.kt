@@ -8,6 +8,7 @@ import kotlinx.coroutines.channels.consumeEach
 import org.gnome.gtk.Application
 import org.gnome.gtk.Window
 import kotlin.system.exitProcess
+import kotlin.time.Duration.Companion.minutes
 
 private class GtkApplicationComposeNode : GtkComposeNode {
     override fun addNode(index: Int, child: GtkComposeNode) {
@@ -35,8 +36,12 @@ fun Application.initializeApplication(
 ) {
     val app = this
     val dispatcher = GtkDispatcher
+    val handler = CoroutineExceptionHandler { _, exception ->
+        println("CoroutineExceptionHandler got $exception")
+    }
+
     runBlocking(dispatcher) {
-        withContext(YieldFrameClock) {
+        withContext(handler + YieldFrameClock) {
             startSnapshotManager()
 
             val recomposer = Recomposer(coroutineContext)
@@ -85,7 +90,11 @@ private fun CoroutineScope.startSnapshotManager() {
         }
     }
     Snapshot.registerGlobalWriteObserver {
-        channel.trySend(Unit)
+        val channelResult = channel.trySend(Unit)
+        check(channelResult.isSuccess) {
+            channelResult.exceptionOrNull()?.printStackTrace()
+            "Channel result = $channelResult"
+        }
     }
 }
 

@@ -43,6 +43,6 @@ fun ApplicationWindow(
         resizable = resizable,
         init = init,
         setContent = { this.child = it },
-        content = content,
+        content = { content() },
     )
 }

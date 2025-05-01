@@ -4,6 +4,7 @@ import androidx.compose.runtime.*
 import io.github.jwharm.javagi.gobject.SignalConnection
 import io.github.mmarco94.compose.GtkApplier
 import io.github.mmarco94.compose.SingleChildComposeNode
+import io.github.mmarco94.compose.GtkSubComposition
 import io.github.mmarco94.compose.modifier.Modifier
 import io.github.mmarco94.compose.shared.components.LocalApplicationWindow
 import org.gnome.adw.AboutDialog
@@ -35,15 +36,20 @@ private fun <D : Dialog> BaseDialog(
     onClose: () -> Unit = {},
     content: @Composable () -> Unit = {},
     creator: () -> D,
-    updater: Updater<GtkDialogComposeNode<D>>.() -> Unit,
-) {
+): D {
     val applicationWindow = LocalApplicationWindow.current
-    val dialog = remember {
-        creator()
-    }
+
+    val composeNode = GtkSubComposition(
+        createNode = {
+            val dialog = creator()
+            dialog.canClose = false
+            GtkDialogComposeNode(dialog)
+        },
+        content = { content() },
+    )
+    val dialog = composeNode.widget
 
     DisposableEffect(Unit) {
-        dialog.canClose = false
         dialog.present(applicationWindow)
         onDispose {
             dialog.forceClose()
@@ -51,28 +57,20 @@ private fun <D : Dialog> BaseDialog(
         }
     }
 
-    ComposeNode<GtkDialogComposeNode<D>, GtkApplier>(
-        factory = {
-            GtkDialogComposeNode(dialog)
-        },
-        update = {
-            set(modifier) { applyModifier(it) }
-            set(title) { this.widget.title = it }
-            set(presentationMode) { this.widget.presentationMode = it }
-            set(followsContentSize) { this.widget.followsContentSize = followsContentSize }
-            set(contentWidth) { this.widget.contentWidth = contentWidth }
-            set(contentHeight) { this.widget.contentHeight = contentHeight }
-            set(onClose) {
-                this.onCloseAttempt?.disconnect()
-                this.onCloseAttempt = this.widget.onCloseAttempt {
-                    onClose()
-                    GObjects.signalStopEmissionByName(dialog, "close-attempt")
-                }
-            }
-            updater()
-        },
-        content = content,
-    )
+    remember(modifier) { composeNode.applyModifier(modifier) }
+    remember(title) { dialog.title = title }
+    remember(presentationMode) { dialog.presentationMode = presentationMode }
+    remember(followsContentSize) { dialog.followsContentSize = followsContentSize }
+    remember(contentWidth) { dialog.contentWidth = contentWidth }
+    remember(contentHeight) { dialog.contentHeight = contentHeight }
+    remember(onClose) {
+        composeNode.onCloseAttempt?.disconnect()
+        composeNode.onCloseAttempt = dialog.onCloseAttempt {
+            onClose()
+            GObjects.signalStopEmissionByName(dialog, "close-attempt")
+        }
+    }
+    return dialog
 }
 
 @Composable
@@ -98,7 +96,6 @@ fun Dialog(
         creator = {
             Dialog.builder().build()
         },
-        updater = {},
     )
 }
 
@@ -133,7 +130,7 @@ fun AboutDialog(
     onClose: () -> Unit = {},
     content: @Composable () -> Unit = {},
 ) {
-    BaseDialog(
+    val dialog = BaseDialog(
         modifier = modifier,
         contentHeight = contentHeight,
         contentWidth = contentWidth,
@@ -145,27 +142,25 @@ fun AboutDialog(
         creator = {
             AboutDialog.builder().build()
         },
-        updater = {
-            set(applicationIcon) { this.widget.applicationIcon = applicationIcon }
-            set(applicationName) { this.widget.applicationName = applicationName }
-            set(artists) { this.widget.artists = artists.toTypedArray() }
-            set(comments) { this.widget.comments = comments }
-            set(copyright) { this.widget.copyright = copyright }
-            set(debugInfo) { this.widget.debugInfo = debugInfo }
-            set(debugInfoFilename) { this.widget.debugInfoFilename = debugInfoFilename }
-            set(designers) { this.widget.designers = designers.toTypedArray() }
-            set(developerName) { this.widget.developerName = developerName }
-            set(developers) { this.widget.developers = developers.toTypedArray() }
-            set(documenters) { this.widget.documenters = documenters.toTypedArray() }
-            set(issueUrl) { this.widget.issueUrl = issueUrl }
-            set(license) { this.widget.license = license }
-            set(licenseType) { this.widget.licenseType = licenseType }
-            set(translatorCredits) { this.widget.translatorCredits = translatorCredits }
-            set(releaseNotes) { this.widget.releaseNotes = releaseNotes }
-            set(releaseNotesVersion) { this.widget.releaseNotesVersion = releaseNotesVersion }
-            set(supportUrl) { this.widget.supportUrl = supportUrl }
-            set(version) { this.widget.version = version }
-            set(website) { this.widget.website = website }
-        },
     )
+    remember(applicationIcon) { dialog.applicationIcon = applicationIcon }
+    remember(applicationName) { dialog.applicationName = applicationName }
+    remember(artists) { dialog.artists = artists.toTypedArray() }
+    remember(comments) { dialog.comments = comments }
+    remember(copyright) { dialog.copyright = copyright }
+    remember(debugInfo) { dialog.debugInfo = debugInfo }
+    remember(debugInfoFilename) { dialog.debugInfoFilename = debugInfoFilename }
+    remember(designers) { dialog.designers = designers.toTypedArray() }
+    remember(developerName) { dialog.developerName = developerName }
+    remember(developers) { dialog.developers = developers.toTypedArray() }
+    remember(documenters) { dialog.documenters = documenters.toTypedArray() }
+    remember(issueUrl) { dialog.issueUrl = issueUrl }
+    remember(license) { dialog.license = license }
+    remember(licenseType) { dialog.licenseType = licenseType }
+    remember(translatorCredits) { dialog.translatorCredits = translatorCredits }
+    remember(releaseNotes) { dialog.releaseNotes = releaseNotes }
+    remember(releaseNotesVersion) { dialog.releaseNotesVersion = releaseNotesVersion }
+    remember(supportUrl) { dialog.supportUrl = supportUrl }
+    remember(version) { dialog.version = version }
+    remember(website) { dialog.website = website }
 }

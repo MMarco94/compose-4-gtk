@@ -26,7 +26,9 @@ fun main(args: Array<String>) {
                 ToggleButton("Allow close", allowClose) { allowClose = !allowClose }
                 ToggleButton("Fullscreen", fullscreen) { fullscreen = !fullscreen }
                 ToggleButton("Maximized", maximized) { maximized = !maximized }
-                Button("Randomize title") { title = "Random Window ${Random.nextInt()}" }
+                Button("Randomize title") {
+                    title = "Random Window ${Random.nextInt()}"
+                }
 
                 if (show) {
                     ApplicationWindow(

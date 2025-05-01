@@ -3,7 +3,6 @@ package io.github.mmarco94.compose.shared.components
 import androidx.compose.runtime.*
 import io.github.jwharm.javagi.gobject.SignalConnection
 import io.github.mmarco94.compose.*
-import io.github.mmarco94.compose.GtkApplier
 import io.github.mmarco94.compose.SingleChildComposeNode
 import io.github.mmarco94.compose.modifier.Modifier
 import org.gnome.gtk.ApplicationWindow
@@ -37,7 +36,7 @@ val LocalApplicationWindow = compositionLocalOf<ApplicationWindow> {
 
 // TODO: fullscreen, maximized, hide on close, icon, active,
 @Composable
-fun <AW : ApplicationWindow, B : ApplicationWindow.Builder<*>> initializeApplicationWindow(
+internal fun <AW : ApplicationWindow, B : ApplicationWindow.Builder<*>> initializeApplicationWindow(
     builder: () -> B,
     modifier: Modifier = Modifier,
     title: String?,
@@ -54,65 +53,61 @@ fun <AW : ApplicationWindow, B : ApplicationWindow.Builder<*>> initializeApplica
     resizable: Boolean = true,
     init: AW.() -> Unit = {},
     setContent: AW.(Widget?) -> Unit,
-    update: @DisallowComposableCalls Updater<out GtkComposeWidget<AW>>.() -> Unit = {},
-    content: @Composable () -> Unit,
+    content: @Composable (AW) -> Unit,
 ) {
     val application = LocalApplication.current
-    val window = remember {
-        builder().build() as AW
-    }
+    val composeNode = GtkSubComposition(
+        createNode = {
+            val window = builder().build() as AW
+            GtkApplicationWindowComposeNode(window, setContent)
+        },
+        content = { composeNode ->
+            CompositionLocalProvider(LocalApplicationWindow provides composeNode.widget) {
+                content(composeNode.widget)
+            }
+        }
+    )
+    val window = composeNode.widget
 
     DisposableEffect(Unit) {
         window.init()
         window.application = application
         window.present()
-        onDispose { window.destroy() }
+        onDispose {
+            window.destroy()
+        }
     }
-
-    ComposeNode<GtkApplicationWindowComposeNode<AW>, GtkApplier>(
-        factory = {
-            GtkApplicationWindowComposeNode(window, setContent)
-        },
-        update = {
-            set(modifier) { applyModifier(it) }
-            set(title) { this.widget.title = it }
-            set(onClose) {
-                this.onClose?.disconnect()
-                this.onClose = this.widget.onCloseRequest { it(); true }
+    remember(modifier) { composeNode.applyModifier(modifier) }
+    remember(title) { window.title = title }
+    remember(onClose) {
+        composeNode.onClose?.disconnect()
+        composeNode.onClose = window.onCloseRequest { onClose(); true }
+    }
+    remember(styles) { composeNode.styles = styles }
+    remember(decorated) { window.decorated = decorated }
+    remember(defaultWidth to defaultHeight) { window.setDefaultSize(defaultWidth, defaultHeight) }
+    remember(deletable) { window.deletable = deletable }
+    remember(fullscreen) {
+        val mustChange = fullscreen != window.isFullscreen
+        if (mustChange) {
+            if (fullscreen) {
+                window.fullscreen()
+            } else {
+                window.unfullscreen()
             }
-            set(styles) { this.styles = it }
-            set(decorated) { this.widget.decorated = it }
-            set(defaultHeight to defaultWidth) { (h, w) -> this.widget.setDefaultSize(w, h) }
-            set(deletable) { this.widget.deletable = it }
-            set(fullscreen) {
-                val mustChange = it != this.widget.isFullscreen
-                if (mustChange) {
-                    if (fullscreen) {
-                        this.widget.fullscreen()
-                    } else {
-                        this.widget.unfullscreen()
-                    }
-                }
+        }
+    }
+    remember(maximized) {
+        val mustChange = maximized != window.isMaximized
+        if (mustChange) {
+            if (maximized) {
+                window.maximize()
+            } else {
+                window.unmaximize()
             }
-            set(maximized) {
-                val mustChange = it != this.widget.isMaximized
-                if (mustChange) {
-                    if (maximized) {
-                        this.widget.maximize()
-                    } else {
-                        this.widget.unmaximize()
-                    }
-                }
-            }
-            set(handleMenubarAccel) { this.widget.handleMenubarAccel = it }
-            set(modal) { this.widget.modal = it }
-            set(resizable) { this.widget.resizable = it }
-            this.update()
-        },
-        content = {
-            CompositionLocalProvider(LocalApplicationWindow provides window) {
-                content()
-            }
-        },
-    )
+        }
+    }
+    remember(handleMenubarAccel) { window.handleMenubarAccel = handleMenubarAccel }
+    remember(modal) { window.modal = modal }
+    remember(resizable) { window.resizable = resizable }
 }

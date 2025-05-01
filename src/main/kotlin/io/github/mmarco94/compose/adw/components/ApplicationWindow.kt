@@ -32,20 +32,7 @@ interface ApplicationWindowScope {
     }
 }
 
-private class ApplicationWindowScopeImpl : ApplicationWindowScope {
-    val pendingBreakpoints = mutableListOf<Breakpoint>()
-    var window: ApplicationWindow? = null
-        set(w) {
-            require(field == null)
-            if (w != null) {
-                for (pendingBreakpoint in pendingBreakpoints) {
-                    w.addBreakpoint(pendingBreakpoint)
-                }
-                pendingBreakpoints.clear()
-                field = w
-            }
-        }
-
+private class ApplicationWindowScopeImpl(val window: ApplicationWindow) : ApplicationWindowScope {
 
     @Composable
     override fun rememberBreakpoint(
@@ -57,10 +44,7 @@ private class ApplicationWindowScopeImpl : ApplicationWindowScope {
             .onApply { matches(true) }
             .onUnapply { matches(false) }
             .build()
-        when (val w = window) {
-            null -> pendingBreakpoints.add(breakpoint)
-            else -> w.addBreakpoint(breakpoint)
-        }
+        window.addBreakpoint(breakpoint)
     }
 }
 
@@ -82,7 +66,6 @@ fun ApplicationWindow(
     init: ApplicationWindow.() -> Unit = {},
     content: @Composable ApplicationWindowScope.() -> Unit,
 ) {
-    val scope = remember { ApplicationWindowScopeImpl() }
     initializeApplicationWindow<ApplicationWindow, ApplicationWindow.Builder<*>>(
         builder = {
             ApplicationWindow.builder()
@@ -102,10 +85,8 @@ fun ApplicationWindow(
         resizable = resizable,
         init = init,
         setContent = { this.content = it },
-        update = {
-            set(scope) { scope.window = this.widget }
-        },
-        content = {
+        content = { window ->
+            val scope = remember { ApplicationWindowScopeImpl(window) }
             scope.apply {
                 content()
             }
