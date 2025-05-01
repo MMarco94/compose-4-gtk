@@ -1,16 +1,9 @@
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import io.github.mmarco94.compose.adw.application
 import io.github.mmarco94.compose.adw.components.ApplicationWindow
 import io.github.mmarco94.compose.adw.components.HeaderBar
 import io.github.mmarco94.compose.adw.components.StatusPage
-import io.github.mmarco94.compose.gtk.components.CheckButton
-import io.github.mmarco94.compose.gtk.components.HorizontalBox
-import io.github.mmarco94.compose.gtk.components.Label
-import io.github.mmarco94.compose.gtk.components.Switch
-import io.github.mmarco94.compose.gtk.components.VerticalBox
+import io.github.mmarco94.compose.gtk.components.*
 import io.github.mmarco94.compose.modifier.Modifier
 import io.github.mmarco94.compose.modifier.alignment
 import io.github.mmarco94.compose.modifier.cssClasses
@@ -25,38 +18,32 @@ fun main(args: Array<String>) {
                 StatusPage(
                     title = "Check Button", description = "Allow users to control binary options or properties"
                 ) {
-                    VerticalBox(spacing = 16) {
-                        var isChecked by remember { mutableStateOf(false) }
+                    HorizontalBox {
+                        VerticalBox(spacing = 16) {
+                            var isChecked by remember { mutableStateOf(false) }
 
-                        VerticalBox(spacing = 8) {
                             CheckButton(
-                                modifier = Modifier.alignment(Align.CENTER), active = isChecked, label = "Change me!"
+                                modifier = Modifier.alignment(Align.START), active = isChecked, label = "Change me!"
                             ) {
                                 isChecked = !isChecked
                             }
-                        }
 
-                        VerticalBox(spacing = 8) {
                             CheckButton(
-                                modifier = Modifier.alignment(Align.CENTER), active = isChecked, label = "Mirror only"
+                                modifier = Modifier.alignment(Align.START), active = isChecked, label = "Mirror only"
                             ) {
                                 println("Can't change me!")
                             }
-                        }
 
-                        VerticalBox(spacing = 8) {
                             CheckButton(
-                                modifier = Modifier.alignment(Align.CENTER),
+                                modifier = Modifier.alignment(Align.START),
                                 active = isChecked,
                                 inconsistent = true,
                             ) {
                                 println("Nothing happens")
                             }
-                        }
 
-                        VerticalBox(spacing = 8) {
                             CheckButton(
-                                modifier = Modifier.alignment(Align.CENTER),
+                                modifier = Modifier.alignment(Align.START),
                                 active = isChecked,
                                 child = {
                                     HorizontalBox {
@@ -67,16 +54,43 @@ fun main(args: Array<String>) {
                             ) {
                                 isChecked = !isChecked
                             }
-                        }
 
-                        VerticalBox(spacing = 8) {
                             CheckButton(
-                                modifier = Modifier.alignment(Align.CENTER),
+                                modifier = Modifier.alignment(Align.START),
                                 active = isChecked,
                                 enabled = false,
                                 label = "Disabled"
                             ) {
                                 println("Can't change me!")
+                            }
+                        }
+
+                        VerticalBox(spacing = 16) {
+                            val checkedStates = remember { mutableStateListOf(false, false, false, false) }
+
+                            fun allChecked() = checkedStates.all { it }
+                            fun someChecked() = checkedStates.any { it }
+
+                            CheckButton(
+                                modifier = Modifier.alignment(Align.START),
+                                active = allChecked(),
+                                inconsistent = someChecked() && !allChecked(),
+                                label = "Select all"
+                            ) {
+                                val newState = !someChecked()
+                                for (i in checkedStates.indices) {
+                                    checkedStates[i] = newState
+                                }
+                            }
+
+                            checkedStates.forEachIndexed { index, isChecked ->
+                                CheckButton(
+                                    modifier = Modifier.alignment(Align.START),
+                                    active = isChecked,
+                                    label = "Option ${index + 1}"
+                                ) {
+                                    checkedStates[index] = !checkedStates[index]
+                                }
                             }
                         }
                     }
