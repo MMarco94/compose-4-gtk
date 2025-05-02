@@ -21,7 +21,6 @@ private class GtkCheckButton(gObject: CheckButton) : SingleChildComposeNode<Chec
  * @param inconsistent Whether the button should display an inconsistent (partially active) state.
  * @param label Optional text label.
  * @param useUnderline Whether to use an underscore in the label for mnemonic activation.
- * @param enabled Whether the check button is enabled for interaction.
  * @param child Optional custom composable content.
  * @param onToggle Callback invoked when the check button is toggled.
  */
@@ -32,7 +31,6 @@ private fun BaseCheckButton(
     inconsistent: Boolean = false,
     label: String? = null,
     useUnderline: Boolean = false,
-    enabled: Boolean = true,
     child: @Composable () -> Unit = {},
     onToggle: () -> Unit,
 ) {
@@ -51,7 +49,6 @@ private fun BaseCheckButton(
             set(inconsistent) { this.widget.inconsistent = it }
             set(label) { this.widget.label = it }
             set(useUnderline) { this.widget.useUnderline = it }
-            set(enabled) { this.widget.sensitive = it }
             set(onToggle) {
                 this.toggled?.disconnect()
                 this.toggled = this.widget.onToggled {
@@ -91,7 +88,6 @@ fun CheckButton(
         active = active,
         inconsistent = inconsistent,
         useUnderline = useUnderline,
-        enabled = enabled,
         onToggle = onToggle,
     )
 }
@@ -104,7 +100,6 @@ fun CheckButton(
  * @param label Text label.
  * @param inconsistent Whether the button should display an inconsistent (partially active) state.
  * @param useUnderline Whether to use an underscore in the label for mnemonic activation.
- * @param enabled Whether the check button is enabled for interaction.
  * @param onToggle Callback invoked when the check button is toggled.
  */
 @Composable
@@ -114,7 +109,6 @@ fun CheckButton(
     label: String,
     inconsistent: Boolean = false,
     useUnderline: Boolean = false,
-    enabled: Boolean = true,
     onToggle: () -> Unit,
 ) {
     BaseCheckButton(
@@ -123,7 +117,6 @@ fun CheckButton(
         inconsistent = inconsistent,
         label = label,
         useUnderline = useUnderline,
-        enabled = enabled,
         onToggle = onToggle,
     )
 }
@@ -136,7 +129,6 @@ fun CheckButton(
  * @param child Custom composable content.
  * @param inconsistent Whether the button should display an inconsistent (partially active) state.
  * @param useUnderline Whether to use an underscore in the label for mnemonic activation.
- * @param enabled Whether the check button is enabled for interaction.
  * @param onToggle Callback invoked when the check button is toggled.
  */
 @Composable
@@ -146,7 +138,6 @@ fun CheckButton(
     child: @Composable () -> Unit,
     inconsistent: Boolean = false,
     useUnderline: Boolean = false,
-    enabled: Boolean = true,
     onToggle: () -> Unit,
 ) {
     BaseCheckButton(
@@ -155,7 +146,6 @@ fun CheckButton(
         inconsistent = inconsistent,
         child = child,
         useUnderline = useUnderline,
-        enabled = enabled,
         onToggle = onToggle,
     )
 }
