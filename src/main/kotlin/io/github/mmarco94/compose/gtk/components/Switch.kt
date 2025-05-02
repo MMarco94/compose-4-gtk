@@ -22,7 +22,6 @@ private class GtkSwitchComposeNode(
 fun Switch(
     modifier: Modifier = Modifier,
     active: Boolean,
-    enabled: Boolean = true,
     onToggle: (Boolean) -> Unit,
 ) {
     var pendingChange by remember { mutableStateOf(0) }
@@ -36,7 +35,6 @@ fun Switch(
             this.widget.active = active
             this.onStateSet?.unblock()
         }
-        set(enabled) { this.widget.sensitive = it }
 
         set(onToggle) {
             this.onStateSet?.disconnect()
