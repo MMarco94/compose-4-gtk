@@ -7,6 +7,7 @@ import io.github.mmarco94.compose.gtk.components.*
 import io.github.mmarco94.compose.modifier.Modifier
 import io.github.mmarco94.compose.modifier.alignment
 import io.github.mmarco94.compose.modifier.cssClasses
+import io.github.mmarco94.compose.modifier.sensitive
 import org.gnome.gtk.Align
 
 fun main(args: Array<String>) {
@@ -56,9 +57,10 @@ fun main(args: Array<String>) {
                             }
 
                             CheckButton(
-                                modifier = Modifier.alignment(Align.START),
+                                modifier = Modifier
+                                    .alignment(Align.START)
+                                    .sensitive(false),
                                 active = isChecked,
-                                enabled = false,
                                 label = "Disabled"
                             ) {
                                 println("Can't change me!")
