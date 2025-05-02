@@ -101,8 +101,8 @@ fun CheckButton(
  *
  * @param modifier The modifier to apply to the widget.
  * @param active Whether the check button is currently active.
- * @param inconsistent Whether the button should display an inconsistent (partially active) state.
  * @param label Text label.
+ * @param inconsistent Whether the button should display an inconsistent (partially active) state.
  * @param useUnderline Whether to use an underscore in the label for mnemonic activation.
  * @param enabled Whether the check button is enabled for interaction.
  * @param onToggle Callback invoked when the check button is toggled.
@@ -111,8 +111,8 @@ fun CheckButton(
 fun CheckButton(
     modifier: Modifier = Modifier,
     active: Boolean,
+    label: String,
     inconsistent: Boolean = false,
-    label: String? = null,
     useUnderline: Boolean = false,
     enabled: Boolean = true,
     onToggle: () -> Unit,
@@ -133,18 +133,18 @@ fun CheckButton(
  *
  * @param modifier The modifier to apply to the widget.
  * @param active Whether the check button is currently active.
+ * @param child Custom composable content.
  * @param inconsistent Whether the button should display an inconsistent (partially active) state.
  * @param useUnderline Whether to use an underscore in the label for mnemonic activation.
  * @param enabled Whether the check button is enabled for interaction.
- * @param child Custom composable content.
  * @param onToggle Callback invoked when the check button is toggled.
  */
 @Composable
 fun CheckButton(
     modifier: Modifier = Modifier,
     active: Boolean,
+    child: @Composable () -> Unit,
     inconsistent: Boolean = false,
-    child: @Composable () -> Unit = {},
     useUnderline: Boolean = false,
     enabled: Boolean = true,
     onToggle: () -> Unit,
