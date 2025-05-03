@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.compose)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.dokka)
     alias(libs.plugins.versioning)
     `maven-publish`
@@ -48,7 +47,6 @@ dependencies {
     implementation(libs.slf4j.api)
 
     testImplementation(libs.kotlinx.datetime)
-    testImplementation(libs.kotlinx.serialization.json)
     testImplementation(libs.slf4j.simple)
 }
 
