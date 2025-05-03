@@ -2,7 +2,6 @@
 kotlin = "2.1.20"
 compose = "1.7.3"
 javagi = "0.12.1"
-kotlinx-datetime = "0.6.2"
 dokka = "2.0.0"
 kotlin-logging = "7.0.7"
 slf4j = "2.0.17"
@@ -10,7 +9,6 @@ slf4j = "2.0.17"
 [libraries]
 javagi-gtk = { group = "io.github.jwharm.javagi", name = "gtk", version.ref = "javagi" }
 javagi-adw = { group = "io.github.jwharm.javagi", name = "adw", version.ref = "javagi" }
-kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinx-datetime"}
 kotlin-logging = { group = "io.github.oshai", name = "kotlin-logging-jvm", version.ref = "kotlin-logging"}
 slf4j-api = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j"}
 slf4j-simple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4j"}
