@@ -191,6 +191,7 @@ fun AlertDialog(
     defaultResponse: AlertDialogResponse? = null,
 ) {
     var connection: SignalConnection<*>? by remember { mutableStateOf(null) }
+    var previousResponses: List<AlertDialogResponse>? by remember { mutableStateOf(null) }
 
     val dialog = BaseDialog(
         modifier = modifier,
@@ -207,24 +208,31 @@ fun AlertDialog(
     remember(heading) { dialog.heading = heading }
     remember(body) { dialog.body = body }
     remember(responses) {
-        responses.forEach { response ->
-            if (dialog.hasResponse(response.id)) {
-                dialog.setResponseLabel(response.id, response.label)
-            } else {
-                dialog.addResponse(response.id, response.label)
+        // clear responses
+        previousResponses
+            ?.asSequence()
+            ?.forEach { previousResponse ->
+                dialog.removeResponse(previousResponse.id)
             }
+        previousResponses = responses
+
+        // add or update responses
+        responses.forEach { response ->
+            dialog.addResponse(response.id, response.label)
             dialog.setResponseEnabled(response.id, response.isEnabled)
             dialog.setResponseAppearance(response.id, response.appearance)
         }
     }
-    remember(defaultResponse) {
-        if (defaultResponse != null && responses.none { response -> response.id == defaultResponse.id }) {
-            logger.warn { "Cannot find default response '${defaultResponse.id}' among responses" }
-            return@remember
+    remember(defaultResponse, responses) {
+        if (defaultResponse != null) {
+            require(
+                value = responses.any { response -> response.id == defaultResponse.id },
+                lazyMessage = { "\"Cannot find default response '${defaultResponse.id}' among responses\"" },
+            )
         }
         dialog.defaultResponse = defaultResponse?.id
     }
-    remember(onResponse) {
+    remember(onResponse, responses) {
         connection?.disconnect()
         connection = dialog.onResponse(null) { responseId ->
             if (responseId == "close") return@onResponse
