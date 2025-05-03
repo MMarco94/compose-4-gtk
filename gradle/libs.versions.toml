@@ -4,7 +4,6 @@ compose = "1.7.3"
 javagi = "0.12.1"
 kotlinx-datetime = "0.6.2"
 dokka = "2.0.0"
-versioning = "6.4.4"
 kotlin-logging = "7.0.7"
 slf4j = "2.0.17"
 
@@ -21,4 +20,3 @@ kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 compose = { id = "org.jetbrains.compose", version.ref = "compose" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
-versioning = { id = "me.qoomon.git-versioning", version.ref = "versioning" }

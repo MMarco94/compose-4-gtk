@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.compose)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.dokka)
-    alias(libs.plugins.versioning)
     `maven-publish`
 }
 
@@ -14,21 +13,7 @@ repositories {
 }
 
 group = "io.github.mmarco94"
-version = "0.0.0-SNAPSHOT"
-
-gitVersioning.apply {
-    refs {
-        branch(".+") {
-            version = "\${ref}-SNAPSHOT"
-        }
-        tag("v(?<version>.*)") {
-            version = "\${ref.version}\${dirty.snapshot}"
-        }
-    }
-    rev {
-        version = "\${commit.short}\${dirty.snapshot}"
-    }
-}
+version = "0.1-SNAPSHOT"
 
 kotlin {
     jvmToolchain(23)
