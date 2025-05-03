@@ -35,7 +35,6 @@ dependencies {
 }
 
 tasks.register<Jar>("dokkaHtmlJar") {
-    dependsOn(tasks.dokkaHtml)
     from(tasks.dokkaGeneratePublicationHtml.flatMap { it.outputDirectory })
     archiveClassifier.set("javadoc")
 }
