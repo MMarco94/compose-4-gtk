@@ -50,7 +50,7 @@ publishing {
 }
 
 // TODO: used on examples. They should probably be moved in a separate module to avoid polluting the main build file
-tasks.register("compileTestResources") {
+tasks.register("compileTestGResources") {
     exec {
         workingDir = file("src/test/gresources")
         commandLine =
@@ -59,5 +59,5 @@ tasks.register("compileTestResources") {
 }
 
 tasks.named("assembleTestResources") {
-    dependsOn("compileTestResources")
+    dependsOn("compileTestGResources")
 }
