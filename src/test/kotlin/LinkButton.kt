@@ -21,11 +21,11 @@ fun main(args: Array<String>) {
                     VerticalBox(spacing = 16) {
                         Box(modifier = Modifier.cssClasses("card").alignment(Align.CENTER)) {
                             VerticalBox(modifier = Modifier.margin(16)) {
-                                val uri = "https://github.com/MMarco94/compose-4-gtk"
+                                val uri = "https://github.com/compose4gtk/compose-4-gtk"
                                 LinkButton(
                                     "Link to the GitHub repo",
                                     uri = uri
-                                ) { println("Visiting $uri") }
+                                )
                             }
                         }
 
@@ -36,7 +36,10 @@ fun main(args: Array<String>) {
                                 LinkButton(
                                     "Link to the GTK documentation",
                                     uri = uri
-                                ) { println("Visiting $uri") }
+                                ) {
+                                    println("Visiting $uri")
+                                    false
+                                }
                             }
                         }
                     }

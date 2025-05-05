@@ -129,7 +129,7 @@ fun LinkButton(
     uri: String,
     modifier: Modifier = Modifier,
     child: @Composable () -> Unit = {},
-    onActivateLink: () -> Unit,
+    onActivateLink: () -> Boolean = { false },
 ) {
     BaseButton(
         creator = {
@@ -145,7 +145,6 @@ fun LinkButton(
                 this.onActivateLink?.disconnect()
                 this.onActivateLink = this.widget.onActivateLink {
                     onActivateLink()
-                    false
                 }
             }
         }
