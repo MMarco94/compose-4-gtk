@@ -2,16 +2,20 @@ package io.github.mmarco94.compose.adw.components
 
 import androidx.compose.runtime.*
 import io.github.jwharm.javagi.gobject.SignalConnection
-import io.github.mmarco94.compose.GtkApplier
 import io.github.mmarco94.compose.SingleChildComposeNode
 import io.github.mmarco94.compose.GtkSubComposition
 import io.github.mmarco94.compose.modifier.Modifier
 import io.github.mmarco94.compose.shared.components.LocalApplicationWindow
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.gnome.adw.AboutDialog
+import org.gnome.adw.AlertDialog
 import org.gnome.adw.Dialog
 import org.gnome.adw.DialogPresentationMode
+import org.gnome.adw.ResponseAppearance
 import org.gnome.gobject.GObjects
 import org.gnome.gtk.*
+
+private val logger = KotlinLogging.logger {}
 
 private class GtkDialogComposeNode<D : Dialog>(
     gObject: D,
@@ -163,4 +167,82 @@ fun AboutDialog(
     remember(supportUrl) { dialog.supportUrl = supportUrl }
     remember(version) { dialog.version = version }
     remember(website) { dialog.website = website }
+}
+
+data class AlertDialogResponse(
+    val id: String,
+    val label: String,
+    val appearance: ResponseAppearance = ResponseAppearance.DEFAULT,
+    val isEnabled: Boolean = true,
+)
+
+@Composable
+fun AlertDialog(
+    heading: String,
+    body: String,
+    responses: List<AlertDialogResponse>,
+    onResponse: (AlertDialogResponse) -> Unit,
+    onClose: () -> Unit,
+    modifier: Modifier = Modifier,
+    contentHeight: Int = -1,
+    contentWidth: Int = -1,
+    followsContentSize: Boolean = false,
+    presentationMode: DialogPresentationMode = DialogPresentationMode.AUTO,
+    defaultResponse: AlertDialogResponse? = null,
+) {
+    var connection: SignalConnection<*>? by remember { mutableStateOf(null) }
+    var previousResponses: List<AlertDialogResponse>? by remember { mutableStateOf(null) }
+
+    val dialog = BaseDialog(
+        modifier = modifier,
+        contentHeight = contentHeight,
+        contentWidth = contentWidth,
+        followsContentSize = followsContentSize,
+        presentationMode = presentationMode,
+        title = null,
+        onClose = onClose,
+        creator = {
+            AlertDialog.builder().build()
+        },
+    )
+    remember(heading) { dialog.heading = heading }
+    remember(body) { dialog.body = body }
+    remember(responses) {
+        // clear responses
+        previousResponses
+            ?.asSequence()
+            ?.forEach { previousResponse ->
+                dialog.removeResponse(previousResponse.id)
+            }
+        previousResponses = responses
+
+        // add or update responses
+        responses.forEach { response ->
+            dialog.addResponse(response.id, response.label)
+            dialog.setResponseEnabled(response.id, response.isEnabled)
+            dialog.setResponseAppearance(response.id, response.appearance)
+        }
+    }
+    remember(defaultResponse, responses) {
+        if (defaultResponse != null) {
+            require(
+                value = responses.any { response -> response.id == defaultResponse.id },
+                lazyMessage = { "\"Cannot find default response '${defaultResponse.id}' among responses\"" },
+            )
+        }
+        dialog.defaultResponse = defaultResponse?.id
+    }
+    remember(onResponse, responses) {
+        connection?.disconnect()
+        connection = dialog.onResponse(null) { responseId ->
+            if (responseId == "close") return@onResponse
+
+            val response = responses.firstOrNull { it.id == responseId }
+            if (response != null) {
+                onResponse(response)
+            } else {
+                logger.warn { "Cannot find selected response '$responseId' among responses" }
+            }
+        }
+    }
 }

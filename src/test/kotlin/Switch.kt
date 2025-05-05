@@ -12,6 +12,7 @@ import io.github.mmarco94.compose.gtk.components.VerticalBox
 import io.github.mmarco94.compose.modifier.Modifier
 import io.github.mmarco94.compose.modifier.alignment
 import io.github.mmarco94.compose.modifier.cssClasses
+import io.github.mmarco94.compose.modifier.sensitive
 import org.gnome.gtk.Align
 
 fun main(args: Array<String>) {
@@ -46,9 +47,10 @@ fun main(args: Array<String>) {
 
                         VerticalBox(spacing = 8) {
                             Switch(
-                                modifier = Modifier.alignment(Align.CENTER),
+                                modifier = Modifier
+                                    .alignment(Align.CENTER)
+                                    .sensitive(false),
                                 active = isSwitchActive,
-                                enabled = false,
                             ){}
                             Label("Disabled")
                         }

@@ -2,9 +2,7 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.compose)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.dokka)
-    alias(libs.plugins.versioning)
     `maven-publish`
 }
 
@@ -15,21 +13,7 @@ repositories {
 }
 
 group = "io.github.mmarco94"
-version = "0.0.0-SNAPSHOT"
-
-gitVersioning.apply {
-    refs {
-        branch(".+") {
-            version = "\${ref}-SNAPSHOT"
-        }
-        tag("v(?<version>.*)") {
-            version = "\${ref.version}\${dirty.snapshot}"
-        }
-    }
-    rev {
-        version = "\${commit.short}\${dirty.snapshot}"
-    }
-}
+version = "0.1-SNAPSHOT"
 
 kotlin {
     jvmToolchain(23)
@@ -47,13 +31,10 @@ dependencies {
     implementation(libs.kotlin.logging)
     implementation(libs.slf4j.api)
 
-    testImplementation(libs.kotlinx.datetime)
-    testImplementation(libs.kotlinx.serialization.json)
     testImplementation(libs.slf4j.simple)
 }
 
 tasks.register<Jar>("dokkaHtmlJar") {
-    dependsOn(tasks.dokkaHtml)
     from(tasks.dokkaGeneratePublicationHtml.flatMap { it.outputDirectory })
     archiveClassifier.set("javadoc")
 }
@@ -69,7 +50,7 @@ publishing {
 }
 
 // TODO: used on examples. They should probably be moved in a separate module to avoid polluting the main build file
-tasks.register("compileTestResources") {
+tasks.register("compileTestGResources") {
     exec {
         workingDir = file("src/test/gresources")
         commandLine =
@@ -78,5 +59,5 @@ tasks.register("compileTestResources") {
 }
 
 tasks.named("assembleTestResources") {
-    dependsOn("compileTestResources")
+    dependsOn("compileTestGResources")
 }
