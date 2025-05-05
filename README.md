@@ -8,6 +8,8 @@ TL;DR: with this library, you can declaratively and dynamically create UIs with 
 
 ## Usage
 
+[![](https://www.jitpack.io/v/MMarco94/compose-4-gtk.svg)](https://www.jitpack.io/#MMarco94/compose-4-gtk)
+
 This library is still under development, and there's no official release yet.
 
 However, you can add still use this library via JitPack, see https://www.jitpack.io/#MMarco94/compose-4-gtk for

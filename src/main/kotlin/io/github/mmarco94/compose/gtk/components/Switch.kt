@@ -22,13 +22,11 @@ private class GtkSwitchComposeNode(
 fun Switch(
     modifier: Modifier = Modifier,
     active: Boolean,
-    enabled: Boolean = true,
     onToggle: (Boolean) -> Unit,
 ) {
     var pendingChange by remember { mutableStateOf(0) }
     ComposeNode<GtkSwitchComposeNode, GtkApplier>({
-        val switch = Switch.builder().build()
-        GtkSwitchComposeNode(switch)
+        GtkSwitchComposeNode(Switch.builder().build())
     }) {
         set(modifier) { applyModifier(it) }
         set(active to pendingChange) { (active, _) ->
@@ -37,7 +35,6 @@ fun Switch(
             this.widget.active = active
             this.onStateSet?.unblock()
         }
-        set(enabled) { this.widget.sensitive = it }
 
         set(onToggle) {
             this.onStateSet?.disconnect()
