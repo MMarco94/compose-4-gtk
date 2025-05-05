@@ -1,6 +1,6 @@
 # A Kotlin Compose library for Gtk4 and Adw
 
-![Welcome](https://raw.githubusercontent.com/MMarco94/compose-4-gtk/main/screenshots/welcome.png)
+![Welcome](https://raw.githubusercontent.com/compose4gtk/compose-4-gtk/main/screenshots/welcome.png)
 
 This library provides a Kotlin Compose interface to interact with native Gtk4 and Adw (Libadwaita) components.
 
@@ -129,7 +129,7 @@ In this example, at any point the `Entry` could ever contain a text that is no u
 
 ## Example
 
-![Demo](https://raw.githubusercontent.com/MMarco94/compose-4-gtk/main/screenshots/demo.gif)
+![Demo](https://raw.githubusercontent.com/compose4gtk/compose-4-gtk/main/screenshots/demo.gif)
 
 ```kotlin
 fun main(args: Array<String>) {

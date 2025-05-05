@@ -1,13 +1,13 @@
 import androidx.compose.runtime.*
-import io.github.mmarco94.compose.adw.application
-import io.github.mmarco94.compose.adw.components.ApplicationWindow
-import io.github.mmarco94.compose.adw.components.HeaderBar
-import io.github.mmarco94.compose.adw.components.StatusPage
-import io.github.mmarco94.compose.gtk.components.*
-import io.github.mmarco94.compose.modifier.Modifier
-import io.github.mmarco94.compose.modifier.alignment
-import io.github.mmarco94.compose.modifier.cssClasses
-import io.github.mmarco94.compose.modifier.sensitive
+import io.github.compose4gtk.adw.application
+import io.github.compose4gtk.adw.components.ApplicationWindow
+import io.github.compose4gtk.adw.components.HeaderBar
+import io.github.compose4gtk.adw.components.StatusPage
+import io.github.compose4gtk.gtk.components.*
+import io.github.compose4gtk.modifier.Modifier
+import io.github.compose4gtk.modifier.alignment
+import io.github.compose4gtk.modifier.cssClasses
+import io.github.compose4gtk.modifier.sensitive
 import org.gnome.gtk.Align
 
 fun main(args: Array<String>) {

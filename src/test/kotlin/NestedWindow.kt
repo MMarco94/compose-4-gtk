@@ -2,13 +2,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import io.github.mmarco94.compose.adw.application
-import io.github.mmarco94.compose.adw.components.ApplicationWindow
-import io.github.mmarco94.compose.adw.components.HeaderBar
-import io.github.mmarco94.compose.gtk.components.Button
-import io.github.mmarco94.compose.gtk.components.Label
-import io.github.mmarco94.compose.gtk.components.ToggleButton
-import io.github.mmarco94.compose.gtk.components.VerticalBox
+import io.github.compose4gtk.adw.application
+import io.github.compose4gtk.adw.components.ApplicationWindow
+import io.github.compose4gtk.adw.components.HeaderBar
+import io.github.compose4gtk.gtk.components.Button
+import io.github.compose4gtk.gtk.components.Label
+import io.github.compose4gtk.gtk.components.ToggleButton
+import io.github.compose4gtk.gtk.components.VerticalBox
 import kotlin.random.Random
 
 fun main(args: Array<String>) {

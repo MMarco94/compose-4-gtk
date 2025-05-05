@@ -4,16 +4,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import io.github.mmarco94.compose.adw.application
-import io.github.mmarco94.compose.adw.components.*
-import io.github.mmarco94.compose.gtk.components.Box
-import io.github.mmarco94.compose.gtk.components.Button
-import io.github.mmarco94.compose.gtk.components.Label
-import io.github.mmarco94.compose.gtk.components.ToggleButton
-import io.github.mmarco94.compose.gtk.components.VerticalBox
-import io.github.mmarco94.compose.modifier.Modifier
-import io.github.mmarco94.compose.modifier.expand
-import io.github.mmarco94.compose.modifier.margin
+import io.github.compose4gtk.adw.application
+import io.github.compose4gtk.adw.components.*
+import io.github.compose4gtk.gtk.components.Box
+import io.github.compose4gtk.gtk.components.Button
+import io.github.compose4gtk.gtk.components.Label
+import io.github.compose4gtk.gtk.components.ToggleButton
+import io.github.compose4gtk.gtk.components.VerticalBox
+import io.github.compose4gtk.modifier.Modifier
+import io.github.compose4gtk.modifier.expand
+import io.github.compose4gtk.modifier.margin
 import org.gnome.gtk.Orientation
 
 fun main(args: Array<String>) {

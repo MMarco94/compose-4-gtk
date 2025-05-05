@@ -1,8 +1,8 @@
-import io.github.mmarco94.compose.adw.application
-import io.github.mmarco94.compose.adw.components.ApplicationWindow
-import io.github.mmarco94.compose.gtk.components.Box
-import io.github.mmarco94.compose.gtk.components.Button
-import io.github.mmarco94.compose.adw.components.HeaderBar
+import io.github.compose4gtk.adw.application
+import io.github.compose4gtk.adw.components.ApplicationWindow
+import io.github.compose4gtk.gtk.components.Box
+import io.github.compose4gtk.gtk.components.Button
+import io.github.compose4gtk.adw.components.HeaderBar
 import org.gnome.gtk.Orientation
 
 fun main(args: Array<String>) {

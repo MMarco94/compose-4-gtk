@@ -1,15 +1,15 @@
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import io.github.mmarco94.compose.adw.application
-import io.github.mmarco94.compose.adw.components.ApplicationWindow
-import io.github.mmarco94.compose.adw.components.Banner
-import io.github.mmarco94.compose.adw.components.HeaderBar
-import io.github.mmarco94.compose.adw.components.HorizontalClamp
-import io.github.mmarco94.compose.gtk.components.ToggleButton
-import io.github.mmarco94.compose.gtk.components.VerticalBox
-import io.github.mmarco94.compose.modifier.Modifier
-import io.github.mmarco94.compose.modifier.alignment
-import io.github.mmarco94.compose.modifier.expand
+import io.github.compose4gtk.adw.application
+import io.github.compose4gtk.adw.components.ApplicationWindow
+import io.github.compose4gtk.adw.components.Banner
+import io.github.compose4gtk.adw.components.HeaderBar
+import io.github.compose4gtk.adw.components.HorizontalClamp
+import io.github.compose4gtk.gtk.components.ToggleButton
+import io.github.compose4gtk.gtk.components.VerticalBox
+import io.github.compose4gtk.modifier.Modifier
+import io.github.compose4gtk.modifier.alignment
+import io.github.compose4gtk.modifier.expand
 import org.gnome.gtk.Align
 
 fun main(args: Array<String>) {

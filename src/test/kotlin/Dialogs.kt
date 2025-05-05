@@ -1,9 +1,9 @@
 import androidx.compose.runtime.*
-import io.github.mmarco94.compose.adw.application
-import io.github.mmarco94.compose.adw.components.*
-import io.github.mmarco94.compose.adw.components.ApplicationWindow
-import io.github.mmarco94.compose.gtk.components.*
-import io.github.mmarco94.compose.modifier.*
+import io.github.compose4gtk.adw.application
+import io.github.compose4gtk.adw.components.*
+import io.github.compose4gtk.adw.components.ApplicationWindow
+import io.github.compose4gtk.gtk.components.*
+import io.github.compose4gtk.modifier.*
 import org.gnome.adw.DialogPresentationMode
 import org.gnome.adw.ResponseAppearance
 import org.gnome.gtk.Align
