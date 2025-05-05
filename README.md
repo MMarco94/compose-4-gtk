@@ -8,14 +8,11 @@ TL;DR: with this library, you can declaratively and dynamically create UIs with 
 
 ## Usage
 
-[![](https://www.jitpack.io/v/MMarco94/compose-4-gtk.svg)](https://www.jitpack.io/#MMarco94/compose-4-gtk)
+![Maven Central](https://img.shields.io/maven-central/v/io.github.compose4gtk/compose-4-gtk.svg?label=Maven%20Central)
 
-This library is still under development, and there's no official release yet.
+This library is still under development, and only pre-release versions are available.
 
-However, you can add still use this library via JitPack, see https://www.jitpack.io/#MMarco94/compose-4-gtk for
-instructions.
-
-The library requires JDK 23 or newer.
+JDK 23 or newer is required.
 
 For example, on your `build.gradle.kts`:
 
@@ -25,17 +22,16 @@ kotlin {
 }
 
 repositories {
+    ...
     mavenCentral()
-    google()
-    maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-    maven("https://www.jitpack.io")
+    ...
 }
 
 ...
 
 dependencies {
     ...
-    implementation("com.github.MMarco94:compose-4-gtk:-SNAPSHOT")
+    implementation("io.github.compose4gtk:compose-4-gtk:<latest-version>")
     ...
 }
 ```

@@ -5,6 +5,7 @@ javagi = "0.12.1"
 dokka = "2.0.0"
 kotlin-logging = "7.0.7"
 slf4j = "2.0.17"
+versioning = "6.4.4"
 
 [libraries]
 javagi-gtk = { group = "io.github.jwharm.javagi", name = "gtk", version.ref = "javagi" }
@@ -18,3 +19,4 @@ kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 compose = { id = "org.jetbrains.compose", version.ref = "compose" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
+versioning = { id = "me.qoomon.git-versioning", version.ref = "versioning" }
