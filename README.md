@@ -10,7 +10,7 @@ TL;DR: with this library, you can declaratively and dynamically create UIs with 
 
 ![Maven Central](https://img.shields.io/maven-central/v/io.github.compose4gtk/compose-4-gtk.svg?label=Maven%20Central)
 
-This library is still under development, and only pre-release versions are available.
+This library is still under development, and only pre-release versions are available [on Maven Central](https://central.sonatype.com/artifact/io.github.compose4gtk/compose-4-gtk).
 
 JDK 23 or newer is required.
 
