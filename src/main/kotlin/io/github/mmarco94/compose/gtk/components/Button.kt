@@ -9,6 +9,7 @@ import io.github.mmarco94.compose.GtkComposeWidget
 import io.github.mmarco94.compose.SingleChildComposeNode
 import io.github.mmarco94.compose.modifier.Modifier
 import org.gnome.gtk.Button
+import org.gnome.gtk.LinkButton
 import org.gnome.gtk.ToggleButton
 
 private class GtkButtonComposeNode(gObject: Button) : SingleChildComposeNode<Button>(gObject, { child = it }) {
@@ -19,6 +20,11 @@ private class GtkToggleButtonComposeNode(
     gObject: ToggleButton,
     var onToggle: SignalConnection<ToggleButton.ToggledCallback>,
 ) : SingleChildComposeNode<ToggleButton>(gObject, { child = it })
+
+private class GtkLinkButtonComposeNode(
+    gObject: LinkButton,
+    var onActivateLink: SignalConnection<LinkButton.ActivateLinkCallback>?,
+) : SingleChildComposeNode<LinkButton>(gObject, { child = it })
 
 @Composable
 private fun <B : GtkComposeWidget<Button>> BaseButton(
@@ -113,6 +119,35 @@ fun IconButton(
                 this.onClick = this.widget.onClicked(it)
             }
             set(iconName) { this.widget.iconName = it }
+        }
+    )
+}
+
+@Composable
+fun LinkButton(
+    label: String,
+    uri: String,
+    modifier: Modifier = Modifier,
+    child: @Composable () -> Unit = {},
+    onActivateLink: () -> Unit,
+) {
+    BaseButton(
+        creator = {
+            val lb = LinkButton.builder().build()
+            GtkLinkButtonComposeNode(lb, lb.onActivateLink { false })
+        },
+        label = label,
+        modifier = modifier,
+        child = child,
+        updater = {
+            set(uri) { this.widget.uri = it }
+            set(onActivateLink) {
+                this.onActivateLink?.disconnect()
+                this.onActivateLink = this.widget.onActivateLink {
+                    onActivateLink()
+                    false
+                }
+            }
         }
     )
 }
