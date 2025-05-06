@@ -30,6 +30,7 @@ private class GtkLinkButtonComposeNode(
 private fun <B : GtkComposeWidget<Button>> BaseButton(
     creator: () -> B,
     label: String,
+    hasFrame: Boolean = true,
     modifier: Modifier = Modifier,
     child: @Composable () -> Unit,
     updater: Updater<B>.() -> Unit,
@@ -39,6 +40,7 @@ private fun <B : GtkComposeWidget<Button>> BaseButton(
         update = {
             set(modifier) { applyModifier(it) }
             set(label) { this.widget.label = it }
+            set(hasFrame) { this.widget.hasFrame = it }
             updater()
         },
         content = child
@@ -48,6 +50,7 @@ private fun <B : GtkComposeWidget<Button>> BaseButton(
 @Composable
 fun Button(
     label: String,
+    hasFrame: Boolean = true,
     modifier: Modifier = Modifier,
     child: @Composable () -> Unit = {},
     onClick: () -> Unit,
@@ -55,6 +58,7 @@ fun Button(
     BaseButton(
         creator = { GtkButtonComposeNode(Button.builder().build()) },
         label = label,
+        hasFrame = hasFrame,
         modifier = modifier,
         child = child,
         updater = {
@@ -70,6 +74,7 @@ fun Button(
 fun ToggleButton(
     label: String,
     active: Boolean,
+    hasFrame: Boolean = true,
     modifier: Modifier = Modifier,
     child: @Composable () -> Unit = {},
     toggled: () -> Unit,
@@ -80,6 +85,7 @@ fun ToggleButton(
             GtkToggleButtonComposeNode(tb, tb.onToggled { })
         },
         label = label,
+        hasFrame = hasFrame,
         modifier = modifier,
         child = child,
         updater = {
@@ -104,6 +110,7 @@ fun ToggleButton(
 @Composable
 fun IconButton(
     iconName: String,
+    hasFrame: Boolean = true,
     modifier: Modifier = Modifier,
     child: @Composable () -> Unit = {},
     onClick: () -> Unit,
@@ -111,6 +118,7 @@ fun IconButton(
     BaseButton(
         creator = { GtkButtonComposeNode(Button.builder().build()) },
         label = "",
+        hasFrame = hasFrame,
         modifier = modifier,
         child = child,
         updater = {
