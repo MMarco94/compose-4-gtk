@@ -18,6 +18,7 @@ private class GtkCheckButton(gObject: CheckButton) : SingleChildComposeNode<Chec
  *
  * @param modifier The modifier to apply to the widget.
  * @param active Whether the check button is currently active.
+ * @param group Optional group for radio-style buttons.
  * @param inconsistent Whether the button should display an inconsistent (partially active) state.
  * @param label Optional text label.
  * @param useUnderline Whether to use an underscore in the label for mnemonic activation.
@@ -28,6 +29,7 @@ private class GtkCheckButton(gObject: CheckButton) : SingleChildComposeNode<Chec
 private fun BaseCheckButton(
     modifier: Modifier = Modifier,
     active: Boolean,
+    group: CheckButton? = null,
     inconsistent: Boolean = false,
     label: String? = null,
     useUnderline: Boolean = false,
@@ -46,6 +48,7 @@ private fun BaseCheckButton(
                 this.widget.active = active
                 this.toggled?.unblock()
             }
+            set(group) { this.widget.setGroup(group) }
             set(inconsistent) { this.widget.inconsistent = it }
             set(label) { this.widget.label = it }
             set(useUnderline) { this.widget.useUnderline = it }
@@ -69,6 +72,7 @@ private fun BaseCheckButton(
  *
  * @param modifier The modifier to apply to the widget.
  * @param active Whether the check button is currently active.
+ * @param group Optional group for radio-style buttons.
  * @param inconsistent Whether the button should display an inconsistent (partially active) state.
  * @param useUnderline Whether to use an underscore in the label for mnemonic activation.
  * @param enabled Whether the check button is enabled for interaction.
@@ -78,6 +82,7 @@ private fun BaseCheckButton(
 fun CheckButton(
     modifier: Modifier = Modifier,
     active: Boolean,
+    group: CheckButton? = null,
     inconsistent: Boolean = false,
     useUnderline: Boolean = false,
     enabled: Boolean = true,
@@ -86,6 +91,7 @@ fun CheckButton(
     BaseCheckButton(
         modifier = modifier,
         active = active,
+        group = group,
         inconsistent = inconsistent,
         useUnderline = useUnderline,
         onToggle = onToggle,
@@ -97,6 +103,7 @@ fun CheckButton(
  *
  * @param modifier The modifier to apply to the widget.
  * @param active Whether the check button is currently active.
+ * @param group Optional group for radio-style buttons.
  * @param label Text label.
  * @param inconsistent Whether the button should display an inconsistent (partially active) state.
  * @param useUnderline Whether to use an underscore in the label for mnemonic activation.
@@ -106,6 +113,7 @@ fun CheckButton(
 fun CheckButton(
     modifier: Modifier = Modifier,
     active: Boolean,
+    group: CheckButton? = null,
     label: String,
     inconsistent: Boolean = false,
     useUnderline: Boolean = false,
@@ -114,6 +122,7 @@ fun CheckButton(
     BaseCheckButton(
         modifier = modifier,
         active = active,
+        group = group,
         inconsistent = inconsistent,
         label = label,
         useUnderline = useUnderline,
@@ -126,6 +135,7 @@ fun CheckButton(
  *
  * @param modifier The modifier to apply to the widget.
  * @param active Whether the check button is currently active.
+ * @param group Optional group for radio-style buttons.
  * @param child Custom composable content.
  * @param inconsistent Whether the button should display an inconsistent (partially active) state.
  * @param useUnderline Whether to use an underscore in the label for mnemonic activation.
@@ -135,6 +145,7 @@ fun CheckButton(
 fun CheckButton(
     modifier: Modifier = Modifier,
     active: Boolean,
+    group: CheckButton? = null,
     child: @Composable () -> Unit,
     inconsistent: Boolean = false,
     useUnderline: Boolean = false,
@@ -143,6 +154,7 @@ fun CheckButton(
     BaseCheckButton(
         modifier = modifier,
         active = active,
+        group = group,
         inconsistent = inconsistent,
         child = child,
         useUnderline = useUnderline,
