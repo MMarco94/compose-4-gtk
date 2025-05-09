@@ -93,7 +93,6 @@ private fun BaseCheckButton(
  * @param active Whether the check button is currently active.
  * @param inconsistent Whether the button should display an inconsistent (partially active) state.
  * @param useUnderline Whether to use an underscore in the label for mnemonic activation.
- * @param enabled Whether the check button is enabled for interaction.
  * @param onToggle Callback invoked when the check button is toggled.
  */
 @Composable
@@ -102,7 +101,6 @@ fun CheckButton(
     active: Boolean,
     inconsistent: Boolean = false,
     useUnderline: Boolean = false,
-    enabled: Boolean = true,
     onToggle: () -> Unit,
 ) {
     BaseCheckButton(
