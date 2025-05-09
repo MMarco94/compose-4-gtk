@@ -5,6 +5,7 @@ import io.github.compose4gtk.adw.components.ApplicationWindow
 import io.github.compose4gtk.adw.components.HeaderBar
 import io.github.compose4gtk.adw.components.StatusPage
 import io.github.compose4gtk.gtk.components.CheckButton
+import io.github.compose4gtk.gtk.components.CheckButtonGroup
 import io.github.compose4gtk.gtk.components.VerticalBox
 import io.github.compose4gtk.modifier.Modifier
 import io.github.compose4gtk.modifier.alignment
@@ -20,16 +21,16 @@ fun main(args: Array<String>) {
                 StatusPage(title = "Radio Buttons", description = "Check buttons grouped to make radio-style buttons") {
                     VerticalBox {
                         val checkedStates = remember { mutableStateListOf(false, false, false, false, false) }
-                        val radioGroup = org.gnome.gtk.CheckButton()
 
-                        checkedStates.forEachIndexed { index, isChecked ->
-                            CheckButton(
-                                modifier = Modifier.alignment(Align.START),
-                                active = isChecked,
-                                label = "Option $index",
-                                group = radioGroup
-                            ) {
-                                checkedStates[index] = !checkedStates[index]
+                        CheckButtonGroup {
+                            checkedStates.forEachIndexed { index, isChecked ->
+                                CheckButton(
+                                    modifier = Modifier.alignment(Align.START),
+                                    active = isChecked,
+                                    label = "Option $index ($isChecked)",
+                                ) {
+                                    checkedStates[index] = !checkedStates[index]
+                                }
                             }
                         }
                     }
