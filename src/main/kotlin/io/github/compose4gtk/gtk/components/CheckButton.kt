@@ -46,16 +46,16 @@ private fun BaseCheckButton(
     onToggle: () -> Unit,
 ) {
     var pendingChange by remember { mutableStateOf(0) }
-    val groupLeader = LocalCheckButtonGroupLeader.current
+    val groupLeaderState = LocalCheckButtonGroupLeader.current
 
     ComposeNode<GtkCheckButton, GtkApplier>(
         factory = {
             val cb = CheckButton.builder().build()
-            if (groupLeader != null) {
-                if (groupLeader.value != null) {
-                    cb.setGroup(groupLeader.value)
+            if (groupLeaderState != null) {
+                if (groupLeaderState.value != null) {
+                    cb.setGroup(groupLeaderState.value)
                 } else {
-                    groupLeader.value = cb
+                    groupLeaderState.value = cb
                     cb.setGroup(cb)
                 }
             }
