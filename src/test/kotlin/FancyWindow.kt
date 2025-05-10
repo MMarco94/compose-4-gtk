@@ -1,6 +1,7 @@
 import io.github.compose4gtk.adw.application
 import io.github.compose4gtk.adw.components.ApplicationWindow
 import io.github.compose4gtk.adw.components.HeaderBar
+import io.github.compose4gtk.adw.components.ToolbarView
 import io.github.compose4gtk.gtk.ImageSource
 import io.github.compose4gtk.gtk.components.*
 import io.github.compose4gtk.modifier.Modifier
@@ -14,7 +15,17 @@ import org.gnome.gtk.PackType
 fun main(args: Array<String>) {
     application("my.example.hello-app", args) {
         ApplicationWindow("Test", onClose = ::exitApplication, defaultWidth = 800) {
-            VerticalBox {
+            ToolbarView(
+                bottomBar = {
+                    HeaderBar(
+                        startWidgets = { Button("Start") {} },
+                        endWidgets = { Button("End") {} },
+                        title = {
+                            Label("Custom title")
+                        }
+                    )
+                }
+            ) {
                 Overlay(
                     mainChild = {
                         Picture(
@@ -33,13 +44,6 @@ fun main(args: Array<String>) {
                             modifier = Modifier.alignment(Align.END, Align.START),
                         )
                     },
-                )
-                HeaderBar(
-                    startWidgets = { Button("Start") {} },
-                    endWidgets = { Button("End") {} },
-                    title = {
-                        Label("Custom title")
-                    }
                 )
             }
         }
