@@ -1,14 +1,25 @@
 package io.github.compose4gtk.gtk.components
 
 import androidx.compose.runtime.*
-import io.github.jwharm.javagi.gobject.SignalConnection
 import io.github.compose4gtk.GtkApplier
 import io.github.compose4gtk.SingleChildComposeNode
 import io.github.compose4gtk.modifier.Modifier
+import io.github.jwharm.javagi.gobject.SignalConnection
 import org.gnome.gtk.CheckButton
 
 private class GtkCheckButton(gObject: CheckButton) : SingleChildComposeNode<CheckButton>(gObject, { child = it }) {
     var toggled: SignalConnection<CheckButton.ToggledCallback>? = null
+}
+
+private val LocalCheckButtonGroupLeader = compositionLocalOf<MutableState<CheckButton?>?> { null }
+
+@Composable
+fun CheckButtonGroup(content: @Composable () -> Unit) {
+    val groupLeader = remember { mutableStateOf<CheckButton?>(null) }
+
+    CompositionLocalProvider(LocalCheckButtonGroupLeader provides groupLeader) {
+        content()
+    }
 }
 
 /**
@@ -35,9 +46,20 @@ private fun BaseCheckButton(
     onToggle: () -> Unit,
 ) {
     var pendingChange by remember { mutableStateOf(0) }
+    val groupLeaderState = LocalCheckButtonGroupLeader.current
+
     ComposeNode<GtkCheckButton, GtkApplier>(
         factory = {
-            GtkCheckButton(CheckButton.builder().build())
+            val cb = CheckButton.builder().build()
+            if (groupLeaderState != null) {
+                if (groupLeaderState.value != null) {
+                    cb.setGroup(groupLeaderState.value)
+                } else {
+                    groupLeaderState.value = cb
+                    cb.setGroup(cb)
+                }
+            }
+            GtkCheckButton(cb)
         },
         update = {
             set(modifier) { this.applyModifier(it) }
@@ -71,7 +93,6 @@ private fun BaseCheckButton(
  * @param active Whether the check button is currently active.
  * @param inconsistent Whether the button should display an inconsistent (partially active) state.
  * @param useUnderline Whether to use an underscore in the label for mnemonic activation.
- * @param enabled Whether the check button is enabled for interaction.
  * @param onToggle Callback invoked when the check button is toggled.
  */
 @Composable
@@ -80,7 +101,6 @@ fun CheckButton(
     active: Boolean,
     inconsistent: Boolean = false,
     useUnderline: Boolean = false,
-    enabled: Boolean = true,
     onToggle: () -> Unit,
 ) {
     BaseCheckButton(
