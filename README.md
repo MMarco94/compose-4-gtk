@@ -66,11 +66,13 @@ A window with a header, and three buttons inside:
 fun main(args: Array<String>) {
     application("my.example.HelloApp", args) {
         ApplicationWindow("Test", onClose = ::exitApplication) {
-            HeaderBar()
+            Box(orientation = Orientation.VERTICAL) {
+                HeaderBar()
 
-            Button("Button 1") { println("Clicked!") }
-            Button("Button 2") { println("Clicked!") }
-            Button("Button 3") { println("Clicked!") }
+                Button("Button 1") { println("Clicked!") }
+                Button("Button 2") { println("Clicked!") }
+                Button("Button 3") { println("Clicked!") }
+            }
         }
     }
 }
