@@ -56,7 +56,6 @@ private fun BaseCheckButton(
                     cb.setGroup(groupLeaderState.value)
                 } else {
                     groupLeaderState.value = cb
-                    cb.setGroup(cb)
                 }
             }
             GtkCheckButton(cb)
