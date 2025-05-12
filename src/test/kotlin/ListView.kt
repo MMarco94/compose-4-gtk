@@ -36,7 +36,9 @@ fun main(args: Array<String>) {
                     itemSize += 1
                 }
                 Button("Remove last") {
-                    itemSize -= 1
+                    if (itemSize > 0) {
+                        itemSize -= 1
+                    }
                 }
                 Button("Double items") {
                     itemSize *= 2
