@@ -1,5 +1,7 @@
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import io.github.compose4gtk.adw.application
 import io.github.compose4gtk.adw.components.ApplicationWindow
 import io.github.compose4gtk.adw.components.HeaderBar
@@ -20,16 +22,17 @@ fun main(args: Array<String>) {
 
                 StatusPage(title = "Radio Buttons", description = "Check buttons grouped to make radio-style buttons") {
                     VerticalBox {
-                        val checkedStates = remember { mutableStateListOf(false, false, false, false, false) }
+                        val radioOptions = listOf("Calls", "Missed", "Friends")
+                        var selectedOption by remember { mutableStateOf(radioOptions[0]) }
 
                         CheckButtonGroup {
-                            checkedStates.forEachIndexed { index, isChecked ->
+                            radioOptions.forEach { text ->
                                 CheckButton(
                                     modifier = Modifier.alignment(Align.START),
-                                    active = isChecked,
-                                    label = "Option $index ($isChecked)",
+                                    active = (text == selectedOption),
+                                    label = text,
                                 ) {
-                                    checkedStates[index] = !checkedStates[index]
+                                    selectedOption = text
                                 }
                             }
                         }
