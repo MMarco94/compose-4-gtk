@@ -4,12 +4,10 @@ import androidx.compose.runtime.*
 import io.github.jwharm.javagi.gio.ListIndexModel
 import io.github.compose4gtk.*
 import io.github.compose4gtk.modifier.Modifier
+import org.gnome.gio.ListModel
 import org.gnome.gio.ListStore
 import org.gnome.gobject.GObject
-import org.gnome.gtk.ListItem
-import org.gnome.gtk.NoSelection
-import org.gnome.gtk.SelectionModel
-import org.gnome.gtk.SignalListItemFactory
+import org.gnome.gtk.*
 import org.gnome.gtk.ListView as GTKListView
 
 /**
@@ -99,6 +97,75 @@ fun <T : GObject> ListView(
             set(model) { this.widget.model = it }
         },
     )
+}
+
+@Composable
+fun <Item : GObject> rememberNoSelectionModel(
+    vararg keys: Any,
+    count: Int,
+    itemFactory: (index: Int) -> Item,
+): SelectionModel<Item> =
+    rememberSelectionModel(
+        keys = keys,
+        count = count,
+        itemFactory = itemFactory,
+        selectionModelFactory = { model -> NoSelection(model) },
+    )
+
+@Composable
+fun <Item : GObject> rememberSingleSelectionModel(
+    vararg keys: Any,
+    count: Int,
+    itemFactory: (index: Int) -> Item,
+): SelectionModel<Item> =
+    rememberSelectionModel(
+        keys = keys,
+        count = count,
+        itemFactory = itemFactory,
+        selectionModelFactory = { model -> SingleSelection(model) },
+    )
+
+@Composable
+fun <Item : GObject> rememberMultiSelectionModel(
+    vararg keys: Any,
+    count: Int,
+    itemFactory: (index: Int) -> Item,
+): SelectionModel<Item> =
+    rememberSelectionModel(
+        keys = keys,
+        count = count,
+        itemFactory = itemFactory,
+        selectionModelFactory = { model -> MultiSelection(model) },
+    )
+
+@Composable
+private fun <Item : GObject, Model : SelectionModel<Item>> rememberSelectionModel(
+    vararg keys: Any,
+    count: Int,
+    itemFactory: (index: Int) -> Item,
+    selectionModelFactory: (model: ListModel<Item>) -> Model,
+): SelectionModel<Item> {
+    val model = remember { ListStore<Item>() }
+
+    remember(*keys, count) {
+        while (model.size > count) {
+            model.removeLast()
+        }
+    }
+
+    remember(*keys, itemFactory) {
+        for (i in 0 until model.size) {
+            model[i] = itemFactory(i)
+        }
+    }
+
+    remember(count) {
+        while (model.size < count) {
+            model.append(itemFactory(model.size))
+        }
+    }
+
+    return remember { selectionModelFactory(model) }
 }
 
 /**
