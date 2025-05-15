@@ -11,14 +11,46 @@ private class GtkCheckButton(gObject: CheckButton) : SingleChildComposeNode<Chec
     var toggled: SignalConnection<CheckButton.ToggledCallback>? = null
 }
 
-private val LocalCheckButtonGroupLeader = compositionLocalOf<MutableState<CheckButton?>?> { null }
+interface RadioGroupState<T> {
+    var selected: T?
+    fun registerCheckButton(checkButton: CheckButton)
+    fun unregisterCheckButton(checkButton: CheckButton)
+}
 
 @Composable
-fun CheckButtonGroup(content: @Composable () -> Unit) {
-    val groupLeader = remember { mutableStateOf<CheckButton?>(null) }
+fun <T> rememberRadioGroupState(selected: T?): RadioGroupState<T> {
+    var selectedState by remember { mutableStateOf(selected) }
+    val checkButtons = remember { mutableStateListOf<CheckButton>() }
 
-    CompositionLocalProvider(LocalCheckButtonGroupLeader provides groupLeader) {
-        content()
+    return remember {
+        object : RadioGroupState<T> {
+            override var selected: T?
+                get() = selectedState
+                set(value) {
+                    if (selectedState != value) {
+                        selectedState = value
+                    }
+                }
+
+            override fun registerCheckButton(checkButton: CheckButton) {
+                checkButtons.add(checkButton)
+                updateGroup()
+            }
+
+            override fun unregisterCheckButton(checkButton: CheckButton) {
+                checkButtons.remove(checkButton)
+                updateGroup()
+            }
+
+            private fun updateGroup() {
+                if (checkButtons.isEmpty()) return
+
+                val leader = checkButtons.first()
+                for (checkButton in checkButtons.drop(1)) {
+                    checkButton.setGroup(leader)
+                }
+            }
+        }
     }
 }
 
@@ -44,20 +76,14 @@ private fun BaseCheckButton(
     useUnderline: Boolean = false,
     child: @Composable () -> Unit = {},
     onToggle: () -> Unit,
+    onCreate: (CheckButton) -> Unit = {},
 ) {
     var pendingChange by remember { mutableStateOf(0) }
-    val groupLeaderState = LocalCheckButtonGroupLeader.current
 
     ComposeNode<GtkCheckButton, GtkApplier>(
         factory = {
             val cb = CheckButton.builder().build()
-            if (groupLeaderState != null) {
-                if (groupLeaderState.value != null) {
-                    cb.setGroup(groupLeaderState.value)
-                } else {
-                    groupLeaderState.value = cb
-                }
-            }
+            onCreate(cb)
             GtkCheckButton(cb)
         },
         update = {
@@ -81,7 +107,7 @@ private fun BaseCheckButton(
                 }
             }
         },
-        content = child
+        content = child,
     )
 }
 
@@ -138,6 +164,41 @@ fun CheckButton(
         useUnderline = useUnderline,
         onToggle = onToggle,
     )
+}
+
+@Composable
+fun <T> RadioButton(
+    modifier: Modifier = Modifier,
+    item: T,
+    state: RadioGroupState<T>,
+    label: String,
+    inconsistent: Boolean = false,
+    useUnderline: Boolean = false,
+    onToggle: () -> Unit,
+) {
+    var gtkCheckButton by remember { mutableStateOf<CheckButton?>(null) }
+
+    BaseCheckButton(
+        modifier = modifier,
+        active = (state.selected == item),
+        inconsistent = inconsistent,
+        useUnderline = useUnderline,
+        label = label,
+        onToggle = onToggle,
+        onCreate = { checkButton -> gtkCheckButton = checkButton }
+    )
+
+    DisposableEffect(gtkCheckButton) {
+        val cb = gtkCheckButton
+        if (cb != null) {
+            state.registerCheckButton(cb)
+        }
+        onDispose {
+            if (cb != null) {
+                state.unregisterCheckButton(cb)
+            }
+        }
+    }
 }
 
 /**
