@@ -7,7 +7,7 @@ import org.gnome.gtk.ApplicationWindow
 import org.gnome.gtk.CssProvider
 
 @Composable
-fun ApplicationWindow(
+fun GtkApplicationWindow(
     title: String?,
     onClose: () -> Unit,
     modifier: Modifier = Modifier,

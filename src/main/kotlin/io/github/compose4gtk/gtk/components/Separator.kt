@@ -9,7 +9,6 @@ import io.github.compose4gtk.modifier.Modifier
 import org.gnome.gtk.Orientation
 import org.gnome.gtk.Separator
 
-
 @Composable
 fun VerticalSeparator(
     modifier: Modifier = Modifier,

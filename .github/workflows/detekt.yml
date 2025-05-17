@@ -1,0 +1,36 @@
+name: Detekt
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    name: Detekt
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: set up JDK 22
+        uses: actions/setup-java@v4
+        with:
+          java-version: '22'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Run detekt
+        run: ./gradlew detekt
+
+      - name: Archive detekt results
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          path: build/reports/detekt/*
+
+      - name: Adding markdown
+        if: ${{ always() }}
+        run: cat build/reports/detekt/*.md >> $GITHUB_STEP_SUMMARY

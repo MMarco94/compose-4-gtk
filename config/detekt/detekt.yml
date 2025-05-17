@@ -1,0 +1,23 @@
+complexity:
+  # Compose functions tend to be longer and have a lot of parameters
+  LongMethod:
+    threshold: 100
+  LongParameterList:
+    ignoreDefaultParameters: true
+
+naming:
+  # Compose functions are uppercase
+  FunctionNaming:
+    functionPattern: "[a-zA-Z0-9]*"
+  # Ofter files with Composable function start with accessory interfaces
+  MatchingDeclarationName:
+    active: false
+
+style:
+  # Library is still in alpha, let's allow TODOs
+  ForbiddenComment:
+    comments: [ ]
+  WildcardImport:
+    excludeImports:
+      - io.github.compose4gtk.adw.components.*
+      - io.github.compose4gtk.gtk.components.*

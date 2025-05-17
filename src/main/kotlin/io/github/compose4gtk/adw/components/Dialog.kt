@@ -1,11 +1,16 @@
 package io.github.compose4gtk.adw.components
 
-import androidx.compose.runtime.*
-import io.github.jwharm.javagi.gobject.SignalConnection
-import io.github.compose4gtk.SingleChildComposeNode
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import io.github.compose4gtk.GtkSubComposition
+import io.github.compose4gtk.SingleChildComposeNode
 import io.github.compose4gtk.modifier.Modifier
 import io.github.compose4gtk.shared.components.LocalApplicationWindow
+import io.github.jwharm.javagi.gobject.SignalConnection
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.gnome.adw.AboutDialog
 import org.gnome.adw.AlertDialog
@@ -13,7 +18,7 @@ import org.gnome.adw.Dialog
 import org.gnome.adw.DialogPresentationMode
 import org.gnome.adw.ResponseAppearance
 import org.gnome.gobject.GObjects
-import org.gnome.gtk.*
+import org.gnome.gtk.License
 
 private val logger = KotlinLogging.logger {}
 

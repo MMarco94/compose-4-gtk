@@ -2,8 +2,9 @@ package io.github.compose4gtk.gtk.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
-import io.github.compose4gtk.*
 import io.github.compose4gtk.GtkApplier
+import io.github.compose4gtk.GtkComposeNode
+import io.github.compose4gtk.GtkComposeWidget
 import io.github.compose4gtk.SingleChildComposeNode
 import io.github.compose4gtk.VirtualComposeNode
 import io.github.compose4gtk.VirtualComposeNodeContainer
@@ -12,7 +13,6 @@ import org.gnome.gtk.BaselinePosition
 import org.gnome.gtk.CenterBox
 import org.gnome.gtk.Orientation
 import org.gnome.gtk.Widget
-
 
 @Composable
 fun CenterBox(

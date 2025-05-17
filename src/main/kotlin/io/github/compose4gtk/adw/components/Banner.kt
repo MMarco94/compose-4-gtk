@@ -2,10 +2,10 @@ package io.github.compose4gtk.adw.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
-import io.github.jwharm.javagi.gobject.SignalConnection
 import io.github.compose4gtk.GtkApplier
 import io.github.compose4gtk.LeafComposeNode
 import io.github.compose4gtk.modifier.Modifier
+import io.github.jwharm.javagi.gobject.SignalConnection
 import org.gnome.adw.Banner
 
 private class AdwBannerComposeNode(

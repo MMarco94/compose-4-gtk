@@ -1,9 +1,17 @@
 package io.github.compose4gtk.gtk.components
 
-import androidx.compose.runtime.*
-import io.github.jwharm.javagi.gio.ListIndexModel
-import io.github.compose4gtk.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ComposeNode
+import androidx.compose.runtime.Composition
+import androidx.compose.runtime.CompositionContext
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCompositionContext
+import io.github.compose4gtk.GtkApplier
+import io.github.compose4gtk.GtkComposeNode
+import io.github.compose4gtk.GtkComposeWidget
+import io.github.compose4gtk.LeafComposeNode
 import io.github.compose4gtk.modifier.Modifier
+import io.github.jwharm.javagi.gio.ListIndexModel
 import org.gnome.gio.ListStore
 import org.gnome.gobject.GObject
 import org.gnome.gtk.ListItem
@@ -40,7 +48,6 @@ private class GtkListItemComposeNode(val listItem: ListItem) : GtkComposeNode {
         listItem.child = null
     }
 }
-
 
 /**
  * Creates a [org.gnome.gtk.ListView] with [items] items.

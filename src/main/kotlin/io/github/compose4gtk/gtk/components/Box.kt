@@ -2,13 +2,13 @@ package io.github.compose4gtk.gtk.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
-import io.github.compose4gtk.GtkComposeWidget
 import io.github.compose4gtk.GtkApplier
+import io.github.compose4gtk.GtkComposeWidget
 import io.github.compose4gtk.GtkContainerComposeNode
 import io.github.compose4gtk.modifier.Modifier
-import org.gnome.gtk.Box as GtkBox
 import org.gnome.gtk.Orientation
 import org.gnome.gtk.Widget
+import org.gnome.gtk.Box as GtkBox
 
 private class GtkBoxComposeNode(gObject: GtkBox) : GtkContainerComposeNode<GtkBox>(gObject) {
     override fun addNode(index: Int, child: GtkComposeWidget<Widget>) {

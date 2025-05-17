@@ -6,11 +6,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import io.github.compose4gtk.adw.application
 import io.github.compose4gtk.adw.components.*
-import io.github.compose4gtk.gtk.components.Box
-import io.github.compose4gtk.gtk.components.Button
-import io.github.compose4gtk.gtk.components.Label
-import io.github.compose4gtk.gtk.components.ToggleButton
-import io.github.compose4gtk.gtk.components.VerticalBox
+import io.github.compose4gtk.gtk.components.*
 import io.github.compose4gtk.modifier.Modifier
 import io.github.compose4gtk.modifier.expand
 import io.github.compose4gtk.modifier.margin
@@ -30,7 +26,11 @@ fun main(args: Array<String>) {
                 HeaderBar(title = { Label("Current page: ${carouselState.currentPage}/${carouselState.pageCount}") })
 
                 Box(
-                    orientation = if (orientation.value == Orientation.HORIZONTAL) Orientation.VERTICAL else Orientation.HORIZONTAL,
+                    orientation = if (orientation.value == Orientation.HORIZONTAL) {
+                        Orientation.VERTICAL
+                    } else {
+                        Orientation.HORIZONTAL
+                    },
                     modifier = Modifier.margin(8, 0)
                 ) {
                     Carousel(
