@@ -107,11 +107,6 @@ jreleaser {
         armored = true
         verify = true
     }
-    release {
-        github {
-            skipTag = true
-        }
-    }
     deploy {
         maven {
             mavenCentral.create("release-deploy") {
