@@ -6,7 +6,8 @@ on:
       - "v*"
 
 jobs:
-  publish:
+  build:
+    permissions: write-all
     runs-on: ubuntu-latest
 
     steps:
@@ -27,12 +28,4 @@ jobs:
           JRELEASER_GPG_PASSPHRASE: ${{ secrets.JRELEASER_GPG_PASSPHRASE }}
           JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.JRELEASER_GPG_PUBLIC_KEY }}
           JRELEASER_GPG_SECRET_KEY: ${{ secrets.JRELEASER_GPG_SECRET_KEY }}
-  create-github-release:
-    permissions: write-all
-    runs-on: "ubuntu-latest"
-    needs: publish
-    steps:
-      - uses: "marvinpinto/action-automatic-releases@latest"
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          prerelease: true
+          JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
