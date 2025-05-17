@@ -110,6 +110,9 @@ jreleaser {
     release {
         github {
             skipTag = true
+            releaseNotes {
+                enabled = true
+            }
         }
     }
     deploy {
