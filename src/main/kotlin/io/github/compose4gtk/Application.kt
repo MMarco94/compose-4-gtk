@@ -41,7 +41,7 @@ interface ApplicationScope {
     fun exitApplication()
 }
 
-val LocalApplication = staticCompositionLocalOf<Application> { throw IllegalStateException("not in a GTK application") }
+val LocalApplication = staticCompositionLocalOf<Application> { throw IllegalStateException("not in a GTK applicagfdfgdfgdgfdfdgfdgfdfgdfgdfgdfgdfgtion") }
 
 fun Application.initializeApplication(
     args: Array<String>,
