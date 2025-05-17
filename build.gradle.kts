@@ -113,6 +113,9 @@ jreleaser {
             releaseNotes {
                 enabled = true
             }
+            changelog {
+                enabled = false
+            }
         }
     }
     deploy {
