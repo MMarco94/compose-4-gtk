@@ -33,12 +33,12 @@ gitVersioning.apply {
 }
 
 kotlin {
-    jvmToolchain(23)
+    jvmToolchain(22)
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_23
-    targetCompatibility = JavaVersion.VERSION_23
+    sourceCompatibility = JavaVersion.VERSION_22
+    targetCompatibility = JavaVersion.VERSION_22
 }
 
 dependencies {
@@ -133,15 +133,6 @@ jreleaser {
     }
 }
 
-// TODO: used on examples. They should probably be moved in a separate module to avoid polluting the main build file
-tasks.register("compileTestGResources") {
-    exec {
-        workingDir = file("src/test/gresources")
-        commandLine =
-            listOf("glib-compile-resources", "--target=../resources/resources.gresource", "resources.gresource.xml")
-    }
-}
-
 tasks.named("assembleTestResources") {
     dependsOn("compileTestGResources")
 }
@@ -152,4 +143,13 @@ tasks.named("publish") {
 
 tasks.named("jreleaserFullRelease") {
     dependsOn("publish")
+}
+
+// TODO: used on examples. They should probably be moved in a separate module to avoid polluting the main build file
+tasks.register("compileTestGResources") {
+    exec {
+        workingDir = file("src/test/gresources")
+        commandLine =
+            listOf("glib-compile-resources", "--target=../resources/resources.gresource", "resources.gresource.xml")
+    }
 }

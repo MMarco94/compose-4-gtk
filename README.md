@@ -12,7 +12,7 @@ TL;DR: with this library, you can declaratively and dynamically create UIs with 
 
 This library is still under development, and only pre-release versions are available [on Maven Central](https://central.sonatype.com/artifact/io.github.compose4gtk/compose-4-gtk).
 
-JDK 23 or newer and the Kotlin Compose compiler plugin are required.
+JDK 22 or newer and the Kotlin Compose compiler plugin are required.
 
 For example, on your `build.gradle.kts`:
 
@@ -24,7 +24,7 @@ plugins {
 }
 
 kotlin {
-    jvmToolchain(23)
+    jvmToolchain(22)
 }
 
 repositories {
