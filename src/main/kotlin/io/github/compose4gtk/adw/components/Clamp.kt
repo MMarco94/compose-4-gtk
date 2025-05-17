@@ -6,9 +6,8 @@ import io.github.compose4gtk.GtkApplier
 import io.github.compose4gtk.GtkComposeWidget
 import io.github.compose4gtk.SingleChildComposeNode
 import io.github.compose4gtk.modifier.Modifier
-import org.gnome.adw.Clamp as GtkClamp
 import org.gnome.gtk.Orientation
-
+import org.gnome.adw.Clamp as GtkClamp
 
 @Composable
 fun VerticalClamp(

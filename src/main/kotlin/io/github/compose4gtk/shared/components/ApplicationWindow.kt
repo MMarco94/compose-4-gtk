@@ -1,10 +1,15 @@
 package io.github.compose4gtk.shared.components
 
-import androidx.compose.runtime.*
-import io.github.jwharm.javagi.gobject.SignalConnection
-import io.github.compose4gtk.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.remember
+import io.github.compose4gtk.GtkSubComposition
+import io.github.compose4gtk.LocalApplication
 import io.github.compose4gtk.SingleChildComposeNode
 import io.github.compose4gtk.modifier.Modifier
+import io.github.jwharm.javagi.gobject.SignalConnection
 import org.gnome.gtk.ApplicationWindow
 import org.gnome.gtk.CssProvider
 import org.gnome.gtk.Gtk
@@ -19,10 +24,10 @@ private class GtkApplicationWindowComposeNode<AW : ApplicationWindow>(
         set(value) {
             styles.forEach { Gtk.styleContextRemoveProviderForDisplay(widget.display, it) }
             field = value
-            styles.forEachIndexed { index, it ->
+            styles.forEachIndexed { index, style ->
                 Gtk.styleContextAddProviderForDisplay(
                     widget.display,
-                    it,
+                    style,
                     Gtk.STYLE_PROVIDER_PRIORITY_FALLBACK + 1 + index,
                 )
             }
@@ -81,7 +86,10 @@ internal fun <AW : ApplicationWindow, B : ApplicationWindow.Builder<*>> initiali
     remember(title) { window.title = title }
     remember(onClose) {
         composeNode.onClose?.disconnect()
-        composeNode.onClose = window.onCloseRequest { onClose(); true }
+        composeNode.onClose = window.onCloseRequest {
+            onClose()
+            true
+        }
     }
     remember(styles) { composeNode.styles = styles }
     remember(decorated) { window.decorated = decorated }

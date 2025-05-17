@@ -1,13 +1,18 @@
 package io.github.compose4gtk.adw.components
 
-import androidx.compose.runtime.*
-import io.github.jwharm.javagi.gobject.SignalConnection
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ComposeNode
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import io.github.compose4gtk.GtkApplier
 import io.github.compose4gtk.GtkComposeWidget
 import io.github.compose4gtk.GtkContainerComposeNode
 import io.github.compose4gtk.LeafComposeNode
 import io.github.compose4gtk.gtk.components.VerticalBox
 import io.github.compose4gtk.modifier.Modifier
+import io.github.jwharm.javagi.gobject.SignalConnection
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.gnome.adw.Carousel
 import org.gnome.adw.CarouselIndicatorDots
@@ -16,6 +21,8 @@ import org.gnome.adw.SpringParams
 import org.gnome.gtk.Orientation
 import org.gnome.gtk.Widget
 
+@Suppress("MagicNumber")
+private val DEFAULT_SPRING_PARAMS = SpringParams(1.0, 0.5, 500.0)
 private val logger = KotlinLogging.logger {}
 
 private class AdwCarouselComposeNode(gObject: Carousel) : GtkContainerComposeNode<Carousel>(gObject) {
@@ -93,7 +100,7 @@ fun Carousel(
     allowScrollWheel: Boolean = true,
     interactive: Boolean = true,
     revealDuration: Int = 0,
-    scrollParams: SpringParams = SpringParams(1.0, 0.5, 500.0),
+    scrollParams: SpringParams = DEFAULT_SPRING_PARAMS,
     spacing: Int = 0,
     onPageChanged: ((Int) -> Unit)? = null,
     content: @Composable (page: Int) -> Unit,

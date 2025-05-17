@@ -26,8 +26,8 @@ fun Revealer(
         update = {
             set(modifier) { applyModifier(it) }
             set(reveal) { this.widget.revealChild = it }
-            set(transitionType) {this.widget.transitionType = it }
-            set(transitionDuration) {this.widget.transitionDuration = it }
+            set(transitionType) { this.widget.transitionType = it }
+            set(transitionDuration) { this.widget.transitionDuration = it }
         },
         content = content,
     )

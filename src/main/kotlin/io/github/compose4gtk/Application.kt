@@ -1,10 +1,24 @@
 package io.github.compose4gtk
 
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Composition
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.MonotonicFrameClock
+import androidx.compose.runtime.Recomposer
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.Snapshot
-import kotlinx.coroutines.*
+import androidx.compose.runtime.staticCompositionLocalOf
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.yield
 import org.gnome.gtk.Application
 import org.gnome.gtk.Window
 import kotlin.system.exitProcess
@@ -27,7 +41,7 @@ interface ApplicationScope {
     fun exitApplication()
 }
 
-val LocalApplication = staticCompositionLocalOf<Application> { throw RuntimeException("not in a GTK application") }
+val LocalApplication = staticCompositionLocalOf<Application> { throw IllegalStateException("not in a GTK application") }
 
 fun Application.initializeApplication(
     args: Array<String>,

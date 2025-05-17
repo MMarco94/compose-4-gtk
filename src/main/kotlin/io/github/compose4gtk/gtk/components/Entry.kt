@@ -8,11 +8,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
-import io.github.jwharm.javagi.gobject.SignalConnection
 import io.github.compose4gtk.Gtk
 import io.github.compose4gtk.GtkApplier
 import io.github.compose4gtk.LeafComposeNode
 import io.github.compose4gtk.modifier.Modifier
+import io.github.jwharm.javagi.gobject.SignalConnection
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.gnome.gobject.GObject

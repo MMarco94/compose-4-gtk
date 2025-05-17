@@ -34,8 +34,8 @@ abstract class GtkComposeWidget<out W : Widget>(val widget: W) : GtkComposeNode 
 abstract class GtkComposeContainer<out W : Widget>(widget: W) : GtkComposeWidget<W>(widget) {
 
     final override fun addNode(index: Int, child: GtkComposeNode) {
-        if (child !is GtkComposeWidget<*>) {
-            throw IllegalArgumentException("GtkComposeContainer only works with GtkComposeWidget")
+        require(child is GtkComposeWidget<*>) {
+            "GtkComposeContainer only works with GtkComposeWidget"
         }
         addNode(index, child)
     }
@@ -61,8 +61,8 @@ internal open class SingleChildComposeNode<W : Widget>(
     }
 
     override fun addNode(index: Int, child: GtkComposeWidget<Widget>) {
-        if (stack.isNotEmpty()) {
-            throw IllegalStateException("${widget.javaClass.simpleName} can have at most one child node")
+        check(stack.isEmpty()) {
+            "${widget.javaClass.simpleName} can have at most one child node"
         }
         stack.add(child.widget)
         recompute()

@@ -51,7 +51,7 @@ fun main(args: Array<String>) {
                                     .alignment(Align.CENTER)
                                     .sensitive(false),
                                 active = isSwitchActive,
-                            ){}
+                            ) {}
                             Label("Disabled")
                         }
                     }

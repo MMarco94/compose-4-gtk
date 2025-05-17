@@ -8,6 +8,7 @@ plugins {
     `maven-publish`
     id("org.jreleaser") version "1.18.0"
     alias(libs.plugins.versioning)
+    alias(libs.plugins.detekt)
 }
 
 repositories {
@@ -152,4 +153,9 @@ tasks.register("compileTestGResources") {
         commandLine =
             listOf("glib-compile-resources", "--target=../resources/resources.gresource", "resources.gresource.xml")
     }
+}
+
+detekt {
+    config.setFrom(file("config/detekt/detekt.yml"))
+    buildUponDefaultConfig = true
 }

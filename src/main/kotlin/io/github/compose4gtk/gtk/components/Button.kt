@@ -3,11 +3,11 @@ package io.github.compose4gtk.gtk.components
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
 import androidx.compose.runtime.Updater
-import io.github.jwharm.javagi.gobject.SignalConnection
 import io.github.compose4gtk.GtkApplier
 import io.github.compose4gtk.GtkComposeWidget
 import io.github.compose4gtk.SingleChildComposeNode
 import io.github.compose4gtk.modifier.Modifier
+import io.github.jwharm.javagi.gobject.SignalConnection
 import org.gnome.gtk.Button
 import org.gnome.gtk.LinkButton
 import org.gnome.gtk.ToggleButton

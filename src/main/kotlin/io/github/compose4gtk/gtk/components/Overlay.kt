@@ -2,15 +2,15 @@ package io.github.compose4gtk.gtk.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
-import io.github.compose4gtk.*
 import io.github.compose4gtk.GtkApplier
+import io.github.compose4gtk.GtkComposeNode
+import io.github.compose4gtk.GtkComposeWidget
 import io.github.compose4gtk.GtkContainerComposeNode
 import io.github.compose4gtk.SingleChildComposeNode
 import io.github.compose4gtk.VirtualComposeNode
 import io.github.compose4gtk.VirtualComposeNodeContainer
 import io.github.compose4gtk.modifier.Modifier
 import org.gnome.gtk.Overlay
-
 
 @Composable
 fun Overlay(

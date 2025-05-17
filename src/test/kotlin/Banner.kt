@@ -13,8 +13,11 @@ import io.github.compose4gtk.modifier.expand
 import org.gnome.gtk.Align
 
 fun main(args: Array<String>) {
-    val bannerTitle =
-        "<i><span foreground=\"red\" size=\"x-large\">Hell</span><span foreground=\"green\" size=\"x-large\">o wo</span><span foreground=\"blue\" size=\"x-large\">rld!</span></i>"
+    val bannerTitle = "<i>" +
+        "<span foreground=\"red\" size=\"x-large\">Hell</span>" +
+        "<span foreground=\"green\" size=\"x-large\">o wo</span>" +
+        "<span foreground=\"blue\" size=\"x-large\">rld!</span>" +
+        "</i>"
 
     application("my.example.hello-app", args) {
         ApplicationWindow(title = "Banner", onClose = ::exitApplication, defaultWidth = 600, defaultHeight = 400) {
@@ -29,14 +32,16 @@ fun main(args: Array<String>) {
                     useMarkup = true,
                     onButtonClicked = {
                         isRevealed.value = false
-                    })
+                    }
+                )
 
                 HorizontalClamp(modifier = Modifier.expand(true)) {
                     ToggleButton(
                         modifier = Modifier.alignment(Align.CENTER),
                         label = "${if (isRevealed.value) "Hide" else "Reveal"} the banner",
                         active = isRevealed.value,
-                        toggled = { isRevealed.value = !isRevealed.value })
+                        toggled = { isRevealed.value = !isRevealed.value }
+                    )
                 }
             }
         }
