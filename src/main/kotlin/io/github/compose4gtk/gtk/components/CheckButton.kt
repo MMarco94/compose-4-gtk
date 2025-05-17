@@ -1,14 +1,57 @@
 package io.github.compose4gtk.gtk.components
 
 import androidx.compose.runtime.*
-import io.github.jwharm.javagi.gobject.SignalConnection
 import io.github.compose4gtk.GtkApplier
 import io.github.compose4gtk.SingleChildComposeNode
 import io.github.compose4gtk.modifier.Modifier
+import io.github.jwharm.javagi.gobject.SignalConnection
 import org.gnome.gtk.CheckButton
 
-private class GtkCheckButton(gObject: CheckButton) : SingleChildComposeNode<CheckButton>(gObject, { child = it }) {
+private class GtkCheckButtonComposeNode(gObject: CheckButton) :
+    SingleChildComposeNode<CheckButton>(gObject, { child = it }) {
     var toggled: SignalConnection<CheckButton.ToggledCallback>? = null
+}
+
+sealed interface RadioGroupState
+
+private class RadioGroupStateImpl : RadioGroupState {
+    private val checkButtons = mutableListOf<GtkCheckButtonComposeNode>()
+    fun registerCheckButton(checkButton: GtkCheckButtonComposeNode) {
+        checkButtons.add(checkButton)
+        updateGroup()
+    }
+
+    fun unregisterCheckButton(checkButton: GtkCheckButtonComposeNode) {
+        checkButtons.remove(checkButton)
+        updateGroup()
+    }
+
+    private fun updateGroup() {
+        if (checkButtons.isEmpty()) return
+
+        var prev: GtkCheckButtonComposeNode? = null
+        for (checkButton in checkButtons) {
+            checkButton.widget.setGroup(prev?.widget)
+            prev = checkButton
+        }
+    }
+
+    fun blockToggledListeners() {
+        for (node in checkButtons) {
+            node.toggled?.block()
+        }
+    }
+
+    fun unblockToggledListeners() {
+        for (node in checkButtons) {
+            node.toggled?.unblock()
+        }
+    }
+}
+
+@Composable
+fun rememberRadioGroupState(): RadioGroupState {
+    return remember { RadioGroupStateImpl() }
 }
 
 /**
@@ -22,46 +65,62 @@ private class GtkCheckButton(gObject: CheckButton) : SingleChildComposeNode<Chec
  * @param label Optional text label.
  * @param useUnderline Whether to use an underscore in the label for mnemonic activation.
  * @param child Optional custom composable content.
- * @param onToggle Callback invoked when the check button is toggled.
+ * @param onActiveRequested Callback invoked when the check button is toggled.
  */
 @Composable
 private fun BaseCheckButton(
     modifier: Modifier = Modifier,
     active: Boolean,
+    state: RadioGroupState? = null,
     inconsistent: Boolean = false,
     label: String? = null,
     useUnderline: Boolean = false,
     child: @Composable () -> Unit = {},
-    onToggle: () -> Unit,
+    onActiveRequested: (active: Boolean) -> Unit,
 ) {
     var pendingChange by remember { mutableStateOf(0) }
-    ComposeNode<GtkCheckButton, GtkApplier>(
-        factory = {
-            GtkCheckButton(CheckButton.builder().build())
-        },
+    val state: RadioGroupStateImpl? = when (state) {
+        is RadioGroupStateImpl -> state
+        null -> null
+    }
+    val checkButtonNode = remember { GtkCheckButtonComposeNode(CheckButton.builder().build()) }
+
+    ComposeNode<GtkCheckButtonComposeNode, GtkApplier>(
+        factory = { checkButtonNode },
         update = {
             set(modifier) { this.applyModifier(it) }
             set(active to pendingChange) { (active, _) ->
                 this.toggled?.block()
+                state?.blockToggledListeners()
                 this.widget.active = active
                 this.toggled?.unblock()
+                state?.unblockToggledListeners()
             }
             set(inconsistent) { this.widget.inconsistent = it }
             set(label) { this.widget.label = it }
             set(useUnderline) { this.widget.useUnderline = it }
-            set(onToggle) {
+            set(onActiveRequested) {
                 this.toggled?.disconnect()
                 this.toggled = this.widget.onToggled {
                     pendingChange += 1
-                    it()
+                    it(this.widget.active)
                     this.toggled?.block()
+                    state?.blockToggledListeners()
                     this.widget.active = active
                     this.toggled?.unblock()
+                    state?.unblockToggledListeners()
                 }
             }
         },
-        content = child
+        content = child,
     )
+
+    DisposableEffect(Unit) {
+        state?.registerCheckButton(checkButtonNode)
+        onDispose {
+            state?.unregisterCheckButton(checkButtonNode)
+        }
+    }
 }
 
 /**
@@ -71,8 +130,7 @@ private fun BaseCheckButton(
  * @param active Whether the check button is currently active.
  * @param inconsistent Whether the button should display an inconsistent (partially active) state.
  * @param useUnderline Whether to use an underscore in the label for mnemonic activation.
- * @param enabled Whether the check button is enabled for interaction.
- * @param onToggle Callback invoked when the check button is toggled.
+ * @param onActiveRequested Callback invoked when the check button is toggled.
  */
 @Composable
 fun CheckButton(
@@ -80,15 +138,14 @@ fun CheckButton(
     active: Boolean,
     inconsistent: Boolean = false,
     useUnderline: Boolean = false,
-    enabled: Boolean = true,
-    onToggle: () -> Unit,
+    onActiveRequested: (active: Boolean) -> Unit,
 ) {
     BaseCheckButton(
         modifier = modifier,
         active = active,
         inconsistent = inconsistent,
         useUnderline = useUnderline,
-        onToggle = onToggle,
+        onActiveRequested = onActiveRequested,
     )
 }
 
@@ -100,7 +157,7 @@ fun CheckButton(
  * @param label Text label.
  * @param inconsistent Whether the button should display an inconsistent (partially active) state.
  * @param useUnderline Whether to use an underscore in the label for mnemonic activation.
- * @param onToggle Callback invoked when the check button is toggled.
+ * @param onActiveRequested Callback invoked when the check button is toggled.
  */
 @Composable
 fun CheckButton(
@@ -109,7 +166,7 @@ fun CheckButton(
     label: String,
     inconsistent: Boolean = false,
     useUnderline: Boolean = false,
-    onToggle: () -> Unit,
+    onActiveRequested: (active: Boolean) -> Unit,
 ) {
     BaseCheckButton(
         modifier = modifier,
@@ -117,7 +174,7 @@ fun CheckButton(
         inconsistent = inconsistent,
         label = label,
         useUnderline = useUnderline,
-        onToggle = onToggle,
+        onActiveRequested = onActiveRequested,
     )
 }
 
@@ -129,7 +186,7 @@ fun CheckButton(
  * @param child Custom composable content.
  * @param inconsistent Whether the button should display an inconsistent (partially active) state.
  * @param useUnderline Whether to use an underscore in the label for mnemonic activation.
- * @param onToggle Callback invoked when the check button is toggled.
+ * @param onActiveRequested Callback invoked when the check button is toggled.
  */
 @Composable
 fun CheckButton(
@@ -138,7 +195,7 @@ fun CheckButton(
     child: @Composable () -> Unit,
     inconsistent: Boolean = false,
     useUnderline: Boolean = false,
-    onToggle: () -> Unit,
+    onActiveRequested: (active: Boolean) -> Unit,
 ) {
     BaseCheckButton(
         modifier = modifier,
@@ -146,6 +203,31 @@ fun CheckButton(
         inconsistent = inconsistent,
         child = child,
         useUnderline = useUnderline,
-        onToggle = onToggle,
+        onActiveRequested = onActiveRequested,
+    )
+}
+
+@Composable
+fun RadioButton(
+    modifier: Modifier = Modifier,
+    state: RadioGroupState,
+    active: Boolean,
+    label: String,
+    inconsistent: Boolean = false,
+    useUnderline: Boolean = false,
+    onSelect: () -> Unit,
+) {
+    BaseCheckButton(
+        modifier = modifier,
+        state = state,
+        active = active,
+        inconsistent = inconsistent,
+        useUnderline = useUnderline,
+        label = label,
+        onActiveRequested = { active ->
+            if (active) {
+                onSelect()
+            }
+        },
     )
 }

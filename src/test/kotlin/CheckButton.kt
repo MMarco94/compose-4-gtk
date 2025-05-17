@@ -25,8 +25,8 @@ fun main(args: Array<String>) {
 
                             CheckButton(
                                 modifier = Modifier.alignment(Align.START), active = isChecked, label = "Change me!"
-                            ) {
-                                isChecked = !isChecked
+                            ) { active ->
+                                isChecked = active
                             }
 
                             CheckButton(
@@ -52,8 +52,8 @@ fun main(args: Array<String>) {
                                         Label("Custom child")
                                     }
                                 },
-                            ) {
-                                isChecked = !isChecked
+                            ) {active ->
+                                isChecked = active
                             }
 
                             CheckButton(
@@ -78,7 +78,7 @@ fun main(args: Array<String>) {
                                 active = allChecked(),
                                 inconsistent = someChecked() && !allChecked(),
                                 label = "Select all"
-                            ) {
+                            ) {active ->
                                 val newState = !someChecked()
                                 for (i in checkedStates.indices) {
                                     checkedStates[i] = newState
@@ -90,8 +90,8 @@ fun main(args: Array<String>) {
                                     modifier = Modifier.alignment(Align.START),
                                     active = isChecked,
                                     label = "Option ${index + 1}"
-                                ) {
-                                    checkedStates[index] = !checkedStates[index]
+                                ) { active ->
+                                    checkedStates[index] = active
                                 }
                             }
                         }
