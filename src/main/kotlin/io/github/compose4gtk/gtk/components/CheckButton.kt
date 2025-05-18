@@ -156,6 +156,39 @@ fun CheckButton(
 }
 
 /**
+ * Creates a [RadioButton] without a label or custom child content.
+ *
+ * @param modifier The modifier to apply to the widget.
+ * @param state Shared radio group state for grouping buttons.
+ * @param active Whether the check button is currently active.
+ * @param inconsistent Whether the button should display an inconsistent (partially active) state.
+ * @param useUnderline Whether to use an underscore in the label for mnemonic activation.
+ * @param onSelect Callback invoked when the radio button is selected.
+ */
+@Composable
+fun RadioButton(
+    modifier: Modifier = Modifier,
+    state: RadioGroupState,
+    active: Boolean,
+    inconsistent: Boolean = false,
+    useUnderline: Boolean = false,
+    onSelect: () -> Unit,
+) {
+    BaseCheckButton(
+        modifier = modifier,
+        state = state,
+        active = active,
+        inconsistent = inconsistent,
+        useUnderline = useUnderline,
+        onActiveRequested = { active ->
+            if (active) {
+                onSelect()
+            }
+        },
+    )
+}
+
+/**
  * Creates a [CheckButton] with a simple text [label].
  *
  * @param modifier The modifier to apply to the widget.
@@ -181,6 +214,42 @@ fun CheckButton(
         label = label,
         useUnderline = useUnderline,
         onActiveRequested = onActiveRequested,
+    )
+}
+
+/**
+ * Creates a [RadioButton] with a simple text [label].
+ *
+ * @param modifier The modifier to apply to the widget.
+ * @param state Shared radio group state for grouping buttons.
+ * @param active Whether the check button is currently active.
+ * @param label Text label.
+ * @param inconsistent Whether the button should display an inconsistent (partially active) state.
+ * @param useUnderline Whether to use an underscore in the label for mnemonic activation.
+ * @param onSelect Callback invoked when the radio button is selected.
+ */
+@Composable
+fun RadioButton(
+    modifier: Modifier = Modifier,
+    state: RadioGroupState,
+    active: Boolean,
+    label: String,
+    inconsistent: Boolean = false,
+    useUnderline: Boolean = false,
+    onSelect: () -> Unit,
+) {
+    BaseCheckButton(
+        modifier = modifier,
+        state = state,
+        active = active,
+        inconsistent = inconsistent,
+        useUnderline = useUnderline,
+        label = label,
+        onActiveRequested = { active ->
+            if (active) {
+                onSelect()
+            }
+        },
     )
 }
 
@@ -213,12 +282,23 @@ fun CheckButton(
     )
 }
 
+/**
+ * Creates a [RadioButton] with a custom child composable as its content.
+ *
+ * @param modifier The modifier to apply to the widget.
+ * @param state Shared radio group state for grouping buttons.
+ * @param active Whether the check button is currently active.
+ * @param child Custom composable content.
+ * @param inconsistent Whether the button should display an inconsistent (partially active) state.
+ * @param useUnderline Whether to use an underscore in the label for mnemonic activation.
+ * @param onSelect Callback invoked when the radio button is selected.
+ */
 @Composable
 fun RadioButton(
     modifier: Modifier = Modifier,
     state: RadioGroupState,
     active: Boolean,
-    label: String,
+    child: @Composable () -> Unit,
     inconsistent: Boolean = false,
     useUnderline: Boolean = false,
     onSelect: () -> Unit,
@@ -229,7 +309,7 @@ fun RadioButton(
         active = active,
         inconsistent = inconsistent,
         useUnderline = useUnderline,
-        label = label,
+        child = child,
         onActiveRequested = { active ->
             if (active) {
                 onSelect()
