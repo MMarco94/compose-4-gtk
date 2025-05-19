@@ -27,11 +27,12 @@ fun main(args: Array<String>) {
 
                         OPTIONS.forEach { option ->
                             RadioButton(
-                                active = option == selection,
-                                inconsistent = option == selection && option == "Inconsistent",
                                 state = radioState,
+                                active = option == selection,
                                 label = option,
-                            ) { selection = option }
+                                onSelect = { selection = option },
+                                inconsistent = option == selection && option == "Inconsistent",
+                            )
                         }
 
                         Button("Clear") {

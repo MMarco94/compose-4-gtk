@@ -48,6 +48,7 @@ dependencies {
     api(libs.javagi.adw)
     implementation(libs.kotlin.logging)
     implementation(libs.slf4j.api)
+    detektPlugins("io.nlopez.compose.rules:detekt:0.4.22")
 
     testImplementation(libs.slf4j.simple)
 }
