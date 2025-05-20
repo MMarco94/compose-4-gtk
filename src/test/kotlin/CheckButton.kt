@@ -56,7 +56,7 @@ fun main(args: Array<String>) {
                                 active = isChecked,
                             ) {
                                 HorizontalBox {
-                                    Switch(active = isChecked) { }
+                                    Switch(active = isChecked, onToggle = {})
                                     Label("Custom child")
                                 }
                             }

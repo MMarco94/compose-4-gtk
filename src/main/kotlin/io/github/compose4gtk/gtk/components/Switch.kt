@@ -3,7 +3,7 @@ package io.github.compose4gtk.gtk.components
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import io.github.jwharm.javagi.gobject.SignalConnection
@@ -20,22 +20,20 @@ private class GtkSwitchComposeNode(
 
 @Composable
 fun Switch(
-    modifier: Modifier = Modifier,
     active: Boolean,
     onToggle: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    var pendingChange by remember { mutableStateOf(0) }
+    var pendingChange by remember { mutableIntStateOf(0) }
     ComposeNode<GtkSwitchComposeNode, GtkApplier>({
         GtkSwitchComposeNode(Switch.builder().build())
     }) {
-        set(modifier) { applyModifier(it) }
         set(active to pendingChange) { (active, _) ->
             this.onStateSet?.block()
             this.widget.state = active
             this.widget.active = active
             this.onStateSet?.unblock()
         }
-
         set(onToggle) {
             this.onStateSet?.disconnect()
             this.onStateSet = this.widget.onStateSet { newState ->
@@ -44,5 +42,6 @@ fun Switch(
                 true
             }
         }
+        set(modifier) { applyModifier(it) }
     }
 }

@@ -1,6 +1,7 @@
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -15,7 +16,7 @@ import org.gnome.gtk.Orientation
 fun main(args: Array<String>) {
     application("my.example.hello-app", args) {
         ApplicationWindow("Carousel", onClose = ::exitApplication) {
-            var pageCount by remember { mutableStateOf(8) }
+            var pageCount by remember { mutableIntStateOf(8) }
             val orientation = remember { mutableStateOf(Orientation.HORIZONTAL) }
             val carouselState = rememberCarouselState(pageCount, orientation.value)
             val allowLongSwipes = remember { mutableStateOf(false) }
