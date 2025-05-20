@@ -18,8 +18,8 @@ fun main(args: Array<String>) {
             ToolbarView(
                 bottomBar = {
                     HeaderBar(
-                        startWidgets = { Button("Start") {} },
-                        endWidgets = { Button("End") {} },
+                        startWidgets = { Button("Start", onClick = {}) },
+                        endWidgets = { Button("End", onClick = {}) },
                         title = {
                             Label("Custom title")
                         }

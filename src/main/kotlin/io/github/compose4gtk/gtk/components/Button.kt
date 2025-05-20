@@ -29,11 +29,11 @@ private class GtkLinkButtonComposeNode(
 @Composable
 private fun <B : GtkComposeWidget<Button>> BaseButton(
     creator: () -> B,
-    label: String,
-    hasFrame: Boolean = true,
-    modifier: Modifier = Modifier,
-    child: @Composable () -> Unit,
     updater: Updater<B>.() -> Unit,
+    label: String,
+    modifier: Modifier = Modifier,
+    hasFrame: Boolean = true,
+    child: @Composable () -> Unit,
 ) {
     ComposeNode<B, GtkApplier>(
         creator,
@@ -50,16 +50,16 @@ private fun <B : GtkComposeWidget<Button>> BaseButton(
 @Composable
 fun Button(
     label: String,
-    hasFrame: Boolean = true,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
     child: @Composable () -> Unit = {},
-    onClick: () -> Unit,
+    hasFrame: Boolean = true,
 ) {
     BaseButton(
         creator = { GtkButtonComposeNode(Button.builder().build()) },
         label = label,
-        hasFrame = hasFrame,
         modifier = modifier,
+        hasFrame = hasFrame,
         child = child,
         updater = {
             set(onClick) {
@@ -74,10 +74,10 @@ fun Button(
 fun ToggleButton(
     label: String,
     active: Boolean,
-    hasFrame: Boolean = true,
+    onToggle: () -> Unit,
     modifier: Modifier = Modifier,
+    hasFrame: Boolean = true,
     child: @Composable () -> Unit = {},
-    toggled: () -> Unit,
 ) {
     BaseButton(
         creator = {
@@ -85,8 +85,8 @@ fun ToggleButton(
             GtkToggleButtonComposeNode(tb, tb.onToggled { })
         },
         label = label,
-        hasFrame = hasFrame,
         modifier = modifier,
+        hasFrame = hasFrame,
         child = child,
         updater = {
             set(active) {
@@ -94,10 +94,10 @@ fun ToggleButton(
                 this.widget.active = it
                 this.onToggle.unblock()
             }
-            set(toggled) {
+            set(onToggle) {
                 this.onToggle.disconnect()
                 this.onToggle = this.widget.onToggled {
-                    toggled()
+                    onToggle()
                     this.onToggle.block()
                     this.widget.active = active
                     this.onToggle.unblock()
@@ -110,23 +110,23 @@ fun ToggleButton(
 @Composable
 fun IconButton(
     iconName: String,
-    hasFrame: Boolean = true,
-    modifier: Modifier = Modifier,
-    child: @Composable () -> Unit = {},
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    hasFrame: Boolean = true,
+    child: @Composable () -> Unit = {},
 ) {
     BaseButton(
         creator = { GtkButtonComposeNode(Button.builder().build()) },
         label = "",
-        hasFrame = hasFrame,
         modifier = modifier,
+        hasFrame = hasFrame,
         child = child,
         updater = {
+            set(iconName) { this.widget.iconName = it }
             set(onClick) {
                 this.onClick?.disconnect()
                 this.onClick = this.widget.onClicked(it)
             }
-            set(iconName) { this.widget.iconName = it }
         }
     )
 }
@@ -136,8 +136,8 @@ fun LinkButton(
     label: String,
     uri: String,
     modifier: Modifier = Modifier,
-    child: @Composable () -> Unit = {},
     onActivateLink: () -> Boolean = { false },
+    child: @Composable () -> Unit = {},
 ) {
     BaseButton(
         creator = {

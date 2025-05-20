@@ -22,13 +22,13 @@ fun main(args: Array<String>) {
                 var maximized by remember { mutableStateOf(false) }
                 var title by remember { mutableStateOf("Random window") }
 
-                Button("Show normal") { show = !show }
-                ToggleButton("Allow close", allowClose) { allowClose = !allowClose }
-                ToggleButton("Fullscreen", fullscreen) { fullscreen = !fullscreen }
-                ToggleButton("Maximized", maximized) { maximized = !maximized }
-                Button("Randomize title") {
+                Button("Show normal", onClick = { show = !show })
+                ToggleButton("Allow close", allowClose, { allowClose = !allowClose })
+                ToggleButton("Fullscreen", fullscreen, { fullscreen = !fullscreen })
+                ToggleButton("Maximized", maximized, { maximized = !maximized })
+                Button("Randomize title", onClick = {
                     title = "Random Window ${Random.nextInt()}"
-                }
+                })
 
                 if (show) {
                     ApplicationWindow(

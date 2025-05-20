@@ -36,26 +36,26 @@ fun main(args: Array<String>) {
                         }
                     }
                 }
-                Button("Add one") {
+                Button("Add one", onClick = {
                     itemSize += 1
-                }
-                Button("Remove last") {
+                })
+                Button("Remove last", onClick = {
                     if (itemSize > 0) {
                         itemSize -= 1
                     }
-                }
-                Button("Double items") {
+                })
+                Button("Double items", onClick = {
                     itemSize *= 2
-                }
-                Button("Halve items") {
+                })
+                Button("Halve items", onClick = {
                     itemSize /= 2
-                }
-                Button("Remove all items") {
+                })
+                Button("Remove all items", onClick = {
                     itemSize = 0
-                }
-                Button(if(show)"hide" else "show") {
+                })
+                Button(if(show)"hide" else "show", onClick = {
                     show = !show
-                }
+                })
             }
         }
     }

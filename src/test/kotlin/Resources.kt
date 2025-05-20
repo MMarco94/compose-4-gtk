@@ -57,9 +57,9 @@ fun main(args: Array<String>) {
                     Row("Styled text") {
                         Label("Big boi", Modifier.cssClasses("big-boi", "accent-colored"))
                     }
-                    Button("Randomize") {
+                    Button("Randomize", onClick = {
                         icon = (possibleIcons - icon).random()
-                    }
+                    })
 
                     Label(
                         "The stylesheet and the icons are declared in the test/gresources directory",

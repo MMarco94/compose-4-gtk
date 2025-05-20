@@ -35,9 +35,9 @@ fun main(args: Array<String>) {
                             )
                         }
 
-                        Button("Clear") {
+                        Button("Clear", onClick = {
                             selection = null
-                        }
+                        })
                     }
                 }
             }
