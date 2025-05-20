@@ -14,10 +14,10 @@ interface PopoverScope {
 
 @Composable
 fun Popover(
+    trigger: @Composable PopoverScope.() -> Unit,
     modifier: Modifier = Modifier,
     arrow: Boolean = true,
     content: @Composable () -> Unit,
-    trigger: @Composable PopoverScope.() -> Unit,
 ) {
     val scope = object : PopoverScope {
         override var gObject: Popover? = null
