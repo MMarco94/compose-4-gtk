@@ -14,13 +14,12 @@ fun main(args: Array<String>) {
                 HeaderBar()
 
                 Box(
-                    modifier = Modifier
-                        .margin(16),
+                    modifier = Modifier.margin(16),
                     orientation = Orientation.VERTICAL,
                     spacing = 16,
                 ) {
-                    Button("Button") { println("Clicked!") }
-                    Button("Button (no frame)", hasFrame = false) { println("Clicked!") }
+                    Button(label = "Button", onClick = { println("Clicked!") })
+                    Button(label = "Button (no frame)", onClick = { println("Clicked!") }, hasFrame = false)
                 }
             }
         }

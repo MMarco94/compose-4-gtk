@@ -10,8 +10,8 @@ import org.gnome.gtk.Spinner
 
 @Composable
 fun Spinner(
-    spinning: Boolean = false,
     modifier: Modifier = Modifier,
+    spinning: Boolean = false,
 ) {
     ComposeNode<GtkComposeWidget<Spinner>, GtkApplier>({
         LeafComposeNode(Spinner.builder().build())

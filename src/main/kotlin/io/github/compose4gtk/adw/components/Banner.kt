@@ -19,9 +19,9 @@ fun Banner(
     modifier: Modifier = Modifier,
     title: String? = null,
     buttonLabel: String? = null,
+    onButtonClick: (() -> Unit)? = null,
     revealed: Boolean = true,
     useMarkup: Boolean = true,
-    onButtonClicked: (() -> Unit)? = null,
 ) {
     ComposeNode<AdwBannerComposeNode, GtkApplier>({
         AdwBannerComposeNode(Banner.builder().build())
@@ -29,9 +29,7 @@ fun Banner(
         set(modifier) { applyModifier(it) }
         set(title) { this.widget.title = it }
         set(buttonLabel) { this.widget.buttonLabel = it }
-        set(revealed) { this.widget.revealed = it }
-        set(useMarkup) { this.widget.useMarkup = it }
-        set(onButtonClicked) {
+        set(onButtonClick) {
             this.onButtonClicked?.disconnect()
             if (it != null) {
                 this.onButtonClicked = this.widget.onButtonClicked {
@@ -41,5 +39,7 @@ fun Banner(
                 this.onButtonClicked = null
             }
         }
+        set(revealed) { this.widget.revealed = it }
+        set(useMarkup) { this.widget.useMarkup = it }
     }
 }

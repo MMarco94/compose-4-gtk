@@ -27,31 +27,34 @@ fun main(args: Array<String>) {
 
                         VerticalBox(spacing = 8) {
                             Switch(
-                                modifier = Modifier.alignment(Align.CENTER),
+                                onToggle = { newState ->
+                                    isSwitchActive = newState
+                                },
                                 active = isSwitchActive,
-                            ) { newState ->
-                                isSwitchActive = newState
-                            }
+                                modifier = Modifier.alignment(Align.CENTER),
+                            )
                             Label(if (isSwitchActive) "On" else "Off")
                         }
 
                         VerticalBox(spacing = 8) {
                             Switch(
-                                modifier = Modifier.alignment(Align.CENTER),
                                 active = isSwitchActive,
-                            ) { newState ->
-                                println("Doesn't change state")
-                            }
+                                onToggle = { newState ->
+                                    println("Doesn't change state")
+                                },
+                                modifier = Modifier.alignment(Align.CENTER),
+                            )
                             Label("Mirror & read-only")
                         }
 
                         VerticalBox(spacing = 8) {
                             Switch(
+                                active = isSwitchActive,
+                                onToggle = {},
                                 modifier = Modifier
                                     .alignment(Align.CENTER)
                                     .sensitive(false),
-                                active = isSwitchActive,
-                            ) {}
+                            )
                             Label("Disabled")
                         }
                     }

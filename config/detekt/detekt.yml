@@ -21,3 +21,12 @@ style:
     excludeImports:
       - io.github.compose4gtk.adw.components.*
       - io.github.compose4gtk.gtk.components.*
+
+Compose:
+  active: true
+  excludes: '**/test/**'
+  CompositionLocalAllowlist:
+    active: true
+    allowedCompositionLocals:
+     - LocalApplication
+     - LocalApplicationWindow

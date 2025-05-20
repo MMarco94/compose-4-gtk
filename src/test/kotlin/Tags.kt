@@ -34,9 +34,9 @@ fun main(args: Array<String>) {
                             FlowBox(homogeneous = true) {
                                 val tokens = text.split(' ').filter { it.isNotBlank() }
                                 tokens.forEach { token ->
-                                    Button(token, modifier = Modifier.margin(8)) {
+                                    Button(token, modifier = Modifier.margin(8), onClick = {
                                         addToast(Toast.builder().setTitle("Clicked on $token").build())
-                                    }
+                                    })
                                 }
                             }
                         }

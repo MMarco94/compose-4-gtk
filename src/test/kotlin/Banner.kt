@@ -26,13 +26,13 @@ fun main(args: Array<String>) {
             VerticalBox {
                 HeaderBar()
                 Banner(
+                    onButtonClick = {
+                        isRevealed.value = false
+                    },
                     title = bannerTitle,
                     buttonLabel = "Hide me!",
                     revealed = isRevealed.value,
                     useMarkup = true,
-                    onButtonClicked = {
-                        isRevealed.value = false
-                    }
                 )
 
                 HorizontalClamp(modifier = Modifier.expand(true)) {
@@ -40,7 +40,7 @@ fun main(args: Array<String>) {
                         modifier = Modifier.alignment(Align.CENTER),
                         label = "${if (isRevealed.value) "Hide" else "Reveal"} the banner",
                         active = isRevealed.value,
-                        toggled = { isRevealed.value = !isRevealed.value }
+                        onToggle = { isRevealed.value = !isRevealed.value }
                     )
                 }
             }

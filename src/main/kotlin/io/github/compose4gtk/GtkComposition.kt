@@ -7,7 +7,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCompositionContext
 
 @Composable
-fun <T : GtkComposeNode> GtkSubComposition(
+fun <T : GtkComposeNode> gtkSubComposition(
     createNode: () -> T,
     content: @Composable (T) -> Unit,
 ): T {

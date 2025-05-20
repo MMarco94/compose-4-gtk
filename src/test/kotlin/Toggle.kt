@@ -17,9 +17,9 @@ fun main(args: Array<String>) {
                 HeaderBar()
 
                 var show by remember { mutableStateOf(false) }
-                ToggleButton("Show  text", show) {
+                ToggleButton("Show  text", show, {
                     show = !show
-                }
+                })
                 if (show) {
                     Label("A random label that can be hidden", modifier = Modifier.sizeRequest(300, 150))
                 }

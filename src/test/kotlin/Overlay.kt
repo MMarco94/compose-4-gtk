@@ -35,10 +35,10 @@ fun main(args: Array<String>) {
                     HeaderBar(
                         title = { Label("Content") },
                         startWidgets = {
-                            Button(if (showSidebar) "Hide sidebar" else "Show sidebar") {
+                            Button(if (showSidebar) "Hide sidebar" else "Show sidebar", onClick = {
                                 if (showSidebar) hideSidebar()
                                 else showSidebar()
-                            }
+                            })
                         },
                     )
                     ScrolledWindow(

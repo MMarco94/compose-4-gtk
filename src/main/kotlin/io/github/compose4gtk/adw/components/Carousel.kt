@@ -3,6 +3,7 @@ package io.github.compose4gtk.adw.components
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -72,8 +73,8 @@ private class CarouselStateImpl : CarouselState {
             requireNotNull(value)
             field = value
         }
-    override var pageCount by mutableStateOf(0)
-    override var currentPage by mutableStateOf(0)
+    override var pageCount by mutableIntStateOf(0)
+    override var currentPage by mutableIntStateOf(0)
     override var orientation by mutableStateOf(Orientation.HORIZONTAL)
 
     override fun scrollTo(pageNumber: Int, animate: Boolean) {
@@ -102,7 +103,7 @@ fun Carousel(
     revealDuration: Int = 0,
     scrollParams: SpringParams = DEFAULT_SPRING_PARAMS,
     spacing: Int = 0,
-    onPageChanged: ((Int) -> Unit)? = null,
+    onPageChange: ((Int) -> Unit)? = null,
     content: @Composable (page: Int) -> Unit,
 ) {
     val stateImpl: CarouselStateImpl = when (state) {
@@ -124,7 +125,7 @@ fun Carousel(
             set(revealDuration) { this.widget.revealDuration = it }
             set(scrollParams) { this.widget.scrollParams = it }
             set(spacing) { this.widget.spacing = it }
-            set(onPageChanged) {
+            set(onPageChange) {
                 this.onPageChanged?.disconnect()
                 this.onPageChanged = this.widget.onPageChanged { index ->
                     stateImpl.currentPage = index

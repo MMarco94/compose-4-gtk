@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import io.github.compose4gtk.GtkApplier
@@ -65,26 +65,26 @@ fun rememberRadioGroupState(): RadioGroupState {
  *
  * This version accepts both a `label` and `child`, but in practice only one should be used.
  *
- * @param modifier The modifier to apply to the widget.
  * @param active Whether the check button is currently active.
- * @param inconsistent Whether the button should display an inconsistent (partially active) state.
+ * @param onActiveRequest Callback invoked when the check button is toggled.
+ * @param modifier The modifier to apply to the widget.
  * @param label Optional text label.
+ * @param inconsistent Whether the button should display an inconsistent (partially active) state.
  * @param useUnderline Whether to use an underscore in the label for mnemonic activation.
  * @param child Optional custom composable content.
- * @param onActiveRequested Callback invoked when the check button is toggled.
  */
 @Composable
 private fun BaseCheckButton(
-    modifier: Modifier = Modifier,
     active: Boolean,
+    onActiveRequest: (active: Boolean) -> Unit,
+    modifier: Modifier = Modifier,
     state: RadioGroupState? = null,
-    inconsistent: Boolean = false,
     label: String? = null,
+    inconsistent: Boolean = false,
     useUnderline: Boolean = false,
     child: @Composable () -> Unit = {},
-    onActiveRequested: (active: Boolean) -> Unit,
 ) {
-    var pendingChange by remember { mutableStateOf(0) }
+    var pendingChange by remember { mutableIntStateOf(0) }
     val state: RadioGroupStateImpl? = when (state) {
         is RadioGroupStateImpl -> state
         null -> null
@@ -105,7 +105,7 @@ private fun BaseCheckButton(
             set(inconsistent) { this.widget.inconsistent = it }
             set(label) { this.widget.label = it }
             set(useUnderline) { this.widget.useUnderline = it }
-            set(onActiveRequested) {
+            set(onActiveRequest) {
                 this.toggled?.disconnect()
                 this.toggled = this.widget.onToggled {
                     pendingChange += 1
@@ -132,153 +132,153 @@ private fun BaseCheckButton(
 /**
  * Creates a [CheckButton] without a label or custom child content.
  *
- * @param modifier The modifier to apply to the widget.
  * @param active Whether the check button is currently active.
+ * @param onActiveRequest Callback invoked when the check button is toggled.
+ * @param modifier The modifier to apply to the widget.
  * @param inconsistent Whether the button should display an inconsistent (partially active) state.
  * @param useUnderline Whether to use an underscore in the label for mnemonic activation.
- * @param onActiveRequested Callback invoked when the check button is toggled.
  */
 @Composable
 fun CheckButton(
-    modifier: Modifier = Modifier,
     active: Boolean,
+    onActiveRequest: (active: Boolean) -> Unit,
+    modifier: Modifier = Modifier,
     inconsistent: Boolean = false,
     useUnderline: Boolean = false,
-    onActiveRequested: (active: Boolean) -> Unit,
 ) {
     BaseCheckButton(
-        modifier = modifier,
         active = active,
+        onActiveRequest = onActiveRequest,
+        modifier = modifier,
         inconsistent = inconsistent,
         useUnderline = useUnderline,
-        onActiveRequested = onActiveRequested,
     )
 }
 
 /**
  * Creates a [RadioButton] without a label or custom child content.
  *
- * @param modifier The modifier to apply to the widget.
  * @param state Shared radio group state for grouping buttons.
  * @param active Whether the check button is currently active.
+ * @param onSelect Callback invoked when the radio button is selected.
+ * @param modifier The modifier to apply to the widget.
  * @param inconsistent Whether the button should display an inconsistent (partially active) state.
  * @param useUnderline Whether to use an underscore in the label for mnemonic activation.
- * @param onSelect Callback invoked when the radio button is selected.
  */
 @Composable
 fun RadioButton(
-    modifier: Modifier = Modifier,
     state: RadioGroupState,
     active: Boolean,
+    onSelect: () -> Unit,
+    modifier: Modifier = Modifier,
     inconsistent: Boolean = false,
     useUnderline: Boolean = false,
-    onSelect: () -> Unit,
 ) {
     BaseCheckButton(
-        modifier = modifier,
-        state = state,
         active = active,
-        inconsistent = inconsistent,
-        useUnderline = useUnderline,
-        onActiveRequested = { active ->
+        onActiveRequest = { active ->
             if (active) {
                 onSelect()
             }
         },
+        modifier = modifier,
+        state = state,
+        inconsistent = inconsistent,
+        useUnderline = useUnderline,
     )
 }
 
 /**
  * Creates a [CheckButton] with a simple text [label].
  *
- * @param modifier The modifier to apply to the widget.
  * @param active Whether the check button is currently active.
  * @param label Text label.
+ * @param onActiveRequest Callback invoked when the check button is toggled.
+ * @param modifier The modifier to apply to the widget.
  * @param inconsistent Whether the button should display an inconsistent (partially active) state.
  * @param useUnderline Whether to use an underscore in the label for mnemonic activation.
- * @param onActiveRequested Callback invoked when the check button is toggled.
  */
 @Composable
 fun CheckButton(
-    modifier: Modifier = Modifier,
     active: Boolean,
     label: String,
+    onActiveRequest: (active: Boolean) -> Unit,
+    modifier: Modifier = Modifier,
     inconsistent: Boolean = false,
     useUnderline: Boolean = false,
-    onActiveRequested: (active: Boolean) -> Unit,
 ) {
     BaseCheckButton(
-        modifier = modifier,
         active = active,
-        inconsistent = inconsistent,
+        onActiveRequest = onActiveRequest,
+        modifier = modifier,
         label = label,
+        inconsistent = inconsistent,
         useUnderline = useUnderline,
-        onActiveRequested = onActiveRequested,
     )
 }
 
 /**
  * Creates a [RadioButton] with a simple text [label].
  *
- * @param modifier The modifier to apply to the widget.
  * @param state Shared radio group state for grouping buttons.
  * @param active Whether the check button is currently active.
  * @param label Text label.
+ * @param onSelect Callback invoked when the radio button is selected.
+ * @param modifier The modifier to apply to the widget.
  * @param inconsistent Whether the button should display an inconsistent (partially active) state.
  * @param useUnderline Whether to use an underscore in the label for mnemonic activation.
- * @param onSelect Callback invoked when the radio button is selected.
  */
 @Composable
 fun RadioButton(
-    modifier: Modifier = Modifier,
     state: RadioGroupState,
     active: Boolean,
     label: String,
+    onSelect: () -> Unit,
+    modifier: Modifier = Modifier,
     inconsistent: Boolean = false,
     useUnderline: Boolean = false,
-    onSelect: () -> Unit,
 ) {
     BaseCheckButton(
-        modifier = modifier,
-        state = state,
         active = active,
-        inconsistent = inconsistent,
-        useUnderline = useUnderline,
-        label = label,
-        onActiveRequested = { active ->
+        onActiveRequest = { active ->
             if (active) {
                 onSelect()
             }
         },
+        modifier = modifier,
+        state = state,
+        label = label,
+        inconsistent = inconsistent,
+        useUnderline = useUnderline,
     )
 }
 
 /**
  * Creates a [CheckButton] with a custom child composable as its content.
  *
- * @param modifier The modifier to apply to the widget.
  * @param active Whether the check button is currently active.
- * @param child Custom composable content.
+ * @param onActiveRequest Callback invoked when the check button is toggled.
+ * @param modifier The modifier to apply to the widget.
  * @param inconsistent Whether the button should display an inconsistent (partially active) state.
  * @param useUnderline Whether to use an underscore in the label for mnemonic activation.
- * @param onActiveRequested Callback invoked when the check button is toggled.
+ * @param child Custom composable content.
  */
 @Composable
 fun CheckButton(
-    modifier: Modifier = Modifier,
     active: Boolean,
-    child: @Composable () -> Unit,
+    onActiveRequest: (active: Boolean) -> Unit,
+    modifier: Modifier = Modifier,
     inconsistent: Boolean = false,
     useUnderline: Boolean = false,
-    onActiveRequested: (active: Boolean) -> Unit,
+    child: @Composable () -> Unit,
 ) {
     BaseCheckButton(
-        modifier = modifier,
         active = active,
+        onActiveRequest = onActiveRequest,
+        modifier = modifier,
         inconsistent = inconsistent,
-        child = child,
         useUnderline = useUnderline,
-        onActiveRequested = onActiveRequested,
+        child = child,
     )
 }
 
@@ -295,25 +295,25 @@ fun CheckButton(
  */
 @Composable
 fun RadioButton(
-    modifier: Modifier = Modifier,
     state: RadioGroupState,
     active: Boolean,
-    child: @Composable () -> Unit,
+    onSelect: () -> Unit,
+    modifier: Modifier = Modifier,
     inconsistent: Boolean = false,
     useUnderline: Boolean = false,
-    onSelect: () -> Unit,
+    child: @Composable () -> Unit,
 ) {
     BaseCheckButton(
-        modifier = modifier,
-        state = state,
         active = active,
-        inconsistent = inconsistent,
-        useUnderline = useUnderline,
-        child = child,
-        onActiveRequested = { active ->
+        onActiveRequest = { active ->
             if (active) {
                 onSelect()
             }
         },
+        modifier = modifier,
+        state = state,
+        inconsistent = inconsistent,
+        useUnderline = useUnderline,
+        child = child,
     )
 }

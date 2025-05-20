@@ -5,7 +5,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import io.github.compose4gtk.modifier.Modifier
-import io.github.compose4gtk.shared.components.initializeApplicationWindow
+import io.github.compose4gtk.shared.components.InitializeApplicationWindow
 import org.gnome.adw.ApplicationWindow
 import org.gnome.adw.Breakpoint
 import org.gnome.adw.BreakpointCondition
@@ -18,7 +18,7 @@ interface ApplicationWindowScope {
      * Be careful: once added, breakpoints won't be removed. Avoid calling this function dynamically
      */
     @Composable
-    fun rememberBreakpoint(
+    fun RememberBreakpoint(
         condition: BreakpointCondition,
         matches: (Boolean) -> Unit,
     )
@@ -28,7 +28,7 @@ interface ApplicationWindowScope {
         condition: BreakpointCondition,
     ): State<Boolean> {
         val matches = remember { mutableStateOf(false) }
-        rememberBreakpoint(condition) {
+        RememberBreakpoint(condition) {
             matches.value = it
         }
         return matches
@@ -38,7 +38,7 @@ interface ApplicationWindowScope {
 private class ApplicationWindowScopeImpl(val window: ApplicationWindow) : ApplicationWindowScope {
 
     @Composable
-    override fun rememberBreakpoint(
+    override fun RememberBreakpoint(
         condition: BreakpointCondition,
         matches: (Boolean) -> Unit,
     ): Unit = remember {
@@ -69,7 +69,7 @@ fun ApplicationWindow(
     init: ApplicationWindow.() -> Unit = {},
     content: @Composable ApplicationWindowScope.() -> Unit,
 ) {
-    initializeApplicationWindow<ApplicationWindow, ApplicationWindow.Builder<*>>(
+    InitializeApplicationWindow<ApplicationWindow, ApplicationWindow.Builder<*>>(
         builder = {
             ApplicationWindow.builder()
         },

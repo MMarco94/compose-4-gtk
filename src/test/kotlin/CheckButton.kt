@@ -24,79 +24,79 @@ fun main(args: Array<String>) {
                     title = "Check Button", description = "Allow users to control binary options or properties"
                 ) {
                     HorizontalBox {
-                        VerticalBox(spacing = 16) {
+                        VerticalBox(spacing = 8) {
                             var isChecked by remember { mutableStateOf(false) }
 
                             CheckButton(
-                                modifier = Modifier.alignment(Align.START), active = isChecked, label = "Change me!"
-                            ) { active ->
-                                isChecked = active
-                            }
-
-                            CheckButton(
-                                modifier = Modifier.alignment(Align.START), active = isChecked, label = "Mirror only"
-                            ) {
-                                println("Can't change me!")
-                            }
-
-                            CheckButton(
+                                onActiveRequest = { active -> isChecked = active },
                                 modifier = Modifier.alignment(Align.START),
                                 active = isChecked,
+                                label = "Change me!"
+                            )
+
+                            CheckButton(
+                                onActiveRequest = { println("Can't change me!") },
+                                modifier = Modifier.alignment(Align.START),
+                                active = isChecked,
+                                label = "Mirror only"
+                            )
+
+                            CheckButton(
+                                active = isChecked,
+                                onActiveRequest = { println("Nothing happens") },
+                                modifier = Modifier.alignment(Align.START),
                                 inconsistent = true,
-                            ) {
-                                println("Nothing happens")
-                            }
+                            )
 
                             CheckButton(
+                                onActiveRequest = { active ->
+                                    isChecked = active
+                                },
                                 modifier = Modifier.alignment(Align.START),
                                 active = isChecked,
-                                child = {
-                                    HorizontalBox {
-                                        Switch(active = isChecked) { }
-                                        Label("Custom child")
-                                    }
-                                },
-                            ) { active ->
-                                isChecked = active
+                            ) {
+                                HorizontalBox {
+                                    Switch(active = isChecked, onToggle = {})
+                                    Label("Custom child")
+                                }
                             }
 
                             CheckButton(
-                                modifier = Modifier
-                                    .alignment(Align.START)
-                                    .sensitive(false),
                                 active = isChecked,
-                                label = "Disabled"
-                            ) {
-                                println("Can't change me!")
-                            }
+                                label = "Disabled",
+                                onActiveRequest = { println("Can't change me!") },
+                                modifier = Modifier.alignment(Align.START).sensitive(false),
+                            )
                         }
 
-                        VerticalBox(spacing = 16) {
+                        VerticalBox(spacing = 8) {
                             val checkedStates = remember { mutableStateListOf(false, false, false, false) }
 
                             fun allChecked() = checkedStates.all { it }
                             fun someChecked() = checkedStates.any { it }
 
                             CheckButton(
-                                modifier = Modifier.alignment(Align.START),
                                 active = allChecked(),
+                                label = "Select all",
+                                onActiveRequest = { active ->
+                                    val newState = !someChecked()
+                                    for (i in checkedStates.indices) {
+                                        checkedStates[i] = newState
+                                    }
+                                },
+                                modifier = Modifier.alignment(Align.START),
                                 inconsistent = someChecked() && !allChecked(),
-                                label = "Select all"
-                            ) { active ->
-                                val newState = !someChecked()
-                                for (i in checkedStates.indices) {
-                                    checkedStates[i] = newState
-                                }
-                            }
+                            )
 
                             checkedStates.forEachIndexed { index, isChecked ->
                                 CheckButton(
-                                    modifier = Modifier.alignment(Align.START),
                                     active = isChecked,
-                                    label = "Option ${index + 1}"
-                                ) { active ->
-                                    checkedStates[index] = active
-                                }
+                                    label = "Option ${index + 1}",
+                                    onActiveRequest = { active ->
+                                        checkedStates[index] = active
+                                    },
+                                    modifier = Modifier.alignment(Align.START),
+                                )
                             }
                         }
                     }

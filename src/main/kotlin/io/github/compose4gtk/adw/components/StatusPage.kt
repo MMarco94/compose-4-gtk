@@ -12,8 +12,8 @@ import org.gnome.adw.StatusPage
 
 @Composable
 fun StatusPage(
-    modifier: Modifier = Modifier,
     title: String,
+    modifier: Modifier = Modifier,
     description: String? = null,
     icon: ImageSource? = null,
     content: @Composable () -> Unit = {},
@@ -26,8 +26,8 @@ fun StatusPage(
             )
         },
         update = {
-            set(modifier) { applyModifier(it) }
             set(title) { this.widget.title = it }
+            set(modifier) { applyModifier(it) }
             set(description) { this.widget.description = it }
             set(icon) { img ->
                 this.widget.setImage(

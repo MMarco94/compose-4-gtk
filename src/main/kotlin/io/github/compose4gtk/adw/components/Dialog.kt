@@ -6,7 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import io.github.compose4gtk.GtkSubComposition
+import io.github.compose4gtk.gtkSubComposition
 import io.github.compose4gtk.SingleChildComposeNode
 import io.github.compose4gtk.modifier.Modifier
 import io.github.compose4gtk.shared.components.LocalApplicationWindow
@@ -35,20 +35,20 @@ private class GtkDialogComposeNode<D : Dialog>(
  *   current breakpoint
  */
 @Composable
-private fun <D : Dialog> BaseDialog(
+private fun <D : Dialog> baseDialog(
+    creator: () -> D,
+    title: String?,
     modifier: Modifier = Modifier,
     contentHeight: Int = 0,
     contentWidth: Int = 0,
     followsContentSize: Boolean = false,
     presentationMode: DialogPresentationMode = DialogPresentationMode.AUTO,
-    title: String?,
     onClose: () -> Unit = {},
     content: @Composable () -> Unit = {},
-    creator: () -> D,
 ): D {
     val applicationWindow = LocalApplicationWindow.current
 
-    val composeNode = GtkSubComposition(
+    val composeNode = gtkSubComposition(
         createNode = {
             val dialog = creator()
             dialog.canClose = false
@@ -66,12 +66,12 @@ private fun <D : Dialog> BaseDialog(
         }
     }
 
-    remember(modifier) { composeNode.applyModifier(modifier) }
     remember(title) { dialog.title = title }
-    remember(presentationMode) { dialog.presentationMode = presentationMode }
-    remember(followsContentSize) { dialog.followsContentSize = followsContentSize }
-    remember(contentWidth) { dialog.contentWidth = contentWidth }
+    remember(modifier) { composeNode.applyModifier(modifier) }
     remember(contentHeight) { dialog.contentHeight = contentHeight }
+    remember(contentWidth) { dialog.contentWidth = contentWidth }
+    remember(followsContentSize) { dialog.followsContentSize = followsContentSize }
+    remember(presentationMode) { dialog.presentationMode = presentationMode }
     remember(onClose) {
         composeNode.onCloseAttempt?.disconnect()
         composeNode.onCloseAttempt = dialog.onCloseAttempt {
@@ -84,35 +84,36 @@ private fun <D : Dialog> BaseDialog(
 
 @Composable
 fun Dialog(
+    title: String?,
     modifier: Modifier = Modifier,
     contentHeight: Int = 0,
     contentWidth: Int = 0,
     followsContentSize: Boolean = false,
     presentationMode: DialogPresentationMode = DialogPresentationMode.AUTO,
-    title: String?,
     onClose: () -> Unit = {},
     content: @Composable () -> Unit = {},
 ) {
-    BaseDialog(
+    baseDialog(
+        creator = {
+            Dialog.builder().build()
+        },
+        title = title,
         modifier = modifier,
         contentHeight = contentHeight,
         contentWidth = contentWidth,
         followsContentSize = followsContentSize,
         presentationMode = presentationMode,
-        title = title,
         onClose = onClose,
         content = content,
-        creator = {
-            Dialog.builder().build()
-        },
     )
 }
 
 @Composable
 fun AboutDialog(
+    title: String?,
+    applicationName: String,
     modifier: Modifier = Modifier,
     applicationIcon: String = "",
-    applicationName: String,
     artists: List<String> = emptyList(),
     comments: String = "",
     contentHeight: Int = 0,
@@ -132,28 +133,27 @@ fun AboutDialog(
     releaseNotes: String = "",
     releaseNotesVersion: String = "",
     supportUrl: String = "",
-    title: String?,
     translatorCredits: String = "",
     version: String = "",
     website: String = "",
     onClose: () -> Unit = {},
     content: @Composable () -> Unit = {},
 ) {
-    val dialog = BaseDialog(
+    val dialog = baseDialog(
+        creator = {
+            AboutDialog.builder().build()
+        },
+        title = title,
         modifier = modifier,
         contentHeight = contentHeight,
         contentWidth = contentWidth,
         followsContentSize = followsContentSize,
         presentationMode = presentationMode,
-        title = title,
         onClose = onClose,
         content = content,
-        creator = {
-            AboutDialog.builder().build()
-        },
     )
-    remember(applicationIcon) { dialog.applicationIcon = applicationIcon }
     remember(applicationName) { dialog.applicationName = applicationName }
+    remember(applicationIcon) { dialog.applicationIcon = applicationIcon }
     remember(artists) { dialog.artists = artists.toTypedArray() }
     remember(comments) { dialog.comments = comments }
     remember(copyright) { dialog.copyright = copyright }
@@ -166,10 +166,10 @@ fun AboutDialog(
     remember(issueUrl) { dialog.issueUrl = issueUrl }
     remember(license) { dialog.license = license }
     remember(licenseType) { dialog.licenseType = licenseType }
-    remember(translatorCredits) { dialog.translatorCredits = translatorCredits }
     remember(releaseNotes) { dialog.releaseNotes = releaseNotes }
     remember(releaseNotesVersion) { dialog.releaseNotesVersion = releaseNotesVersion }
     remember(supportUrl) { dialog.supportUrl = supportUrl }
+    remember(translatorCredits) { dialog.translatorCredits = translatorCredits }
     remember(version) { dialog.version = version }
     remember(website) { dialog.website = website }
 }
@@ -198,17 +198,17 @@ fun AlertDialog(
     var connection: SignalConnection<*>? by remember { mutableStateOf(null) }
     var previousResponses: List<AlertDialogResponse>? by remember { mutableStateOf(null) }
 
-    val dialog = BaseDialog(
+    val dialog = baseDialog(
+        creator = {
+            AlertDialog.builder().build()
+        },
+        title = null,
         modifier = modifier,
         contentHeight = contentHeight,
         contentWidth = contentWidth,
         followsContentSize = followsContentSize,
         presentationMode = presentationMode,
-        title = null,
         onClose = onClose,
-        creator = {
-            AlertDialog.builder().build()
-        },
     )
     remember(heading) { dialog.heading = heading }
     remember(body) { dialog.body = body }

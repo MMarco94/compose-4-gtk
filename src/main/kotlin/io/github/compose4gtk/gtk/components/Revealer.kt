@@ -12,9 +12,9 @@ import org.gnome.gtk.RevealerTransitionType
 @Composable
 fun Revealer(
     reveal: Boolean,
+    modifier: Modifier = Modifier,
     transitionType: RevealerTransitionType = RevealerTransitionType.NONE,
     transitionDuration: Int = 0,
-    modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
     ComposeNode<GtkComposeWidget<Revealer>, GtkApplier>(
@@ -24,8 +24,8 @@ fun Revealer(
             }
         },
         update = {
-            set(modifier) { applyModifier(it) }
             set(reveal) { this.widget.revealChild = it }
+            set(modifier) { applyModifier(it) }
             set(transitionType) { this.widget.transitionType = it }
             set(transitionDuration) { this.widget.transitionDuration = it }
         },
