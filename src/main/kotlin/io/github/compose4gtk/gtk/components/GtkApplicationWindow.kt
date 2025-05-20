@@ -2,7 +2,7 @@ package io.github.compose4gtk.gtk.components
 
 import androidx.compose.runtime.Composable
 import io.github.compose4gtk.modifier.Modifier
-import io.github.compose4gtk.shared.components.initializeApplicationWindow
+import io.github.compose4gtk.shared.components.InitializeApplicationWindow
 import org.gnome.gtk.ApplicationWindow
 import org.gnome.gtk.CssProvider
 
@@ -24,12 +24,13 @@ fun GtkApplicationWindow(
     init: ApplicationWindow.() -> Unit = {},
     content: @Composable () -> Unit,
 ) {
-    initializeApplicationWindow(
+    InitializeApplicationWindow(
         builder = {
             ApplicationWindow.builder()
         },
-        modifier = modifier,
+        setContent = { this.child = it },
         title = title,
+        modifier = modifier,
         styles = styles,
         deletable = deletable,
         onClose = onClose,
@@ -42,7 +43,6 @@ fun GtkApplicationWindow(
         modal = modal,
         resizable = resizable,
         init = init,
-        setContent = { this.child = it },
         content = { content() },
     )
 }

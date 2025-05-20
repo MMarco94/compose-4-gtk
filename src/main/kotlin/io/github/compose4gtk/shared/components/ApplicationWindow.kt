@@ -5,7 +5,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.remember
-import io.github.compose4gtk.GtkSubComposition
+import io.github.compose4gtk.gtkSubComposition
 import io.github.compose4gtk.LocalApplication
 import io.github.compose4gtk.SingleChildComposeNode
 import io.github.compose4gtk.modifier.Modifier
@@ -41,11 +41,12 @@ val LocalApplicationWindow = compositionLocalOf<ApplicationWindow> {
 
 // TODO: fullscreen, maximized, hide on close, icon, active,
 @Composable
-internal fun <AW : ApplicationWindow, B : ApplicationWindow.Builder<*>> initializeApplicationWindow(
+internal fun <AW : ApplicationWindow, B : ApplicationWindow.Builder<*>> InitializeApplicationWindow(
     builder: () -> B,
-    modifier: Modifier = Modifier,
+    setContent: AW.(Widget?) -> Unit,
     title: String?,
     onClose: () -> Unit,
+    modifier: Modifier = Modifier,
     styles: List<CssProvider> = emptyList(),
     decorated: Boolean = true,
     defaultHeight: Int = 0,
@@ -57,11 +58,10 @@ internal fun <AW : ApplicationWindow, B : ApplicationWindow.Builder<*>> initiali
     modal: Boolean = false,
     resizable: Boolean = true,
     init: AW.() -> Unit = {},
-    setContent: AW.(Widget?) -> Unit,
     content: @Composable (AW) -> Unit,
 ) {
     val application = LocalApplication.current
-    val composeNode = GtkSubComposition(
+    val composeNode = gtkSubComposition(
         createNode = {
             val window = builder().build() as AW
             GtkApplicationWindowComposeNode(window, setContent)
@@ -82,8 +82,8 @@ internal fun <AW : ApplicationWindow, B : ApplicationWindow.Builder<*>> initiali
             window.destroy()
         }
     }
-    remember(modifier) { composeNode.applyModifier(modifier) }
     remember(title) { window.title = title }
+    remember(modifier) { composeNode.applyModifier(modifier) }
     remember(onClose) {
         composeNode.onClose?.disconnect()
         composeNode.onClose = window.onCloseRequest {

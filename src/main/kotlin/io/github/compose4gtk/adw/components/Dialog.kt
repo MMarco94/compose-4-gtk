@@ -6,7 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import io.github.compose4gtk.GtkSubComposition
+import io.github.compose4gtk.gtkSubComposition
 import io.github.compose4gtk.SingleChildComposeNode
 import io.github.compose4gtk.modifier.Modifier
 import io.github.compose4gtk.shared.components.LocalApplicationWindow
@@ -48,7 +48,7 @@ private fun <D : Dialog> baseDialog(
 ): D {
     val applicationWindow = LocalApplicationWindow.current
 
-    val composeNode = GtkSubComposition(
+    val composeNode = gtkSubComposition(
         createNode = {
             val dialog = creator()
             dialog.canClose = false

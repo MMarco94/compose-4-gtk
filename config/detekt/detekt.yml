@@ -25,3 +25,8 @@ style:
 Compose:
   active: true
   excludes: '**/test/**'
+  CompositionLocalAllowlist:
+    active: true
+    allowedCompositionLocals:
+     - LocalApplication
+     - LocalApplicationWindow

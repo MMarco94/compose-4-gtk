@@ -11,14 +11,14 @@ import org.gnome.adw.WindowTitle
 @Composable
 fun WindowTitle(
     title: String,
-    subtitle: String? = null,
     modifier: Modifier = Modifier,
+    subtitle: String? = null,
 ) {
     ComposeNode<GtkComposeWidget<WindowTitle>, GtkApplier>({
         LeafComposeNode(WindowTitle.builder().build())
     }) {
-        set(modifier) { applyModifier(it) }
         set(title) { this.widget.title = it }
+        set(modifier) { applyModifier(it) }
         set(subtitle) { this.widget.subtitle = it }
     }
 }
